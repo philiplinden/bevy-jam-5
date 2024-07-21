@@ -13,18 +13,18 @@ use crate::{
 
 pub(super) fn plugin(app: &mut App) {
     app.observe(spawn_player);
-    app.register_type::<Player>();
+    app.register_type::<Earth>();
 }
 
 #[derive(Event, Debug)]
-pub struct SpawnPlayer;
+pub struct SpawnEarth;
 
 #[derive(Component, Debug, Clone, Copy, PartialEq, Eq, Default, Reflect)]
 #[reflect(Component)]
-pub struct Player;
+pub struct Earth;
 
 fn spawn_player(
-    _trigger: Trigger<SpawnPlayer>,
+    _trigger: Trigger<SpawnEarth>,
     mut commands: Commands,
     image_handles: Res<HandleMap<ImageKey>>,
     mut texture_atlas_layouts: ResMut<Assets<TextureAtlasLayout>>,
@@ -38,8 +38,8 @@ fn spawn_player(
     let player_animation = PlayerAnimation::new();
 
     commands.spawn((
-        Name::new("Player"),
-        Player,
+        Name::new("Earth"),
+        Earth,
         SpriteBundle {
             texture: image_handles[&ImageKey::Ducky].clone_weak(),
             transform: Transform::from_scale(Vec2::splat(8.0).extend(1.0)),

@@ -92,7 +92,7 @@ impl FromWorld for HandleMap<SoundtrackKey> {
         [
             (
                 SoundtrackKey::Title,
-                asset_server.load("audio/soundtracks/DOS-88_Race-To-Mars.ogg"),
+                asset_server.load("audio/soundtracks/DOS-88_Race-to-Mars.ogg"),
             ),
             (
                 SoundtrackKey::Credits,
