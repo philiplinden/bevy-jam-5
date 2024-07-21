@@ -11,6 +11,7 @@ bevy = { version = "0.14", features = [
     "multi_threaded",
 ] }
 bevy_asset_loader = { version = "0.21.0", features = ["progress_tracking"] }
+bevy_vector_shapes = "0.8.0"
 rand = "0.8.5"
 
 # Disable low-severity logs at compile time for performance.
@@ -20,6 +21,8 @@ log = { version = "0.4.22", features = [
 ] }
 
 # UI
+image = "0.25.2"
+winit = "0.30.4"
 sickle_ui = { rev = "a548517", git = "https://github.com/UmbraLuminosa/sickle_ui" }
 iyes_progress = { version = "0.12.0", features = ["assets", "bevy_asset", "bevy_log"] }
 leafwing-input-manager = "0.14.0"

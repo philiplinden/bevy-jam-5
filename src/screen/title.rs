@@ -43,6 +43,7 @@ fn enter_title(mut commands: Commands) {
 fn exit_title(mut commands: Commands) {
     // We could use [`StateScoped`] on the sound playing entites instead.
     commands.trigger(PlaySoundtrack::Disable);
+    commands.trigger(PlaySoundtrack::Key(SoundtrackKey::Gameplay));
 }
 
 fn handle_title_action(

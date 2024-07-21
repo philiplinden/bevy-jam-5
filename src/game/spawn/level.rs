@@ -2,7 +2,7 @@
 
 use bevy::prelude::*;
 
-use super::planet::SpawnEarth;
+use super::planetoids::SpawnEarth;
 
 pub(super) fn plugin(app: &mut App) {
     app.observe(spawn_level);
