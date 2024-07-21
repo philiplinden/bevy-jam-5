@@ -15,7 +15,7 @@ pub(super) fn plugin(app: &mut App) {
     app.init_resource::<HandleMap<SoundtrackKey>>();
 }
 
-#[derive(PartialEq, Eq, Hash, Reflect)]
+#[derive(Copy, Clone, Eq, PartialEq, Hash, Reflect)]
 pub enum ImageKey {
     Ducky,
 }
@@ -40,7 +40,7 @@ impl FromWorld for HandleMap<ImageKey> {
     }
 }
 
-#[derive(PartialEq, Eq, Hash, Reflect)]
+#[derive(Copy, Clone, Eq, PartialEq, Hash, Reflect)]
 pub enum SfxKey {
     ButtonHover,
     ButtonPress,
@@ -75,8 +75,9 @@ impl FromWorld for HandleMap<SfxKey> {
     }
 }
 
-#[derive(PartialEq, Eq, Hash, Reflect)]
+#[derive(Copy, Clone, Eq, PartialEq, Hash, Reflect)]
 pub enum SoundtrackKey {
+    Title,
     Credits,
     Gameplay,
 }
@@ -90,12 +91,16 @@ impl FromWorld for HandleMap<SoundtrackKey> {
         let asset_server = world.resource::<AssetServer>();
         [
             (
+                SoundtrackKey::Title,
+                asset_server.load("audio/soundtracks/DOS-88_Race-To-Mars.ogg"),
+            ),
+            (
                 SoundtrackKey::Credits,
-                asset_server.load("audio/soundtracks/Monkeys Spinning Monkeys.ogg"),
+                asset_server.load("audio/soundtracks/DOS-88_Double-Tap.ogg"),
             ),
             (
                 SoundtrackKey::Gameplay,
-                asset_server.load("audio/soundtracks/Fluffing A Duck.ogg"),
+                asset_server.load("audio/soundtracks/DOS-88_Checking-Manifest.ogg"),
             ),
         ]
         .into()

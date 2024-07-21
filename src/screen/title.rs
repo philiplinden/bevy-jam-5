@@ -3,10 +3,14 @@
 use bevy::prelude::*;
 
 use super::Screen;
-use crate::ui::prelude::*;
+use crate::{
+    game::{assets::SoundtrackKey, audio::soundtrack::PlaySoundtrack},
+    ui::prelude::*
+};
 
 pub(super) fn plugin(app: &mut App) {
     app.add_systems(OnEnter(Screen::Title), enter_title);
+    app.add_systems(OnExit(Screen::Title), exit_title);
 
     app.register_type::<TitleAction>();
     app.add_systems(Update, handle_title_action.run_if(in_state(Screen::Title)));
@@ -33,6 +37,12 @@ fn enter_title(mut commands: Commands) {
             #[cfg(not(target_family = "wasm"))]
             children.button("Exit").insert(TitleAction::Exit);
         });
+    commands.trigger(PlaySoundtrack::Key(SoundtrackKey::Title));
+}
+
+fn exit_title(mut commands: Commands) {
+    // We could use [`StateScoped`] on the sound playing entites instead.
+    commands.trigger(PlaySoundtrack::Disable);
 }
 
 fn handle_title_action(
