@@ -7,7 +7,7 @@ license = "MIT"
 
 [dependencies]
 # core crates
-bevy = { version = "0.14", features = [
+bevy = { version = "0.14.0", features = [
     "multi_threaded",
 ] }
 bevy_asset_loader = { version = "0.21.0", features = ["progress_tracking"] }
@@ -29,8 +29,9 @@ leafwing-input-manager = "0.14.0"
 bevy_mod_picking = { version = "0.20.1", features = ["backend_avian", "bevy_picking_avian", "bevy_picking_highlight"] }
 
 # physics
-avian = "0.0.0"
+avian2d ="0.1.1"
 particular = { version = "0.7.0", features = ["gpu", "parallel"] }
+physical_constants = "0.5.0"
 
 # dev tools
 bevy-inspector-egui = { version = "0.25.1", features = ["highlight_changes"], optional = true }

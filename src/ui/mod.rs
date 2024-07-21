@@ -21,7 +21,7 @@ use winit::window::Icon;
 
 pub(super) fn plugin(app: &mut App) {
     app.add_plugins(interaction::plugin);
-    app.add_systems(Startup, set_window_icon)
+    app.add_systems(Startup, set_window_icon);
 }
 
 fn set_window_icon(
@@ -31,7 +31,7 @@ fn set_window_icon(
     // here we use the `image` crate to load our icon data from a png file
     // this is not a very bevy-native solution, but it will do
     let (icon_rgba, icon_width, icon_height) = {
-        let image = image::open("my_icon.png")
+        let image = image::open("assets/images/radar-crt-screen.png")
             .expect("Failed to open icon path")
             .into_rgba8();
         let (width, height) = image.dimensions();

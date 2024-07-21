@@ -4,7 +4,7 @@ use bevy::prelude::*;
 
 use super::Screen;
 use crate::{
-    game::{assets::SoundtrackKey, audio::soundtrack::PlaySoundtrack},
+    game::audio::soundtrack::PlaySoundtrack,
     ui::prelude::*
 };
 

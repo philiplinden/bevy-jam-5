@@ -1,5 +1,4 @@
 use bevy::{audio::PlaybackMode, prelude::*};
-use rand::seq::SliceRandom;
 
 use crate::game::assets::{HandleMap, SfxKey};
 
@@ -14,7 +13,6 @@ fn play_sfx(
 ) {
     let sfx_key = match trigger.event() {
         PlaySfx::Key(key) => *key,
-        PlaySfx::RandomStep => random_step(),
     };
     commands.spawn(AudioSourceBundle {
         source: sfx_handles[&sfx_key].clone_weak(),
@@ -29,12 +27,4 @@ fn play_sfx(
 #[derive(Event)]
 pub enum PlaySfx {
     Key(SfxKey),
-    RandomStep,
-}
-
-fn random_step() -> SfxKey {
-    [SfxKey::Step1, SfxKey::Step2, SfxKey::Step3, SfxKey::Step4]
-        .choose(&mut rand::thread_rng())
-        .copied()
-        .unwrap()
 }

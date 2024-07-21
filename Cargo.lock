@@ -425,10 +425,23 @@ dependencies = [
 ]
 
 [[package]]
-name = "avian"
-version = "0.0.0"
+name = "avian2d"
+version = "0.1.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9f7d51f548a8e50bc12417e1b368c50ffdd5aa360208d4a35a44293eaf37faf2"
+checksum = "757274b827f77c3853fd36c4229ebeda55746fc297244bcd1104e561dab34326"
+dependencies = [
+ "avian_derive",
+ "bevy 0.14.0",
+ "bevy_math 0.14.0",
+ "bitflags 2.6.0",
+ "derive_more",
+ "fxhash",
+ "indexmap",
+ "itertools 0.13.0",
+ "nalgebra",
+ "parry2d",
+ "parry2d-f64",
+]
 
 [[package]]
 name = "avian3d"
@@ -548,7 +561,7 @@ dependencies = [
 name = "bevy-jam-5"
 version = "0.1.0"
 dependencies = [
- "avian",
+ "avian2d",
  "bevy 0.14.0",
  "bevy-inspector-egui",
  "bevy_asset_loader",
@@ -560,6 +573,7 @@ dependencies = [
  "leafwing-input-manager",
  "log",
  "particular",
+ "physical_constants",
  "rand",
  "sickle_ui",
  "winit 0.30.4",
@@ -5102,6 +5116,52 @@ dependencies = [
 ]
 
 [[package]]
+name = "parry2d"
+version = "0.15.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "41c56bf3b44b08f18a6ed01e5c6bf1a41a12efc7e8b806ce0cf50831c88f9fc8"
+dependencies = [
+ "approx",
+ "arrayvec",
+ "bitflags 1.3.2",
+ "downcast-rs",
+ "either",
+ "log",
+ "nalgebra",
+ "num-derive",
+ "num-traits",
+ "rayon",
+ "rustc-hash",
+ "simba",
+ "slab",
+ "smallvec",
+ "spade",
+]
+
+[[package]]
+name = "parry2d-f64"
+version = "0.15.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "416b765a3db5f3e219fcc878d649ea6dc6b93490694be846c39c7398074f90d1"
+dependencies = [
+ "approx",
+ "arrayvec",
+ "bitflags 1.3.2",
+ "downcast-rs",
+ "either",
+ "log",
+ "nalgebra",
+ "num-derive",
+ "num-traits",
+ "rayon",
+ "rustc-hash",
+ "simba",
+ "slab",
+ "smallvec",
+ "spade",
+]
+
+[[package]]
 name = "parry3d"
 version = "0.15.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -5202,6 +5262,15 @@ dependencies = [
  "indexmap",
  "serde",
  "serde_derive",
+]
+
+[[package]]
+name = "physical_constants"
+version = "0.5.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f3aad4556f19b1f2430b7d8492f251a8d152636595bcbf3224d099eead0e4c73"
+dependencies = [
+ "regex",
 ]
 
 [[package]]

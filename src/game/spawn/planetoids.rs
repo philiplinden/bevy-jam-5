@@ -4,6 +4,7 @@ use bevy::prelude::*;
 use bevy_vector_shapes::prelude::*;
 
 use crate::{
+    physics::nbody::PointMass,
     screen::Screen,
     ui::palette,
 };
@@ -18,7 +19,9 @@ pub struct SpawnEarth;
 
 #[derive(Component, Debug, Clone, Copy, PartialEq, Eq, Default, Reflect)]
 #[reflect(Component)]
-pub struct Earth;
+pub struct Earth {
+    mass: PointMass
+};
 
 fn spawn_earth(
     _trigger: Trigger<SpawnEarth>,

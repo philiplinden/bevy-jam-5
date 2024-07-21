@@ -1,12 +1,11 @@
 use bevy::{
     prelude::*,
-    render::texture::{ImageLoaderSettings, ImageSampler},
     utils::HashMap,
 };
 
 pub(super) fn plugin(app: &mut App) {
-    app.register_type::<HandleMap<ImageKey>>();
-    app.init_resource::<HandleMap<ImageKey>>();
+    app.register_type::<HandleMap<FontKey>>();
+    app.init_resource::<HandleMap<FontKey>>();
 
     app.register_type::<HandleMap<SfxKey>>();
     app.init_resource::<HandleMap<SfxKey>>();
@@ -15,39 +14,11 @@ pub(super) fn plugin(app: &mut App) {
     app.init_resource::<HandleMap<SoundtrackKey>>();
 }
 
-#[derive(Copy, Clone, Eq, PartialEq, Hash, Reflect)]
-pub enum ImageKey {
-    Ducky,
-}
-
-impl AssetKey for ImageKey {
-    type Asset = Image;
-}
-
-impl FromWorld for HandleMap<ImageKey> {
-    fn from_world(world: &mut World) -> Self {
-        let asset_server = world.resource::<AssetServer>();
-        [(
-            ImageKey::Ducky,
-            asset_server.load_with_settings(
-                "images/ducky.png",
-                |settings: &mut ImageLoaderSettings| {
-                    settings.sampler = ImageSampler::nearest();
-                },
-            ),
-        )]
-        .into()
-    }
-}
 
 #[derive(Copy, Clone, Eq, PartialEq, Hash, Reflect)]
 pub enum SfxKey {
     ButtonHover,
     ButtonPress,
-    Step1,
-    Step2,
-    Step3,
-    Step4,
 }
 
 impl AssetKey for SfxKey {
@@ -113,7 +84,7 @@ impl AssetKey for FontKey {
     type Asset = Font;
 }
 
-impl FromWorld for HandleMap<Font> {
+impl FromWorld for HandleMap<FontKey> {
     fn from_world(world: &mut World) -> Self {
         let asset_server = world.resource::<AssetServer>();
         [
@@ -128,10 +99,6 @@ impl FromWorld for HandleMap<Font> {
         ]
         .into()
     }
-}
-
-impl AssetKey for SfxKey {
-    type Asset = AudioSource;
 }
 
 pub trait AssetKey: Sized {

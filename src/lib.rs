@@ -1,6 +1,7 @@
 #[cfg(feature = "dev")]
 mod dev_tools;
 mod game;
+mod physics;
 mod screen;
 mod ui;
 
@@ -53,7 +54,12 @@ impl Plugin for AppPlugin {
         );
 
         // Add other plugins.
-        app.add_plugins((game::plugin, screen::plugin, ui::plugin));
+        app.add_plugins((
+            game::plugin,
+            physics::plugin,
+            screen::plugin,
+            ui::plugin,
+        ));
 
         // Enable dev tools for dev builds.
         #[cfg(feature = "dev")]
