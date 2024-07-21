@@ -60,16 +60,12 @@ impl FromWorld for HandleMap<SfxKey> {
         [
             (
                 SfxKey::ButtonHover,
-                asset_server.load("audio/sfx/button_hover.ogg"),
+                asset_server.load("audio/sfx/BLEEOOP_Interface_Bleeps/Bleep_06.ogg"),
             ),
             (
                 SfxKey::ButtonPress,
-                asset_server.load("audio/sfx/button_press.ogg"),
+                asset_server.load("audio/sfx/BLEEOOP_Interface_Bleeps/Execute_01.ogg"),
             ),
-            (SfxKey::Step1, asset_server.load("audio/sfx/step1.ogg")),
-            (SfxKey::Step2, asset_server.load("audio/sfx/step2.ogg")),
-            (SfxKey::Step3, asset_server.load("audio/sfx/step3.ogg")),
-            (SfxKey::Step4, asset_server.load("audio/sfx/step4.ogg")),
         ]
         .into()
     }
@@ -105,6 +101,37 @@ impl FromWorld for HandleMap<SoundtrackKey> {
         ]
         .into()
     }
+}
+
+#[derive(Copy, Clone, Eq, PartialEq, Hash, Reflect)]
+pub enum FontKey {
+    Mono,
+    Sans,
+}
+
+impl AssetKey for FontKey {
+    type Asset = Font;
+}
+
+impl FromWorld for HandleMap<Font> {
+    fn from_world(world: &mut World) -> Self {
+        let asset_server = world.resource::<AssetServer>();
+        [
+            (
+                FontKey::Mono,
+                asset_server.load("fonts/monogram-extended.ttf"),
+            ),
+            (
+                FontKey::Sans,
+                asset_server.load("fonts/divinity-sans-regular.ttf"),
+            ),
+        ]
+        .into()
+    }
+}
+
+impl AssetKey for SfxKey {
+    type Asset = AudioSource;
 }
 
 pub trait AssetKey: Sized {
