@@ -25,8 +25,8 @@ pub struct Satellite;
 
 #[derive(Event, Debug)]
 pub struct SpawnSatellite {
-    pub position: Position,
-    pub velocity: LinearVelocity,
+    pub position: Vec2,
+    pub velocity: Vec2,
     pub size: Vec2,
     pub mass: f32,
     pub color: Color,
@@ -35,8 +35,8 @@ pub struct SpawnSatellite {
 impl Default for SpawnSatellite {
     fn default() -> Self {
         SpawnSatellite {
-            position: Position(Vec2::ZERO),
-            velocity: LinearVelocity(Vec2::ZERO),
+            position: Vec2::ZERO,
+            velocity: Vec2::ZERO,
             size: Vec2::new(0.5, 0.1),
             mass: 5.0,
             color: palette::SATELLITE,
@@ -53,17 +53,14 @@ fn spawn_satellite(
     commands.spawn((
         Name::new("Satellite"),
         PhysicsBodyBundle {
-            body: PhysicsBody {
-                position: Position(spawn_event.position.0),
-                velocity: LinearVelocity(spawn_event.velocity.0),
-                mass: Mass(spawn_event.mass),
-                ..default()
-            },
+            body: PhysicsBody::new(spawn_event.position, spawn_event.mass),
             collider: Collider::rectangle(spawn_event.size.x, spawn_event.size.y),
             ..default()
         },
+        LinearVelocity(spawn_event.velocity),
         ShapeBundle::rect(
             &ShapeConfig {
+                transform: Transform::from_xyz(spawn_event.position.x, spawn_event.position.y, 0.0),
                 color: spawn_event.color,
                 hollow: false,
                 ..ShapeConfig::default_2d()
@@ -74,7 +71,7 @@ fn spawn_satellite(
     ));
 }
 
-pub fn random_starting_position() -> Position {
+pub fn random_starting_position() -> Vec2 {
     let mut rng = rand::thread_rng();
     let altitude_range = Uniform::new(10.0, 100.0);
     let raan_range = Uniform::new(0.0, 2.0 * math::PI);
@@ -82,5 +79,5 @@ pub fn random_starting_position() -> Position {
     let radius = EARTH_RADIUS + altitude_range.sample(&mut rng);
     let raan = raan_range.sample(&mut rng);
     let (sin, cos) = raan.sin_cos();
-    Position::from_xy(radius * sin, radius * cos)
+    Vec2::new(radius * sin, radius * cos)
 }

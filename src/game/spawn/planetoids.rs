@@ -3,10 +3,12 @@
 use bevy::prelude::*;
 use bevy_vector_shapes::prelude::*;
 use avian2d::prelude::*;
-use avian2d::math::PI;
 
 use crate::{
-    game::settings::*,
+    game::{
+        physics::nbody::{PhysicsBody, PhysicsBodyBundle},
+        settings::*,
+    },
     screen::Screen,
     ui::palette,
 };
@@ -38,12 +40,11 @@ fn spawn_earth(
             },
             EARTH_RADIUS,
         ),
-        RigidBody::Static,
+        PhysicsBodyBundle {
+            body: PhysicsBody::new(Vec2::ZERO, EARTH_MASS),
+            rigidbody: RigidBody::Dynamic,
+            collider: Collider::circle(EARTH_RADIUS),
+        },
         StateScoped(Screen::Playing),
     ));
-}
-
-// since we are in 2d, the density uses AREA not VOLUME
-pub fn earth_density() -> f32 {
-    EARTH_MASS / (PI * ( EARTH_RADIUS.powi(2) ))
 }
