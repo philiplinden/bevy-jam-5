@@ -7,10 +7,11 @@ license = "MIT"
 
 [dependencies]
 # core crates
-bevy = { version = "0.14", features = [
+bevy = { version = "0.14.0", features = [
     "multi_threaded",
 ] }
 bevy_asset_loader = { version = "0.21.0", features = ["progress_tracking"] }
+bevy_vector_shapes = "0.8.0"
 rand = "0.8.5"
 
 # Disable low-severity logs at compile time for performance.
@@ -20,23 +21,29 @@ log = { version = "0.4.22", features = [
 ] }
 
 # UI
+image = "0.25.2"
+winit = "0.30.4"
 sickle_ui = { rev = "a548517", git = "https://github.com/UmbraLuminosa/sickle_ui" }
 iyes_progress = { version = "0.12.0", features = ["assets", "bevy_asset", "bevy_log"] }
 leafwing-input-manager = "0.14.0"
 bevy_mod_picking = { version = "0.20.1", features = ["backend_avian", "bevy_picking_avian", "bevy_picking_highlight"] }
 
 # physics
-avian = "0.0.0"
+avian2d ="0.1.1"
 particular = { version = "0.7.0", features = ["gpu", "parallel"] }
+physical_constants = "0.5.0"
 
 # dev tools
 bevy-inspector-egui = { version = "0.25.1", features = ["highlight_changes"], optional = true }
 bevy_mod_debugdump = { version = "0.11.0", optional = true }
+bevy_pancam = "0.12.0"
 
 [features]
 default = [
     # Default to a native dev build.
     "dev_native",
+    "inspect",
+    # "physicsdebug",
 ]
 dev = [
     # Improve compile times for dev builds by linking Bevy as a dynamic library.
@@ -53,6 +60,8 @@ dev_native = [
     # Enable embedded asset hot reloading for native dev builds.
     "bevy/embedded_watcher",
 ]
+inspect = []
+physicsdebug = []
 
 # Idiomatic Bevy code often triggers these lints, and the CI workflow treats them as errors.
 # In some cases they may still signal poor code quality however, so consider commenting out these lines.

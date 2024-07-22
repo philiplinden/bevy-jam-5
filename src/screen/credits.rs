@@ -34,8 +34,7 @@ fn enter_credits(mut commands: Commands) {
             children.label("Philip Linden - @philiplinden");
 
             children.header("Assets");
-            children.label("Bevy logo - All rights reserved by the Bevy Foundation. Permission granted for splash screen use when unmodified.");
-            children.label("Ducky sprite - CC0 by Caz Creates Games");
+            children.label("Bevy logo - All rights reserved by the Bevy Foundation. Used with permission.");
             children.label("Music - CC-0 by DOS-88");
 
             children.button("Back").insert(CreditsAction::Back);
