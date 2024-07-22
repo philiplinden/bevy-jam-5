@@ -40,7 +40,6 @@ fn spawn_earth(
         ),
         RigidBody::Static,
         StateScoped(Screen::Playing),
-        MassPropertiesBundle::new_computed(&Collider::circle(EARTH_RADIUS), earth_density()),
     ));
 }
 

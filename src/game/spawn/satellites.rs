@@ -6,7 +6,10 @@ use avian2d::{math, prelude::*};
 use rand::{self, distributions::{Uniform, Distribution}};
 
 use crate::{
-    game::settings::*,
+    game::{
+        physics::nbody::{PhysicsBody, PhysicsBodyBundle},
+        settings::*,
+    },
     screen::Screen,
     ui::palette,
 };
@@ -16,20 +19,62 @@ pub(super) fn plugin(app: &mut App) {
     app.register_type::<Satellite>();
 }
 
-#[derive(Event, Debug)]
-pub struct SpawnSatellite;
-
-#[derive(Component, Debug, Clone, Copy, PartialEq, Eq, Default, Reflect)]
+#[derive(Component, Debug, Default, Clone, Copy, PartialEq, Eq, Reflect)]
 #[reflect(Component)]
 pub struct Satellite;
 
+#[derive(Event, Debug)]
+pub struct SpawnSatellite {
+    pub position: Position,
+    pub velocity: LinearVelocity,
+    pub size: Vec2,
+    pub mass: f32,
+    pub color: Color,
+}
+
+impl Default for SpawnSatellite {
+    fn default() -> Self {
+        SpawnSatellite {
+            position: Position(Vec2::ZERO),
+            velocity: LinearVelocity(Vec2::ZERO),
+            size: Vec2::new(0.5, 0.1),
+            mass: 5.0,
+            color: palette::SATELLITE,
+        }
+    }
+}
+
+
 fn spawn_satellite(
-    _trigger: Trigger<SpawnSatellite>,
+    trigger: Trigger<SpawnSatellite>,
     mut commands: Commands,
 ) {
-    let satellite_size = 0.001;
-    let satellite_density = 1.0;
+    let spawn_event = trigger.event();
+    commands.spawn((
+        Name::new("Satellite"),
+        PhysicsBodyBundle {
+            body: PhysicsBody {
+                position: Position(spawn_event.position.0),
+                velocity: LinearVelocity(spawn_event.velocity.0),
+                mass: Mass(spawn_event.mass),
+                ..default()
+            },
+            collider: Collider::rectangle(spawn_event.size.x, spawn_event.size.y),
+            ..default()
+        },
+        ShapeBundle::rect(
+            &ShapeConfig {
+                color: spawn_event.color,
+                hollow: false,
+                ..ShapeConfig::default_2d()
+            },
+            spawn_event.size,
+        ),
+        StateScoped(Screen::Playing),
+    ));
+}
 
+pub fn random_starting_position() -> Position {
     let mut rng = rand::thread_rng();
     let altitude_range = Uniform::new(10.0, 100.0);
     let raan_range = Uniform::new(0.0, 2.0 * math::PI);
@@ -37,22 +82,5 @@ fn spawn_satellite(
     let radius = EARTH_RADIUS + altitude_range.sample(&mut rng);
     let raan = raan_range.sample(&mut rng);
     let (sin, cos) = raan.sin_cos();
-    let initial_position = Transform::from_xyz(radius * sin, radius * cos, 0.0);
-
-    commands.spawn((
-        Name::new("Satellite"),
-        Satellite,
-        ShapeBundle::circle(
-            &ShapeConfig {
-                transform: initial_position,
-                color: palette::SATELLITE,
-                hollow: false,
-                ..ShapeConfig::default_2d()
-            },
-            satellite_size,
-        ),
-        MassPropertiesBundle::new_computed(&Collider::circle(satellite_size), satellite_density),
-        RigidBody::Dynamic,
-        StateScoped(Screen::Playing),
-    ));
+    Position::from_xy(radius * sin, radius * cos)
 }
