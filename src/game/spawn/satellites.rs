@@ -2,6 +2,7 @@
 
 use bevy::prelude::*;
 use bevy_vector_shapes::prelude::*;
+use avian2d::prelude::*;
 
 use crate::{
     screen::Screen,
@@ -24,7 +25,7 @@ fn spawn_satellite(
     _trigger: Trigger<SpawnSatellite>,
     mut commands: Commands,
 ) {
-
+    let radius = 10.0;
     commands.spawn((
         Name::new("Satellite"),
         Satellite,
@@ -34,8 +35,11 @@ fn spawn_satellite(
                 hollow: false,
                 ..ShapeConfig::default_2d()
             },
-            10.0,
+            radius,
         ),
+        TransformBundle::from_transform(Transform::from_xyz(0.0, 300.0, 0.0)),
+        Collider::circle(radius),
+        RigidBody::Dynamic,
         StateScoped(Screen::Playing),
     ));
 }

@@ -2,6 +2,7 @@
 
 use bevy::prelude::*;
 use bevy_vector_shapes::prelude::*;
+use avian2d::prelude::*;
 
 use crate::{
     physics::nbody::PointMass,
@@ -19,15 +20,13 @@ pub struct SpawnEarth;
 
 #[derive(Component, Debug, Clone, Copy, PartialEq, Eq, Default, Reflect)]
 #[reflect(Component)]
-pub struct Earth {
-    mass: PointMass
-};
+pub struct Earth;
 
 fn spawn_earth(
     _trigger: Trigger<SpawnEarth>,
     mut commands: Commands,
 ) {
-
+    let radius = 100.0;
     commands.spawn((
         Name::new("Earth"),
         Earth,
@@ -37,8 +36,10 @@ fn spawn_earth(
                 hollow: true,
                 ..ShapeConfig::default_2d()
             },
-            100.0,
+            radius,
         ),
+        Collider::circle(radius),
+        RigidBody::Static,
         StateScoped(Screen::Playing),
     ));
 }
