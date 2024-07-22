@@ -3,9 +3,10 @@
 use bevy::prelude::*;
 use bevy_vector_shapes::prelude::*;
 use avian2d::prelude::*;
+use avian2d::math::PI;
 
 use crate::{
-    physics::nbody::PointMass,
+    game::settings::*,
     screen::Screen,
     ui::palette,
 };
@@ -26,7 +27,6 @@ fn spawn_earth(
     _trigger: Trigger<SpawnEarth>,
     mut commands: Commands,
 ) {
-    let radius = 100.0;
     commands.spawn((
         Name::new("Earth"),
         Earth,
@@ -36,10 +36,15 @@ fn spawn_earth(
                 hollow: true,
                 ..ShapeConfig::default_2d()
             },
-            radius,
+            EARTH_RADIUS,
         ),
-        Collider::circle(radius),
         RigidBody::Static,
         StateScoped(Screen::Playing),
+        MassPropertiesBundle::new_computed(&Collider::circle(EARTH_RADIUS), earth_density()),
     ));
+}
+
+// since we are in 2d, the density uses AREA not VOLUME
+pub fn earth_density() -> f32 {
+    EARTH_MASS / (PI * ( EARTH_RADIUS.powi(2) ))
 }

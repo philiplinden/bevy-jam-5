@@ -3,6 +3,7 @@
 use bevy::prelude::*;
 
 use super::planetoids::SpawnEarth;
+use super::satellites::SpawnSatellite;
 
 pub(super) fn plugin(app: &mut App) {
     app.observe(spawn_level);

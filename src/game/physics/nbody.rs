@@ -20,7 +20,7 @@ pub(super) fn plugin(app: &mut App) {
 
 /// Batched n-body accelerations from Particular example
 fn accelerate_rigidbodies(mut query: Query<(&mut LinearVelocity, &GlobalTransform, &Mass)>, time: Res<Time>) {
-    let accelerations = query
+    query
         .iter()
         .map(|(.., transform, mass)| {
             (
