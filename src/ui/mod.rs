@@ -22,7 +22,7 @@ use bevy::winit::WinitWindows;
 use winit::window::Icon;
 
 pub(super) fn plugin(app: &mut App) {
-    app.add_plugins(interaction::plugin);
+    app.add_plugins((interaction::plugin, screens::plugin));
     app.add_systems(Startup, set_window_icon);
 }
 
