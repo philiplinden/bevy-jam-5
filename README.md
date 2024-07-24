@@ -1,105 +1,77 @@
-_Brought to you by the Bevy Jam working group._
+# Bevy Jam 5 - Theme: Cycles
 
-# Bevy Quickstart
+> [!NOTE] 
+> **Goals**
+> 1. Program and visualize orbits and communications links
+> 2. Complete game loop and experience — no placeholders
+> 3. Learn Bevy
 
-This template is a great way to get started on a new [Bevy](https://bevyengine.org/) game—especially for a game jam!
-Start with a [basic project structure](#write-your-game) and [CI / CD](#release-your-game) that can deploy to [itch.io](https://itch.io).
-You can [try this template in your web browser!](https://the-bevy-flock.itch.io/bevy-quickstart)
+## Idea 1: `( S O L )         S U R V I V O R           ◦.`
 
-Don't want to read through the whole README? [@ChristopherBiscardi](https://github.com/ChristopherBiscardi) made a video on how to use the template from start to finish:
+![inspiration 1](doc/assets/inspo-1.png)
+![inspiration 2](doc/assets/inspo-2.png)
 
-[<img src="./docs/thumbnail.png" width=40% height=40% alt="A video tutorial for bevy_quickstart"/>](https://www.youtube.com/watch?v=ESBRyXClaYc)
+Core Gameplay:
 
-## Prerequisites
+- N-body physics and orbits create natural cycles
+- Satellite management combines resource management with skill-based navigation
 
-We assume that you know how to use Bevy already and have seen the [official Quick Start Guide](https://bevyengine.org/learn/quick-start/introduction/).
+Progression:
 
-## Create a new game
+1. Start with one satellite
+2. Manage orbits using arrow keys
+3. Earn money from successful links
+4. Expand fleet or upgrade existing satellites
 
-Install [`cargo-generate`](https://github.com/cargo-generate/cargo-generate) and run the following commands:
+Gameplay Loops:
 
-```sh
-cargo generate TheBevyFlock/bevy_quickstart --branch cargo-generate
-git branch --move main
-```
+- Short-term: Orbit adjustment and conjunction avoidance
+- Mid-term: Resource management (power, money, upgrades)
+- Long-term: Fleet expansion and optimization
 
-Then [create a GitHub repository](https://github.com/new) and push your local repository to it.
+Suggested Additions:
 
-<details>
-  <summary>This template can also be set up manually.</summary>
+- Periodic events like solar flares or meteor showers
+- Day/night cycles affecting power generation
+- Atmospheric drag increasing over time, requiring periodic boosts
+- Rotating ground stations to create dynamic link opportunities
 
-Navigate to the top of [this GitHub repository](https://github.com/TheBevyFlock/bevy_quickstart/) and select `Use this template > Create a new repository`:
+Visual Style:
 
-![UI demonstration](./docs/readme-manual-setup.png)
+- Use a color palette similar to the image (black background, green graphics)
+- Implement a CRT shader effect for authenticity
+- Add subtle scan lines and screen curvature
 
-Clone your new Github repository to a local repository and push a commit with the following changes:
+Audio:
 
-- Delete `LICENSE`, `README`, and `docs/` files.
-- Search for and replace instances of `bevy_quickstart` with the name of your project.
-- Adjust the `env` variables in [`.github/workflows/release.yaml`](./.github/workflows/release.yaml).
+- Lo-fi background music
+- Retro blips and beeps for UI interactions
+- Low, ominous tones for warnings
 
-</details>
+Stretch Goals:
 
-## Write your game
+- Orbiting debris that returns periodically
+- Recurring mission types tied to celestial events
+- Upgrade cycles where old satellites can be recycled for parts
 
-The best way to get started is to play around with what you find in [`src/game/`](./src/game).
+## Idea 2: `phase_shift`
 
-This template comes with a basic project structure that you may find useful:
+![inspiration 3](doc/assets/lissajous.gif)
+![inspiration 4](https://www.youtube.com/watch?v=t6nGiBzGLD8)
 
-| Path                                     | Description                                           |
-|------------------------------------------|-------------------------------------------------------|
-| [`src/lib.rs`](./src/lib.rs)             | App setup                                             |
-| [`src/screen/`](./src/screen)            | Splash screen, title screen, playing screen, etc.     |
-| [`src/game/`](./src/game)                | Game mechanics & content (replace with your own code) |
-| [`src/ui/`](./src/ui)                    | Reusable UI widgets & theming                         |
-| [`src/dev_tools.rs`](./src/dev_tools.rs) | Dev tools for dev builds                              |
-
-Feel free to move things around however you want, though.
-
-If you are new to Bevy, the patterns used in this template may look a bit weird at first glance.
-See our [Design Document](./docs/design.md) for more information on how we structured the code and why.
-
-> [!Tip]
-> Be sure to check out the [3rd-party tools](./docs/tooling.md) we recommend!
-
-## Run your game
-
-Running your game locally is very simple:
-
-- Use `cargo run` to run a native dev build.
-- Use [`trunk serve`](https://trunkrs.dev/) to run a web dev build.
-
-If you're using [VS Code](https://code.visualstudio.com/), this template comes with a [`.vscode/tasks.json`](./.vscode/tasks.json) file.
-
-<details>
-    <summary>(Optional) Improve your compile times</summary>
-
-[`.cargo/config_fast_builds.toml`](./.cargo/config_fast_builds.toml) contains documentation on how to set up your environment to improve compile times.
-After you've fiddled with it, rename it to `.cargo/config.toml` to enable it.
-
-</details>
-
-## Release your game
-
-This template uses [GitHub workflows](https://docs.github.com/en/actions/using-workflows) to run tests and build releases.
-See [Workflows](./docs/workflows.md) for more information.
-
-## Known Issues
-
-There are some known issues in Bevy that require some arcane workarounds.
-To keep this template simple, we have opted not to include those workarounds.
-You can read about them in the [Known Issues](./docs/known-issues.md) document.
-
-## License
-
-The source code in this repository is licensed under any of the following at your option:
-
-- [CC0-1.0 License](./LICENSE-CC0-1.0.txt)
-- [MIT License](./LICENSE-MIT.txt)
-- [Apache License, Version 2.0](./LICENSE-Apache-2.0.txt)
-
-We hold no patent rights to anything presented in this repository.
-
-## Credits
-
-The [assets](./assets) in this repository are all 3rd-party. See the [credits screen](./src/screen/credits.rs) for more information.
+- Oscilloscope vibe
+- Bullet hell
+- Your bullets take the path of a lissajous pattern
+    - projectile follow the line slow to medium speed like theyre on a zipline, kinda like the dots on the image below
+    - the lissajous pattern has an “end” to the line. Each projectile gets one cycle on the pattern
+    - You realistically only get “low frequency” lissajous, so your projectiles dont last forever, but it is possible to get crazy game breaking ones.
+- You can get upgrades to increase the frequency of your pattern
+    - you get x upgrades and y upgrades
+    - Frequency and Amplitude upgrades
+    - You have a limited number of projectiles that replenish with time
+- the longer your lissajous pattern the longer the projectiles stay on the screen, but the more complex and erratic their pattern so you have less aim, but technically more firepower on screen at once
+- You can get items that make your lissajous path go crazy and it makes the bullets go crazy all over the screen.
+    - These are like the audio impulse weapons that make a mushroom shape. or a world or spring, ect.
+    - They allow your projectiles to hit enemies at multiple Hz effectively being screen clear/ bomb items
+- Bosses can inflict audio disturbances to your line that can shake projectiles off it.
+    - Like maybe the bass builds through the boss fight in a cycle, each beat perturbing your line a bit more till the projectiles just shake off and fly in random directions both harming boss and you.
