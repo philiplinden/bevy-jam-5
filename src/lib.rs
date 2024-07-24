@@ -2,7 +2,6 @@
 mod dev_tools;
 mod assets;
 mod game;
-mod screen;
 mod ui;
 
 use bevy::{
@@ -33,7 +32,7 @@ impl Plugin for AppPlugin {
                 })
                 .set(WindowPlugin {
                     primary_window: Window {
-                        title: "( C A S C A D E ÷ P R O T O C O L )".to_string(),
+                        title: "( S O L )         S U R V I V O R          ◦.".to_string(),
                         canvas: Some("#bevy".to_string()),
                         fit_canvas_to_parent: true,
                         prevent_default_event_handling: true,
@@ -53,7 +52,6 @@ impl Plugin for AppPlugin {
         // Add other plugins.
         app.add_plugins((
             game::plugin,
-            screen::plugin,
             ui::plugin,
         ));
 

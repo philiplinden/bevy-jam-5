@@ -1,98 +1,13 @@
-use bevy::{
-    prelude::*,
-    utils::HashMap,
-};
+use bevy::prelude::*;
 use bevy_asset_loader::prelude::*;
+use iyes_progress::prelude::*;
 
-pub(super) fn plugin(app: &mut App) {
-    app.register_type::<HandleMap<FontKey>>();
-    app.init_resource::<HandleMap<FontKey>>();
+// struct AssetLoaderPlugin;
 
-    app.register_type::<HandleMap<SoundtrackKey>>();
-    app.init_resource::<HandleMap<SoundtrackKey>>();
-}
-
-
-
-#[derive(Copy, Clone, Eq, PartialEq, Hash, Reflect)]
-pub enum SoundtrackKey {
-    Title,
-    Credits,
-    Gameplay,
-}
-
-impl AssetKey for SoundtrackKey {
-    type Asset = AudioSource;
-}
-
-impl FromWorld for HandleMap<SoundtrackKey> {
-    fn from_world(world: &mut World) -> Self {
-        let asset_server = world.resource::<AssetServer>();
-        [
-            (
-                SoundtrackKey::Title,
-                asset_server.load("audio/soundtracks/DOS-88_Race-to-Mars.ogg"),
-            ),
-            (
-                SoundtrackKey::Credits,
-                asset_server.load("audio/soundtracks/DOS-88_Double-Tap.ogg"),
-            ),
-            (
-                SoundtrackKey::Gameplay,
-                asset_server.load("audio/soundtracks/DOS-88_Checking-Manifest.ogg"),
-            ),
-        ]
-        .into()
-    }
-}
-
-#[derive(Copy, Clone, Eq, PartialEq, Hash, Reflect)]
-pub enum FontKey {
-    Mono,
-    Sans,
-}
-
-impl AssetKey for FontKey {
-    type Asset = Font;
-}
-
-impl FromWorld for HandleMap<FontKey> {
-    fn from_world(world: &mut World) -> Self {
-        let asset_server = world.resource::<AssetServer>();
-        [
-            (
-                FontKey::Mono,
-                asset_server.load("fonts/monogram-extended.ttf"),
-            ),
-            (
-                FontKey::Sans,
-                asset_server.load("fonts/divinity-sans-regular.ttf"),
-            ),
-        ]
-        .into()
-    }
-}
-
-pub trait AssetKey: Sized {
-    type Asset: Asset;
-}
-
-#[derive(Resource, Reflect, Deref, DerefMut)]
-#[reflect(Resource)]
-pub struct HandleMap<K: AssetKey>(HashMap<K, Handle<K::Asset>>);
-
-impl<K: AssetKey, T> From<T> for HandleMap<K>
-where
-    T: Into<HashMap<K, Handle<K::Asset>>>,
-{
-    fn from(value: T) -> Self {
-        Self(value.into())
-    }
-}
-
-impl<K: AssetKey> HandleMap<K> {
-    pub fn all_loaded(&self, asset_server: &AssetServer) -> bool {
-        self.values()
-            .all(|x| asset_server.is_loaded_with_dependencies(x))
-    }
-}
+// impl Plugin for AssetLoaderPlugin {
+//     fn build(&self, app: &mut App) {
+//         app.add_plugins((
+//             ProgressPlugin::new()
+//         ));
+//     }
+// }
