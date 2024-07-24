@@ -1,14 +1,10 @@
 //! Spawn the main level by triggering other observers.
 
 use avian2d::prelude::*;
-use bevy::{
-    prelude::*,
-    sprite::{MaterialMesh2dBundle, Mesh2dHandle},
-};
+use bevy::prelude::*;
+use bevy_vector_shapes::prelude::*;
 
-use crate::game::{
-    physics::nbody::{PhysicsBodyBundle, PhysicsBody}, settings::*,
-};
+use crate::game::settings::*;
 
 pub(super) fn plugin(app: &mut App) {
     app.observe(spawn_level);
@@ -20,19 +16,18 @@ pub struct SpawnLevel;
 fn spawn_level(
     _trigger: Trigger<SpawnLevel>,
     mut commands: Commands,
-    mut meshes: ResMut<Assets<Mesh>>,
-    mut materials: ResMut<Assets<ColorMaterial>>,
 ) {
     commands.spawn((
-        MaterialMesh2dBundle {
-            mesh: Mesh2dHandle(meshes.add(Circle { radius: EARTH_RADIUS })),
-            material: materials.add(Color::Srgba(bevy::color::palettes::basic::GREEN)),
-            ..default()
-        },
-        PhysicsBodyBundle {
-            body: PhysicsBody::new(Vec2::new(0.0, 0.0), EARTH_MASS),
-            rigidbody: RigidBody::Kinematic,
-            collider: Collider::circle(EARTH_RADIUS)
-        }
+        Name::new("Earth"),
+        ShapeBundle::circle(
+            &ShapeConfig {
+                color: Color::Srgba(bevy::color::palettes::basic::GREEN),
+                hollow: true,
+                ..ShapeConfig::default_2d()
+            },
+            EARTH_RADIUS,
+        ),
+        RigidBody::Static,
+        Collider::circle(EARTH_RADIUS),
     ));
 }

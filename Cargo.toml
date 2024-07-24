@@ -26,8 +26,8 @@ winit = "0.30.4"
 sickle_ui = "0.2.1"
 iyes_progress = { version = "0.12.0", features = ["assets", "bevy_asset", "bevy_log"] }
 leafwing-input-manager = "0.14.0"
-bevy_mod_picking = { version = "0.20.1", features = ["backend_avian", "bevy_picking_avian", "bevy_picking_highlight"] }
-bevy_pancam = "0.12.0"
+bevy_mod_picking = { version = "0.20.1", features = ["backend_avian", "bevy_picking_avian",  "bevy_picking_highlight"] }
+bevy_pancam = { version = "0.12.0", features = ["bevy_egui"] }
 
 # physics
 avian2d ="0.1.1"
@@ -39,14 +39,12 @@ bevy_video_glitch = "0.2.0"
 
 # dev tools
 bevy_mod_debugdump = { version = "0.11.0", optional = true }
-bevy-inspector-egui = { version = "0.25.1", optional = true, features = ["highlight_changes"] }
+bevy-inspector-egui = { version = "0.25.1", features = ["highlight_changes"] }
 
 [features]
 default = [
     # Default to a native dev build.
     "dev_native",
-    "inspect",
-    "physics_debug",
 ]
 dev = [
     # Improve compile times for dev builds by linking Bevy as a dynamic library.
@@ -63,8 +61,6 @@ dev_native = [
     "bevy/embedded_watcher",
 ]
 main_menu = []
-inspect = ["bevy-inspector-egui"]
-physics_debug = []
 
 
 # Idiomatic Bevy code often triggers these lints, and the CI workflow treats them as errors.
