@@ -1,6 +1,6 @@
 use bevy::{color::palettes::tailwind::*, prelude::*};
 
-
+pub const BEVY_GRAY: Color = Color::srgb(0.157, 0.157, 0.157);
 pub const NODE_BACKGROUND: Color = Color::Srgba(NEUTRAL_800);
 pub const BUTTON_HOVERED_BACKGROUND: Color = Color::Srgba(GREEN_700);
 pub const BUTTON_PRESSED_BACKGROUND: Color = Color::Srgba(GREEN_600);

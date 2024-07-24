@@ -1,5 +1,6 @@
 #[cfg(feature = "dev")]
 mod dev_tools;
+mod assets;
 mod game;
 mod screen;
 mod ui;
@@ -58,7 +59,7 @@ impl Plugin for AppPlugin {
 
         // Enable dev tools for dev builds.
         #[cfg(feature = "dev")]
-        app.add_plugins(dev_tools::plugin);
+        app.add_plugins(dev_tools::DebugPlugin);
     }
 }
 

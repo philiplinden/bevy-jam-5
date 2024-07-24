@@ -41,7 +41,15 @@ const SPLASH_BACKGROUND_COLOR: Color = Color::srgb(0.157, 0.157, 0.157);
 const SPLASH_DURATION_SECS: f32 = 1.8;
 const SPLASH_FADE_DURATION_SECS: f32 = 0.6;
 
-fn spawn_splash(mut commands: Commands, asset_server: Res<AssetServer>) {
+fn spawn_splash(
+    mut commands: Commands,
+    asset_server: Res<AssetServer>,
+    mut next_screen: ResMut<NextState<Screen>>,
+) {
+    #[cfg(feature = "no_splash")]
+    next_screen.set(Screen::Title);
+
+    #[cfg(not(feature = "no_splash"))]
     commands
         .ui_root()
         .insert((
@@ -137,6 +145,6 @@ fn tick_splash_timer(time: Res<Time>, mut timer: ResMut<SplashTimer>) {
 
 fn check_splash_timer(timer: ResMut<SplashTimer>, mut next_screen: ResMut<NextState<Screen>>) {
     if timer.0.just_finished() {
-        next_screen.set(Screen::Loading);
+        next_screen.set(Screen::Title);
     }
 }

@@ -59,5 +59,3 @@ fn accelerate_particles(time: Res<Time>, mut query: Query<(&mut PhysicsBody, &mu
             velocity.0 += acceleration * time.delta_seconds();
         });
 }
-
-// fn circular_velocity(first_body: RigidBody, second_body: RigidBody)

@@ -31,6 +31,7 @@ fn enter_paused(mut commands: Commands) {
             children.button("Resume").insert(PausedAction::Resume);
             children.button("Main Menu").insert(PausedAction::Title);
         });
+    // TODO: don't forget to pause physics time!
 }
 
 fn exit_paused(mut commands: Commands) {

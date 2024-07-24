@@ -3,17 +3,11 @@
 //! for this, but you could also use `Events<E>` or `Commands`.
 
 use bevy::prelude::*;
-use bevy_vector_shapes::Shape2dPlugin;
 
 pub mod level;
-pub mod planetoids;
-pub mod satellites;
 
 pub(super) fn plugin(app: &mut App) {
     app.add_plugins((
-        Shape2dPlugin::default(),
         level::plugin,
-        planetoids::plugin,
-        satellites::plugin,
     ));
 }

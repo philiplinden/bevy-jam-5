@@ -2,7 +2,9 @@ use bevy::prelude::*;
 use bevy_pancam::{PanCam, PanCamPlugin};
 
 pub(super) fn plugin(app: &mut App) {
-    app.add_plugins(PanCamPlugin::default());
+    app.add_plugins((
+        PanCamPlugin::default(),
+    ));
 
     // Spawn the main camera.
     app.add_systems(Startup, spawn_camera);

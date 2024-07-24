@@ -5,19 +5,19 @@ use bevy::prelude::*;
 
 use super::Screen;
 use crate::{
-    game::assets::{HandleMap, SfxKey, SoundtrackKey},
+    assets::{HandleMap, SoundtrackKey},
     ui::prelude::*,
 };
 
 pub(super) fn plugin(app: &mut App) {
-    app.add_systems(OnEnter(Screen::Loading), enter_loading);
+    app.add_systems(OnEnter(Screen::Loading), enter_screen);
     app.add_systems(
         Update,
-        continue_to_title.run_if(in_state(Screen::Loading).and_then(all_assets_loaded)),
+        continue_to_next_screen.run_if(in_state(Screen::Loading).and_then(all_assets_loaded)),
     );
 }
 
-fn enter_loading(mut commands: Commands) {
+fn enter_screen(mut commands: Commands) {
     commands
         .ui_root()
         .insert(StateScoped(Screen::Loading))
@@ -28,13 +28,11 @@ fn enter_loading(mut commands: Commands) {
 
 fn all_assets_loaded(
     asset_server: Res<AssetServer>,
-    sfx_handles: Res<HandleMap<SfxKey>>,
     soundtrack_handles: Res<HandleMap<SoundtrackKey>>,
 ) -> bool {
-    sfx_handles.all_loaded(&asset_server)
-        && soundtrack_handles.all_loaded(&asset_server)
+    soundtrack_handles.all_loaded(&asset_server)
 }
 
-fn continue_to_title(mut next_screen: ResMut<NextState<Screen>>) {
-    next_screen.set(Screen::Title);
+fn continue_to_next_screen(mut next_screen: ResMut<NextState<Screen>>) {
+    next_screen.set(Screen::Playing);
 }

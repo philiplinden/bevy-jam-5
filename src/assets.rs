@@ -2,45 +2,17 @@ use bevy::{
     prelude::*,
     utils::HashMap,
 };
+use bevy_asset_loader::prelude::*;
 
 pub(super) fn plugin(app: &mut App) {
     app.register_type::<HandleMap<FontKey>>();
     app.init_resource::<HandleMap<FontKey>>();
-
-    app.register_type::<HandleMap<SfxKey>>();
-    app.init_resource::<HandleMap<SfxKey>>();
 
     app.register_type::<HandleMap<SoundtrackKey>>();
     app.init_resource::<HandleMap<SoundtrackKey>>();
 }
 
 
-#[derive(Copy, Clone, Eq, PartialEq, Hash, Reflect)]
-pub enum SfxKey {
-    ButtonHover,
-    ButtonPress,
-}
-
-impl AssetKey for SfxKey {
-    type Asset = AudioSource;
-}
-
-impl FromWorld for HandleMap<SfxKey> {
-    fn from_world(world: &mut World) -> Self {
-        let asset_server = world.resource::<AssetServer>();
-        [
-            (
-                SfxKey::ButtonHover,
-                asset_server.load("audio/sfx/BLEEOOP_Interface_Bleeps/Bleep_06.ogg"),
-            ),
-            (
-                SfxKey::ButtonPress,
-                asset_server.load("audio/sfx/BLEEOOP_Interface_Bleeps/Execute_01.ogg"),
-            ),
-        ]
-        .into()
-    }
-}
 
 #[derive(Copy, Clone, Eq, PartialEq, Hash, Reflect)]
 pub enum SoundtrackKey {

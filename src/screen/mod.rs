@@ -24,26 +24,13 @@ pub(super) fn plugin(app: &mut App) {
 }
 
 /// The game's main screen states.
-#[derive(States, Debug, Hash, PartialEq, Eq, Clone)]
+#[derive(States, Debug, Hash, PartialEq, Eq, Clone, Default)]
 pub enum Screen {
+    #[default]
     Splash,
     Loading,
     Title,
     Credits,
     Playing,
     Paused,
-}
-
-impl Default for Screen {
-    fn default() -> Self {
-        #[cfg(skip_menu)]
-        {
-            Screen::Title
-        }
-
-        #[cfg(not(skip_menu))]
-        {
-            Screen::Playing
-        }
-    }
 }

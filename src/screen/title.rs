@@ -4,13 +4,14 @@ use bevy::prelude::*;
 
 use super::Screen;
 use crate::{
-    game::{assets::SoundtrackKey, audio::soundtrack::PlaySoundtrack},
+    assets::SoundtrackKey,
+    game::audio::soundtrack::PlaySoundtrack,
     ui::prelude::*
 };
 
 pub(super) fn plugin(app: &mut App) {
-    app.add_systems(OnEnter(Screen::Title), enter_title);
-    app.add_systems(OnExit(Screen::Title), exit_title);
+    app.add_systems(OnEnter(Screen::Title), enter_screen);
+    app.add_systems(OnExit(Screen::Title), exit_screen);
 
     app.register_type::<TitleAction>();
     app.add_systems(Update, handle_title_action.run_if(in_state(Screen::Title)));
@@ -26,7 +27,7 @@ enum TitleAction {
     Exit,
 }
 
-fn enter_title(mut commands: Commands) {
+fn enter_screen(mut commands: Commands) {
     commands
         .ui_root()
         .insert(StateScoped(Screen::Title))
@@ -40,7 +41,7 @@ fn enter_title(mut commands: Commands) {
     commands.trigger(PlaySoundtrack::Key(SoundtrackKey::Title));
 }
 
-fn exit_title(mut commands: Commands) {
+fn exit_screen(mut commands: Commands) {
     // We could use [`StateScoped`] on the sound playing entites instead.
     commands.trigger(PlaySoundtrack::Disable);
     commands.trigger(PlaySoundtrack::Key(SoundtrackKey::Gameplay));
@@ -54,7 +55,7 @@ fn handle_title_action(
     for (interaction, action) in &mut button_query {
         if matches!(interaction, Interaction::Pressed) {
             match action {
-                TitleAction::Play => next_screen.set(Screen::Playing),
+                TitleAction::Play => next_screen.set(Screen::Loading),
                 TitleAction::Credits => next_screen.set(Screen::Credits),
 
                 #[cfg(not(target_family = "wasm"))]
@@ -63,5 +64,8 @@ fn handle_title_action(
                 }
             }
         }
+
+        #[cfg(feature = "autoplay")]
+        next_screen.set(Screen::Loading);
     }
 }
