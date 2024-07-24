@@ -1,7 +1,5 @@
 use bevy::{audio::PlaybackMode, prelude::*};
 
-use crate::game::assets::{HandleMap, SfxKey};
-
 pub(super) fn plugin(app: &mut App) {
     app.observe(play_sfx);
 }
@@ -9,7 +7,7 @@ pub(super) fn plugin(app: &mut App) {
 fn play_sfx(
     trigger: Trigger<PlaySfx>,
     mut commands: Commands,
-    sfx_handles: Res<HandleMap<SfxKey>>,
+    sfx_handles: Res<HandleMap<SfxAssets>>,
 ) {
     let sfx_key = match trigger.event() {
         PlaySfx::Key(key) => *key,
@@ -21,10 +19,4 @@ fn play_sfx(
             ..default()
         },
     });
-}
-
-/// Trigger this event to play a single sound effect.
-#[derive(Event)]
-pub enum PlaySfx {
-    Key(SfxKey),
 }
