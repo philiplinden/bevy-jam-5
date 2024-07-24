@@ -39,11 +39,14 @@ bevy_video_glitch = "0.2.0"
 
 # dev tools
 bevy_mod_debugdump = { version = "0.11.0", optional = true }
+bevy-inspector-egui = { version = "0.25.1", optional = true, features = ["highlight_changes"] }
 
 [features]
 default = [
     # Default to a native dev build.
     "dev_native",
+    "inspect",
+    "physics_debug",
 ]
 dev = [
     # Improve compile times for dev builds by linking Bevy as a dynamic library.
@@ -59,6 +62,10 @@ dev_native = [
     # Enable embedded asset hot reloading for native dev builds.
     "bevy/embedded_watcher",
 ]
+main_menu = []
+inspect = ["bevy-inspector-egui"]
+physics_debug = []
+
 
 # Idiomatic Bevy code often triggers these lints, and the CI workflow treats them as errors.
 # In some cases they may still signal poor code quality however, so consider commenting out these lines.

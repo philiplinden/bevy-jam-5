@@ -5,9 +5,11 @@
 use bevy::prelude::*;
 
 pub mod level;
+pub mod particles;
 
 pub(super) fn plugin(app: &mut App) {
     app.add_plugins((
         level::plugin,
+        particles::plugin,
     ));
 }
