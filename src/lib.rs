@@ -51,6 +51,7 @@ impl Plugin for AppPlugin {
 
         // Add other plugins.
         app.add_plugins((
+            assets::AssetLoaderPlugin,
             game::plugin,
             ui::plugin,
         ));
