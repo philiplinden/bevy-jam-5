@@ -1,6 +1,6 @@
 // N-body accelerations
 
-use avian2d::prelude::*;
+use avian2d::{math::FRAC_PI_2, prelude::*};
 use bevy::prelude::*;
 use particular::prelude::*;
 use physical_constants::NEWTONIAN_CONSTANT_OF_GRAVITATION;
@@ -20,27 +20,12 @@ const COMPUTE_METHOD: parallel::BarnesHut<f32> = parallel::BarnesHut {
 
 pub(super) fn plugin(app: &mut App) {
     app.insert_resource(Gravity::ZERO);
+    app.add_plugins(big_space::BigSpacePlugin::<i64>::new(true));
     // Add Particular n-body plugin
     app.add_systems(
         PhysicsSchedule,
         accelerate_particles.in_set(PhysicsStepSet::First),
     );
-}
-
-#[derive(Particle, Default)]
-#[dim(2)]
-pub struct AvianParticle {
-    position: Vec2,
-    mu: f32,
-}
-
-impl AvianParticle {
-    fn new(position: Position, mass: Mass) -> AvianParticle {
-        AvianParticle {
-            position: Vec2::from(position.to_array()),
-            mu: mass.0 * G,
-        }
-    }
 }
 
 fn accelerate_particles(
@@ -49,11 +34,23 @@ fn accelerate_particles(
 ) {
     query
         .iter()
-        .map(|(.., transform, mass)| (transform.translation.to_array(), mass.0))
+        .map(|(.., transform, mass)| (transform.translation.to_array(), mass.0 * G))
         .accelerations(&mut COMPUTE_METHOD.clone())
         .map(Vec3::from)
         .zip(&mut query)
         .for_each(|(acceleration, (mut velocity, ..))| (
             velocity.0 += Vec2 {x: acceleration.x, y: acceleration.y} * time.delta_seconds()
         ));
+}
+
+pub struct OrbitingBody {
+    pub position: Vec2,
+    pub mass: f32,
+}
+
+/// Relative velocity of Body 2 such that it has a circular orbit around Body 1
+pub fn circular_velocity(body1: OrbitingBody, body2: OrbitingBody) -> Vec2 {
+    let magnitude = f32::sqrt( ( G * body2.mass ) / ( body2.position.distance(body1.position)));
+    let direction = (body2.position - body1.position).normalize().perp();
+    direction * magnitude
 }

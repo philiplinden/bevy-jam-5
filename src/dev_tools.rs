@@ -15,6 +15,9 @@ impl Plugin for DebugPlugin {
         app.add_plugins(FrameTimeDiagnosticsPlugin);
         // Print state transitions in dev builds
         app.add_systems(Update, log_transitions::<Screen>);
-        app.add_plugins((WorldInspectorPlugin::default(), PhysicsDebugPlugin::default()));
+        app.add_plugins((
+            WorldInspectorPlugin::default(),
+            PhysicsDebugPlugin::default(),
+        ));
     }
 }

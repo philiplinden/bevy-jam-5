@@ -7,27 +7,28 @@ use bevy_vector_shapes::prelude::*;
 use crate::game::settings::*;
 
 pub(super) fn plugin(app: &mut App) {
-    app.observe(spawn_level);
+    app.observe(spawn_planet);
 }
 
 #[derive(Event, Debug)]
-pub struct SpawnLevel;
+pub struct SpawnPlanet;
 
-fn spawn_level(
-    _trigger: Trigger<SpawnLevel>,
+fn spawn_planet(
+    _trigger: Trigger<SpawnPlanet>,
     mut commands: Commands,
 ) {
     commands.spawn((
-        Name::new("Earth"),
+        Name::new("Planet"),
         ShapeBundle::circle(
             &ShapeConfig {
-                color: Color::Srgba(bevy::color::palettes::basic::GREEN),
+                color: Color::from(crate::ui::palette::EARTH),
                 hollow: true,
                 ..ShapeConfig::default_2d()
             },
-            EARTH_RADIUS,
+            PLANET_RADIUS,
         ),
         RigidBody::Static,
-        Collider::circle(EARTH_RADIUS),
+        Collider::circle(PLANET_RADIUS),
+        Mass(PLANET_MASS),
     ));
 }

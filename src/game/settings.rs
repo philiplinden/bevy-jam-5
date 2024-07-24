@@ -4,7 +4,8 @@ pub const FIXED_TIMESTEP_HZ: f64 = 120.0;
 pub const BARNES_HUT_THETA: f32 = 0.5;
 
 // Game tuning
-pub const EARTH_RADIUS: f32 = 300.0;
-pub const EARTH_MASS: f32 = 10.0E10;
+pub const PLANET_RADIUS: f32 = 6378.;
+pub const PLANET_MASS: f32 = 6.0E24;
 
-pub const PARTICLE_RADIUS: f32 = 5.0;
+pub const PARTICLE_RADIUS: f32 = 1737.;
+pub const PARTICLE_MASS: f32 =  7_342.0E22;

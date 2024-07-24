@@ -40,6 +40,7 @@ bevy_video_glitch = "0.2.0"
 # dev tools
 bevy_mod_debugdump = { version = "0.11.0", optional = true }
 bevy-inspector-egui = { version = "0.25.1", features = ["highlight_changes"] }
+big_space = "0.7.0"
 
 [features]
 default = [
