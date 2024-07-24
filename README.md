@@ -57,7 +57,7 @@ Stretch Goals:
 ## Idea 2: `phase_shift`
 
 ![inspiration 3](doc/assets/lissajous.gif)
-![inspiration 4](https://www.youtube.com/watch?v=t6nGiBzGLD8)
+[inspiration - lissajous tutorial](https://www.youtube.com/watch?v=t6nGiBzGLD8)
 
 - Oscilloscope vibe
 - Bullet hell
