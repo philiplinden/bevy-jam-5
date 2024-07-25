@@ -69,6 +69,7 @@ pub(crate) fn plugin(app: &mut App) {
                              // background: LinearRgba::BLUE,
                              background: Color::hsl(192.671, 0.800, 0.658).into(),
                              offset: Vec2::new(0.35, -0.35),
+                             begin: UVec2::new(0, 0),
                              // channels: vec![Vec2::splat(0.0), Vec2::splat(1.)],
                              channels: data,
                              // mode: Mode::XY,
@@ -95,6 +96,7 @@ pub struct OscilloscopeMaterial {
     pub foreground: Color,
     pub background: Color,
     pub offset: Vec2,
+    pub begin: UVec2,
     pub mode: Mode,
     #[storage(2, read_only)]
     pub channels: Vec<Vec2>,
@@ -109,6 +111,7 @@ pub struct OscilloscopeMaterialUniform {
     pub foreground: LinearRgba,
     pub background: LinearRgba,
     pub offset: Vec2,
+    pub begin: UVec2,
     pub mode: u32,
 }
 
@@ -122,6 +125,7 @@ impl AsBindGroupShaderType<OscilloscopeMaterialUniform> for OscilloscopeMaterial
         OscilloscopeMaterialUniform {
             foreground: LinearRgba::from(self.foreground),
             background: LinearRgba::from(self.background),
+            begin: self.begin,
             offset: self.offset,
             mode: self.mode as u32,
         }

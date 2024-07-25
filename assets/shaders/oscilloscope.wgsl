@@ -19,6 +19,7 @@ struct OscilloscopeMaterial {
     foreground: vec4<f32>,
     background: vec4<f32>,
     offset: vec2<f32>,
+    begin: vec2<u32>,
     mode: u32,
 };
 
@@ -47,19 +48,19 @@ fn time_series(p: vec2<f32>) -> f32 {
     let n = arrayLength(&channel);
     var t = -1.0;
     let dt = 2.0/f32(n);
-    var a = vec2<f32>(t, channel[0].x + material.offset.x);
+    var a = vec2<f32>(t, channel[material.begin.x + 0].x + material.offset.x);
     for (var i = 1u; i < n; i++) {
         t += dt;
-        let b = vec2<f32>(t, channel[i].x + material.offset.x);
+        let b = vec2<f32>(t, channel[(material.begin.x + i) % n].x + material.offset.x);
         d = min(d, sd_segment(p, a, b));
         a = b;
     }
 
     t = -1.0;
-    a = vec2<f32>(t, channel[0].y + material.offset.y);
+    a = vec2<f32>(t, channel[material.begin.y + 0].y + material.offset.y);
     for (var i = 1u; i < n; i++) {
         t += dt;
-        let b = vec2<f32>(t, channel[i].y + material.offset.y);
+        let b = vec2<f32>(t, channel[(material.begin.y + i) % n].y + material.offset.y);
         d = min(d, sd_segment(p, a, b));
         a = b;
     }
