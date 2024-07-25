@@ -1,4 +1,4 @@
-# Concept - `( S O L )         S U R V I V O R           ◦.`
+# Concept - `( S O L )    S U R V I V O R     ◦.`
 _Grow a fleet of satellites and keep your business alive through solar cycles_
 _and other anomalies. Upgrade your satellites or strength in numbers? Use lunar_
 _cycles and orbital resonance to your advantage? Strategize and adapt to_
