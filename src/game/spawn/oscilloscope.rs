@@ -72,13 +72,34 @@ pub(crate) fn plugin(app: &mut App) {
                              begin: UVec2::new(0, 0),
                              // channels: vec![Vec2::splat(0.0), Vec2::splat(1.)],
                              channels: data,
-                             // mode: Mode::XY,
-                             mode: Mode::TimeSeries,
+                             mode: Mode::XY,
+                             // mode: Mode::TimeSeries,
                              // color_texture: Some(asset_server.load("branding/icon.png")),
                          }),
                          ..default()
                      });
-                 });
+                 })
+        .add_systems(Update, update_wave_form)
+        ;
+}
+
+fn update_wave_form(mut materials: ResMut<Assets<OscilloscopeMaterial>>, time: Res<Time>) {
+    for (id, material) in materials.iter_mut() {
+        let x = WaveForm {
+            amp: 0.25,
+            phase: time.elapsed_seconds(),
+            ..default()
+        };
+        let y = WaveForm {
+            freq: 1.5,
+            ..x
+        };
+        let data: Vec<Vec2> = x.iter(0.0, 0.1)
+                               .zip(y.iter(0.0, 0.1))
+                               .take(100).map(|(x, y)| Vec2::new(x, y)).collect();
+        material.channels = data;
+
+    }
 }
 
 #[derive(Debug, Default, Clone, Copy)]
