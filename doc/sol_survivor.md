@@ -7,6 +7,13 @@ _changing conditions. Beware---the Sun is angry this year._
 Sol Survivor is a tower-defense idle game created for
 [Bevy Jam #5](https://itch.io/jam/bevy-jam-5) with the theme: **cycles**.
 
+## Credits
+Philip Linden - Concept & code
+
+Austin Bodzas - Concept dev
+
+David Breen - Concept dev
+
 ## Platform
 Although Bevy is cross-platform, the focus of this project is to build for web
 and host it on itch.io in an embedded Web Assembly player.
