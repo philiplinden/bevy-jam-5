@@ -15,13 +15,13 @@ and host it on itch.io in an embedded Web Assembly player.
 Core Gameplay:
 
 - N-body physics and orbits create natural cycles
-- Satellite management combines resource management with skill-based navigation
+- Satellite management combines resource management with upgrade-based progression
 
 Progression:
 
 1. Start with one satellite
-2. Manage orbits using arrow keys
-3. Earn money from successful links
+2. ~~Manage orbits using arrow keys~~ Click for a circular orbit. Click and drag for an elliptical orbit. Cost is calculated by an approximate scale proportional to how "exotic" or energetic the orbit is.
+3. Earn money from successful links to ground stations
 4. Expand fleet or upgrade existing satellites
 
 ## Look & Feel
