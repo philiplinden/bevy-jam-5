@@ -3,7 +3,11 @@
 use bevy::{
     prelude::*,
     reflect::TypePath,
-    render::render_resource::{AsBindGroup, ShaderRef},
+    render::{
+    render_asset::RenderAssets,
+        render_resource::{AsBindGroup, ShaderRef, ShaderType, AsBindGroupShaderType},
+    texture::{GpuImage, Image},
+    },
     sprite::{Material2d, Material2dPlugin, MaterialMesh2dBundle},
 };
 
@@ -45,10 +49,13 @@ pub(crate) fn plugin(app: &mut App) {
                  mut meshes: ResMut<Assets<Mesh>>,
                  mut materials: ResMut<Assets<OscilloscopeMaterial>>,
                  | {
-                     let x = WaveForm::default();
-                     let y = WaveForm {
-                         freq: 1.1,
+                     let x = WaveForm {
+                         amp: 0.25,
                          ..default()
+                     };
+                     let y = WaveForm {
+                         freq: 1.5,
+                         ..x
                      };
                      let data = x.iter(0.0, 0.1)
                          .zip(y.iter(0.0, 0.1))
@@ -61,8 +68,11 @@ pub(crate) fn plugin(app: &mut App) {
                              foreground: Color::hsl(118.882, 0.535, 0.109).into(),
                              // background: LinearRgba::BLUE,
                              background: Color::hsl(192.671, 0.800, 0.658).into(),
+                             offset: Vec2::new(0.35, -0.35),
                              // channels: vec![Vec2::splat(0.0), Vec2::splat(1.)],
                              channels: data,
+                             // mode: Mode::XY,
+                             mode: Mode::TimeSeries,
                              // color_texture: Some(asset_server.load("branding/icon.png")),
                          }),
                          ..default()
@@ -70,13 +80,22 @@ pub(crate) fn plugin(app: &mut App) {
                  });
 }
 
+#[derive(Debug, Default, Clone, Copy)]
+pub enum Mode {
+    #[default]
+    XY = 1,
+    TimeSeries = 2,
+}
+
 // This is the struct that will be passed to your shader
 #[derive(Asset, TypePath, AsBindGroup, Debug, Clone)]
+// #[reflect(Default, Debug)]
+#[uniform(0, OscilloscopeMaterialUniform)]
 pub struct OscilloscopeMaterial {
-    #[uniform(0)]
-    pub foreground: LinearRgba,
-    #[uniform(1)]
-    pub background: LinearRgba,
+    pub foreground: Color,
+    pub background: Color,
+    pub offset: Vec2,
+    pub mode: Mode,
     #[storage(2, read_only)]
     pub channels: Vec<Vec2>,
     // #[texture(3)]
@@ -84,10 +103,29 @@ pub struct OscilloscopeMaterial {
     // color_texture: Option<Handle<Image>>,
 }
 
-impl OscilloscopeMaterial {
+/// The GPU representation of the uniform data of a [`OscilloscopeMaterial`].
+#[derive(Clone, Default, ShaderType)]
+pub struct OscilloscopeMaterialUniform {
+    pub foreground: LinearRgba,
+    pub background: LinearRgba,
+    pub offset: Vec2,
+    pub mode: u32,
+}
 
+impl AsBindGroupShaderType<OscilloscopeMaterialUniform> for OscilloscopeMaterial {
+    fn as_bind_group_shader_type(&self, _images: &RenderAssets<GpuImage>) -> OscilloscopeMaterialUniform {
+        // let mut flags = OscilloscopeMaterialFlags::NONE;
+        // if self.texture.is_some() {
+        //     flags |= OscilloscopeMaterialFlags::TEXTURE;
+        // }
 
-
+        OscilloscopeMaterialUniform {
+            foreground: LinearRgba::from(self.foreground),
+            background: LinearRgba::from(self.background),
+            offset: self.offset,
+            mode: self.mode as u32,
+        }
+    }
 }
 
 /// The Material2d trait is very configurable, but comes with sensible defaults for all methods.

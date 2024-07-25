@@ -7,6 +7,7 @@
 #import bevy_sprite::mesh2d_vertex_output::VertexOutput
 // we can import items from shader modules in the assets folder with a quoted path
 //
+//
 @group(0) @binding(0) var<uniform> view: View;
 #ifdef IS_2D
 @group(0) @binding(1) var<uniform> globals: Globals; // Works on 2d.
@@ -14,14 +15,17 @@
 @group(0) @binding(9) var<uniform> globals: Globals; // Works on 3d.
 #endif
 
-const COLOR_MULTIPLIER: vec4<f32> = vec4<f32>(1.0, 1.0, 1.0, 0.5);
+struct OscilloscopeMaterial {
+    foreground: vec4<f32>,
+    background: vec4<f32>,
+    offset: vec2<f32>,
+    mode: u32,
+};
 
-@group(2) @binding(0) var<uniform> foreground: vec4<f32>;
-@group(2) @binding(1) var<uniform> background: vec4<f32>;
+@group(2) @binding(0) var<uniform> material: OscilloscopeMaterial;
+// @group(2) @binding(1) var<uniform> material.background: vec4<f32>;
 @group(2) @binding(2) var<storage> channel: array<vec2<f32>>;
-// @group(2) @binding(1) var base_color_texture: texture_2d<f32>;
-// @group(2) @binding(2) var base_color_sampler: sampler;
-//
+
 fn sd_segment(p: vec2<f32>, a: vec2<f32>, b: vec2<f32>) -> f32 {
     let pa = p - a;
     let ba = b - a;
@@ -30,7 +34,40 @@ fn sd_segment(p: vec2<f32>, a: vec2<f32>, b: vec2<f32>) -> f32 {
 }
 
 fn sdf(p: vec2<f32>) -> f32 {
-    var d = 1000000000.0;
+    if material.mode == 1u {
+        return xy_mode(p);
+    } else { //if material.mode == 2u {
+        return time_series(p);
+    }
+}
+
+
+fn time_series(p: vec2<f32>) -> f32 {
+    var d = 16777216.0;
+    let n = arrayLength(&channel);
+    var t = -1.0;
+    let dt = 2.0/f32(n);
+    var a = vec2<f32>(t, channel[0].x + material.offset.x);
+    for (var i = 1u; i < n; i++) {
+        t += dt;
+        let b = vec2<f32>(t, channel[i].x + material.offset.x);
+        d = min(d, sd_segment(p, a, b));
+        a = b;
+    }
+
+    t = -1.0;
+    a = vec2<f32>(t, channel[0].y + material.offset.y);
+    for (var i = 1u; i < n; i++) {
+        t += dt;
+        let b = vec2<f32>(t, channel[i].y + material.offset.y);
+        d = min(d, sd_segment(p, a, b));
+        a = b;
+    }
+    return d;
+}
+
+fn xy_mode(p: vec2<f32>) -> f32 {
+    var d = 16777216.0;
     let n = arrayLength(&channel);
     var a = channel[0];
     for (var i = 1u; i < n; i++) {
@@ -43,11 +80,8 @@ fn sdf(p: vec2<f32>) -> f32 {
 
 fn effect(d: f32, pp: vec2<f32>, resolution: vec2<f32>) -> vec3<f32> {
     let aa: f32 = 2.0 / resolution.y;
-    // Green foreground and blue background HSV colors from the original.
-    // var fg: vec3<f32> = hsv2rgb(vec3<f32>(0.33, 0.85, 0.025));
-    // var bg: vec3<f32> = hsv2rgb(vec3<f32>(0.55, 0.85, 0.85));
-    let fg = foreground.rgb;
-    let bg = background.rgb;
+    let fg = material.foreground.rgb;
+    let bg = material.background.rgb;
     var col: vec3<f32> = 0.1 * bg.rgb;
     col += fg.rgb / sqrt(abs(d));
     col += bg.rgb * smoothstep(aa, -aa, (d - 0.001));
@@ -78,7 +112,6 @@ fn to_linear(nonlinear: vec4<f32>) -> vec4<f32> {
 
 @fragment
 fn fragment(in: VertexOutput) -> @location(0) vec4<f32> {
-
     let q: vec2<f32> = in.uv;
     var p: vec2<f32> = -1.0 + 2.0 * q;
     let resolution: vec2<f32> = view.viewport.zw;
@@ -94,5 +127,4 @@ fn fragment(in: VertexOutput) -> @location(0) vec4<f32> {
 #else
     return c;
 #endif
-    // return foreground_color;// * textureSample(base_color_texture, base_color_sampler, mesh.uv) * COLOR_MULTIPLIER;
 }
