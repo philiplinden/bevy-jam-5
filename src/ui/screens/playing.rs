@@ -10,6 +10,7 @@ pub(super) fn plugin(app: &mut App) {
 }
 
 fn enter_playing(mut commands: Commands) {
-    commands.trigger(planetoids::SpawnPlanet);
-    commands.trigger(satellites::SpawnSatellite);
+    // commands.trigger(planetoids::SpawnPlanet);
+    // commands.trigger(satellites::SpawnSatellite);
+    commands.trigger(oscilloscope::SpawnOscilloscope);
 }
