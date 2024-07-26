@@ -8,6 +8,7 @@ use bevy::{
     asset::AssetMetaCheck,
     audio::{AudioPlugin, Volume},
     prelude::*,
+    window::{EnabledButtons, WindowTheme},
 };
 
 pub struct AppPlugin;
@@ -32,10 +33,17 @@ impl Plugin for AppPlugin {
                 })
                 .set(WindowPlugin {
                     primary_window: Window {
-                        title: "( S O L )         S U R V I V O R           ◦.".to_string(),
+                        title: "[ p h a s e ~ s h i f t ]".to_string(),
                         canvas: Some("#bevy".to_string()),
                         fit_canvas_to_parent: true,
                         prevent_default_event_handling: true,
+                        resolution: (1024., 1024.).into(),
+                        resizable: false,
+                        window_theme: Some(WindowTheme::Dark),
+                        enabled_buttons: EnabledButtons {
+                            maximize: false,
+                            ..Default::default()
+                        },
                         ..default()
                     }
                     .into(),

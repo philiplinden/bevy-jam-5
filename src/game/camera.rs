@@ -28,9 +28,11 @@ fn update_settings(mut settings: Query<&mut VideoGlitchSettings>, time: Res<Time
 }
 
 fn spawn_camera(mut commands: Commands) {
+    let mut camera_bundle = Camera2dBundle::default();
+    camera_bundle.projection.scaling_mode = bevy::render::camera::ScalingMode::Fixed {width: 512., height: 512.};
     commands.spawn((
         Name::new("Camera"),
-        Camera2dBundle::default(),
+        camera_bundle,
         // Render all UI to this camera.
         // Not strictly necessary since we only use one camera,
         // but if we don't use this component, our UI will disappear as soon

@@ -27,7 +27,9 @@ fn enter_credits(mut commands: Commands) {
         .insert(StateScoped(Screen::Credits))
         .with_children(|children| {
             children.header("Made by");
-            children.label("Philip Linden - @philiplinden");
+            children.label("Philip Linden @philiplinden - Concept & Code");
+            children.label("Shane Celis @shanecelis - Art & Code");
+            children.label("David Breen - Concept");
 
             children.header("Assets");
             children.label("Bevy logo - All rights reserved by the Bevy Foundation. Used with permission.");
