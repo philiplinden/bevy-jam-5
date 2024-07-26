@@ -8,6 +8,23 @@ pub(super) fn plugin(app: &mut App) {
 
     // Spawn the main camera.
     app.add_systems(Startup, spawn_camera);
+       // .add_systems(Update, update_settings);
+}
+
+// Change the intensity over time to show that the effect is controlled from the main world
+fn update_settings(mut settings: Query<&mut VideoGlitchSettings>, time: Res<Time>) {
+    for mut setting in &mut settings {
+        let mut intensity = time.elapsed_seconds();
+        // Make it loop periodically.
+        intensity = intensity.sin();
+        // Remap it to 0..1 because the intensity can't be negative.
+        intensity = intensity * 0.5 + 0.5;
+        // Set the intensity.
+        //
+        // This will then be extracted to the render world and uploaded to the
+        // gpu automatically by the [`UniformComponentPlugin`].
+        setting.intensity = intensity;
+    }
 }
 
 fn spawn_camera(mut commands: Commands) {
@@ -23,7 +40,7 @@ fn spawn_camera(mut commands: Commands) {
         IsDefaultUiCamera,
         // This component is also used to determine on which camera to run the post processing effect.
         VideoGlitchSettings {
-            intensity: 1.0,
+            intensity: 0.1,
             color_aberration: Mat3::IDENTITY,
         },
     ));

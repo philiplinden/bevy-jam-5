@@ -107,3 +107,6 @@ inherits = "release"
 opt-level = 3
 # Keep debug information in the binary.
 strip = "none"
+
+[patch.crates-io]
+bevy_video_glitch = { git = "https://github.com/shanecelis/bevy_video_glitch.git" }
