@@ -1,5 +1,6 @@
 use bevy::prelude::*;
 use bevy_video_glitch::{VideoGlitchPlugin, VideoGlitchSettings};
+use crate::game::crt::CrtSettings;
 
 pub(super) fn plugin(app: &mut App) {
     app.add_plugins((
@@ -42,9 +43,12 @@ fn spawn_camera(mut commands: Commands) {
         // for debugging. So it's good to have this here for future-proofing.
         IsDefaultUiCamera,
         // This component is also used to determine on which camera to run the post processing effect.
-        VideoGlitchSettings {
-            intensity: 0.4,
-            color_aberration: Mat3::IDENTITY,
-        },
+        // VideoGlitchSettings {
+        //     intensity: 0.4,
+        //     color_aberration: Mat3::IDENTITY,
+        // },
+        CrtSettings {
+            intensity: 1.0,
+        }
     ));
 }

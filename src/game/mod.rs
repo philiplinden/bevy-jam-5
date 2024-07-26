@@ -5,6 +5,7 @@ use bevy::prelude::*;
 pub mod audio;
 pub mod camera;
 pub mod oscilloscope;
+pub mod crt;
 
 use crate::ui::interaction;
 
@@ -13,6 +14,7 @@ pub(super) fn plugin(app: &mut App) {
         camera::plugin,
         audio::plugin,
         oscilloscope::plugin,
+        crt::plugin,
     ));
 }
 
