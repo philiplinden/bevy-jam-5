@@ -7,7 +7,7 @@ use bevy::{
 };
 
 use display::{OscilloscopeMaterial, Mode};
-use waveform::WaveForm;
+pub use waveform::Waveform;
 use crate::ui::palette::{OSCILLOSCOPE_SCREEN_COLOR, WAVEFORM_COLOR};
 
 
@@ -30,11 +30,11 @@ fn new_oscilloscope(
     window: Query<&Window>,
 ) {
         let window = window.single();
-        let x = WaveForm {
+        let x = Waveform {
             amp: 0.25,
             ..default()
         };
-        let y = WaveForm {
+        let y = Waveform {
             freq: 1.5,
             ..x
         };

@@ -1,9 +1,13 @@
 use bevy::prelude::*;
+use leafwing_input_manager::prelude::*;
+
+use crate::game::oscilloscope::waveform::*;
 
 pub(super) fn plugin(app: &mut App) {
     app.register_type::<InteractionPalette>();
     app.add_systems(Update, apply_interaction_palette);
 }
+
 
 pub type InteractionQuery<'w, 's, T> =
     Query<'w, 's, (&'static Interaction, T), Changed<Interaction>>;
@@ -27,5 +31,32 @@ fn apply_interaction_palette(
             Interaction::Pressed => palette.pressed,
         }
         .into();
+    }
+}
+
+#[derive(Component)]
+pub struct WaveformControls {
+    pub phase_axis: VirtualAxis,
+    pub frequency_axis: VirtualAxis
+}
+
+#[derive(Bundle)]
+pub struct WaveformControlsBundle {
+    pub x_waveform: WaveformControls,
+    pub y_waveform: WaveformControls,
+}
+
+impl Default for WaveformControlsBundle {
+    fn default() -> Self {
+        WaveformControlsBundle {
+            x_waveform: WaveformControls {
+                phase_axis: VirtualAxis::horizontal_arrow_keys(),
+                frequency_axis: VirtualAxis::vertical_arrow_keys(),
+            },
+            y_waveform: WaveformControls {
+                phase_axis: VirtualAxis::ad(),
+                frequency_axis: VirtualAxis::ws(),
+            },
+        }
     }
 }

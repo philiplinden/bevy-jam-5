@@ -3230,6 +3230,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "bebb7f3227809906ca7ccc981aedf7805b5edb422b4265290cc749316c0faba4"
 dependencies = [
  "bevy",
+ "bevy_egui",
  "derive_more",
  "itertools 0.13.0",
  "leafwing_input_manager_macros",
