@@ -1,41 +1,17 @@
 //! A shader and a material that uses it.
 use bevy::{
-    core_pipeline::{
-        core_2d::graph::{Core2d, Node2d},
-        core_3d::graph::{Core3d, Node3d},
-        fullscreen_vertex_shader::fullscreen_shader_vertex_state,
-    },
-    ecs::{system::SystemState, query::QueryItem},
     prelude::*,
     reflect::TypePath,
     render::{
-        extract_component::{
-            ComponentUniforms, ExtractComponent, ExtractComponentPlugin, UniformComponentPlugin,
-        },
-        globals::{GlobalsBuffer, GlobalsUniform},
         render_asset::RenderAssets,
-        render_graph::{
-            NodeRunError, RenderGraphApp, RenderGraphContext, RenderLabel, ViewNode, ViewNodeRunner,
-        },
         render_resource::{
-            binding_types::{sampler, texture_2d, uniform_buffer},
-            AsBindGroup, AsBindGroupShaderType, BindGroupEntries, BindGroupLayout,
-            BindGroupLayoutEntries, CachedRenderPipelineId, ColorTargetState, ColorWrites,
-            FragmentState, MultisampleState, Operations, PipelineCache, PrimitiveState,
-            RenderPassColorAttachment, RenderPassDescriptor, RenderPipelineDescriptor, Sampler,
-            SamplerBindingType, SamplerDescriptor, ShaderRef, ShaderStages, ShaderType,
-            TextureFormat, TextureSampleType,
+            AsBindGroup, AsBindGroupShaderType, ShaderRef, ShaderType,
         },
-        renderer::{RenderContext, RenderDevice},
-        texture::BevyDefault,
         texture::GpuImage,
-        view::ViewTarget,
-        RenderApp,
     },
     sprite::{Material2d, Material2dPlugin},
 };
 
-use crate::assets::ShaderAssets;
 
 pub(super) fn plugin(app: &mut App) {
     app.add_plugins((

@@ -45,8 +45,8 @@ fn new_oscilloscope(
             mesh: meshes.add(Rectangle::new(window.resolution.width(), window.resolution.height())).into(),
             transform: Transform::default(),
             material: materials.add(OscilloscopeMaterial {
-                foreground: WAVEFORM_COLOR.into(),
-                background: OSCILLOSCOPE_SCREEN_COLOR.into(),
+                foreground: WAVEFORM_COLOR,
+                background: OSCILLOSCOPE_SCREEN_COLOR,
                 offset: Vec2::new(0.35, -0.35),
                 begin: UVec2::new(0, 0),
                 // channels: vec![Vec2::splat(0.0), Vec2::splat(1.)],
