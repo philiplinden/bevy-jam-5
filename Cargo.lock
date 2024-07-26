@@ -1604,8 +1604,7 @@ dependencies = [
 [[package]]
 name = "bevy_video_glitch"
 version = "0.2.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5ce556137f668dee65f811cef568e8340d54cc1ec78c398c2c1fed58185584a5"
+source = "git+https://github.com/shanecelis/bevy_video_glitch.git#e17daa9693503d35b28b4f08ef86b935b735feb4"
 dependencies = [
  "bevy",
 ]

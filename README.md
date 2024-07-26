@@ -55,6 +55,10 @@ Stretch Goals:
       perturbing your line a bit more till the projectiles just shake off and
       fly in random directions both harming boss and you.
 
+## Before Release TODO
+
+- [ ] Publish new bevy_video_glitch; remove cargo patch.
+
 ## Look & Feel
 The interface looks like a classic analog oscilloscope. Changing parameters with
 upgrades or user inputs directly reflects the turning of dials.
