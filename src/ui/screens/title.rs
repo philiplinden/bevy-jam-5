@@ -9,7 +9,7 @@ pub(super) fn plugin(app: &mut App) {
     app.add_systems(OnEnter(Screen::Title), enter_screen);
 
     app.register_type::<TitleAction>();
-    app.add_systems(Update, handle_title_action.run_if(in_state(Screen::Title)));
+    // app.add_systems(Update, handle_title_action.run_if(in_state(Screen::Title)));
 }
 
 #[derive(Component, Debug, Clone, Copy, PartialEq, Eq, Reflect)]
@@ -35,25 +35,25 @@ fn enter_screen(mut commands: Commands) {
         });
 }
 
-fn handle_title_action(
-    mut next_screen: ResMut<NextState<Screen>>,
-    mut button_query: InteractionQuery<&TitleAction>,
-    #[cfg(not(target_family = "wasm"))] mut app_exit: EventWriter<AppExit>,
-) {
-    for (interaction, action) in &mut button_query {
-        if matches!(interaction, Interaction::Pressed) {
-            match action {
-                TitleAction::Play => next_screen.set(Screen::Loading),
-                TitleAction::Credits => next_screen.set(Screen::Credits),
+// fn handle_title_action(
+//     mut next_screen: ResMut<NextState<Screen>>,
+//     mut button_query: InteractionQuery<&TitleAction>,
+//     #[cfg(not(target_family = "wasm"))] mut app_exit: EventWriter<AppExit>,
+// ) {
+//     for (interaction, action) in &mut button_query {
+//         if matches!(interaction, Interaction::Pressed) {
+//             match action {
+//                 TitleAction::Play => next_screen.set(Screen::Loading),
+//                 TitleAction::Credits => next_screen.set(Screen::Credits),
 
-                #[cfg(not(target_family = "wasm"))]
-                TitleAction::Exit => {
-                    app_exit.send(AppExit::Success);
-                }
-            }
-        }
+//                 #[cfg(not(target_family = "wasm"))]
+//                 TitleAction::Exit => {
+//                     app_exit.send(AppExit::Success);
+//                 }
+//             }
+//         }
 
-        #[cfg(feature = "autoplay")]
-        next_screen.set(Screen::Loading);
-    }
-}
+//         #[cfg(feature = "autoplay")]
+//         next_screen.set(Screen::Loading);
+//     }
+// }
