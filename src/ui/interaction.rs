@@ -34,29 +34,13 @@ fn apply_interaction_palette(
     }
 }
 
+pub const X_PHASE_AXIS: VirtualAxis = VirtualAxis::horizontal_arrow_keys();
+pub const X_FREQUENCY_AXIS: VirtualAxis = VirtualAxis::vertical_arrow_keys();
+pub const Y_PHASE_AXIS: VirtualAxis = VirtualAxis::ad();
+pub const Y_FREQUENCY_AXIS: VirtualAxis = VirtualAxis::ws();
+
 #[derive(Component)]
 pub struct WaveformControls {
     pub phase_axis: VirtualAxis,
-    pub frequency_axis: VirtualAxis
-}
-
-#[derive(Bundle)]
-pub struct WaveformControlsBundle {
-    pub x_waveform: WaveformControls,
-    pub y_waveform: WaveformControls,
-}
-
-impl Default for WaveformControlsBundle {
-    fn default() -> Self {
-        WaveformControlsBundle {
-            x_waveform: WaveformControls {
-                phase_axis: VirtualAxis::horizontal_arrow_keys(),
-                frequency_axis: VirtualAxis::vertical_arrow_keys(),
-            },
-            y_waveform: WaveformControls {
-                phase_axis: VirtualAxis::ad(),
-                frequency_axis: VirtualAxis::ws(),
-            },
-        }
-    }
+    pub frequency_axis: VirtualAxis,
 }

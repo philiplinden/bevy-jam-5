@@ -40,6 +40,7 @@ struct CrtPlugin;
 
 impl Plugin for CrtPlugin {
     fn build(&self, app: &mut App) {
+        app.register_type::<CrtSettings>();
         app.add_plugins((
             // The settings will be a component that lives in the main world but will
             // be extracted to the render world every frame.
