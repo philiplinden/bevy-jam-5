@@ -5,7 +5,6 @@ use bevy::prelude::*;
 pub mod audio;
 pub mod camera;
 pub mod physics;
-pub mod settings;
 pub mod spawn;
 
 pub(super) fn plugin(app: &mut App) {

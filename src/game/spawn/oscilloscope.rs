@@ -6,10 +6,12 @@ use bevy::{
     render::{
     render_asset::RenderAssets,
         render_resource::{AsBindGroup, ShaderRef, ShaderType, AsBindGroupShaderType},
-    texture::{GpuImage, Image},
+    texture::GpuImage,
     },
     sprite::{Material2d, Material2dPlugin, MaterialMesh2dBundle},
 };
+
+use crate::ui::palette::{OSCILLOSCOPE_SCREEN_COLOR, WAVEFORM_COLOR};
 
 /// This example uses a shader source file from the assets subdirectory
 const SHADER_ASSET_PATH: &str = "shaders/oscilloscope.wgsl";
@@ -17,6 +19,7 @@ const SHADER_ASSET_PATH: &str = "shaders/oscilloscope.wgsl";
 #[derive(Event)]
 pub struct SpawnOscilloscope;
 
+#[derive(Component)]
 pub struct WaveForm {
     amp: f32,
     freq: f32,
@@ -44,41 +47,7 @@ impl WaveForm {
 
 pub(crate) fn plugin(app: &mut App) {
     app.add_plugins(Material2dPlugin::<OscilloscopeMaterial>::default())
-        .observe(|_trigger: Trigger<SpawnOscilloscope>,
-                 mut commands: Commands,
-                 mut meshes: ResMut<Assets<Mesh>>,
-                 mut materials: ResMut<Assets<OscilloscopeMaterial>>,
-                 | {
-                     let x = WaveForm {
-                         amp: 0.25,
-                         ..default()
-                     };
-                     let y = WaveForm {
-                         freq: 1.5,
-                         ..x
-                     };
-                     let data = x.iter(0.0, 0.1)
-                         .zip(y.iter(0.0, 0.1))
-                                 .take(1000).map(|(x, y)| Vec2::new(x, y)).collect();
-                     commands.spawn(MaterialMesh2dBundle {
-                         mesh: meshes.add(Rectangle::default()).into(),
-                         transform: Transform::default().with_scale(Vec3::splat(512.)),
-                         material: materials.add(OscilloscopeMaterial {
-                             // foreground: LinearRgba::GREEN,
-                             foreground: Color::hsl(118.882, 0.535, 0.109).into(),
-                             // background: LinearRgba::BLUE,
-                             background: Color::hsl(192.671, 0.800, 0.658).into(),
-                             offset: Vec2::new(0.35, -0.35),
-                             begin: UVec2::new(0, 0),
-                             // channels: vec![Vec2::splat(0.0), Vec2::splat(1.)],
-                             channels: data,
-                             mode: Mode::XY,
-                             // mode: Mode::TimeSeries,
-                             // color_texture: Some(asset_server.load("branding/icon.png")),
-                         }),
-                         ..default()
-                     });
-                 })
+        .observe(new_oscilloscope)
         .add_systems(Update, update_wave_form)
         ;
 }
@@ -100,6 +69,40 @@ fn update_wave_form(mut materials: ResMut<Assets<OscilloscopeMaterial>>, time: R
         material.channels = data;
 
     }
+}
+
+fn new_oscilloscope(
+    trigger: Trigger<SpawnOscilloscope>,
+    mut commands: Commands,
+    mut meshes: ResMut<Assets<Mesh>>,
+    mut materials: ResMut<Assets<OscilloscopeMaterial>>) {
+        let x = WaveForm {
+            amp: 0.25,
+            ..default()
+        };
+        let y = WaveForm {
+            freq: 1.5,
+            ..x
+        };
+        let data = x.iter(0.0, 0.1)
+            .zip(y.iter(0.0, 0.1))
+                    .take(1000).map(|(x, y)| Vec2::new(x, y)).collect();
+        commands.spawn(MaterialMesh2dBundle {
+            mesh: meshes.add(Rectangle::default()).into(),
+            transform: Transform::default().with_scale(Vec3::splat(512.)),
+            material: materials.add(OscilloscopeMaterial {
+                foreground: WAVEFORM_COLOR.into(),
+                background: OSCILLOSCOPE_SCREEN_COLOR.into(),
+                offset: Vec2::new(0.35, -0.35),
+                begin: UVec2::new(0, 0),
+                // channels: vec![Vec2::splat(0.0), Vec2::splat(1.)],
+                channels: data,
+                mode: Mode::XY,
+                // mode: Mode::TimeSeries,
+                // color_texture: Some(asset_server.load("branding/icon.png")),
+            }),
+            ..default()
+        });
 }
 
 #[derive(Debug, Default, Clone, Copy)]

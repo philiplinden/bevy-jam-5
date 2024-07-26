@@ -4,14 +4,10 @@
 
 use bevy::prelude::*;
 
-pub mod planetoids;
-pub mod satellites;
 pub mod oscilloscope;
 
 pub(super) fn plugin(app: &mut App) {
     app.add_plugins((
-        planetoids::plugin,
-        satellites::plugin,
         oscilloscope::plugin,
     ));
 }

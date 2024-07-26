@@ -483,7 +483,6 @@ dependencies = [
  "bevy_asset_loader",
  "bevy_mod_debugdump",
  "bevy_mod_picking",
- "bevy_pancam",
  "bevy_vector_shapes",
  "bevy_video_glitch",
  "big_space",
@@ -1124,16 +1123,6 @@ dependencies = [
  "bevy_utils",
  "bevy_window",
  "crossbeam-channel",
-]
-
-[[package]]
-name = "bevy_pancam"
-version = "0.12.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f911424ae6dad142b8e1b7475a5dfe16031cbe0fe7b54cc386e7e74a8722ae59"
-dependencies = [
- "bevy",
- "bevy_egui",
 ]
 
 [[package]]

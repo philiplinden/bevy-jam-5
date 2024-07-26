@@ -1,10 +1,8 @@
 use bevy::prelude::*;
-use bevy_pancam::{PanCam, PanCamPlugin};
 use bevy_video_glitch::{VideoGlitchPlugin, VideoGlitchSettings};
 
 pub(super) fn plugin(app: &mut App) {
     app.add_plugins((
-        PanCamPlugin::default(),
         VideoGlitchPlugin,
     ));
 
@@ -23,7 +21,6 @@ fn spawn_camera(mut commands: Commands) {
         // [ui node outlines](https://bevyengine.org/news/bevy-0-14/#ui-node-outline-gizmos)
         // for debugging. So it's good to have this here for future-proofing.
         IsDefaultUiCamera,
-        PanCam::default(),
         // This component is also used to determine on which camera to run the post processing effect.
         VideoGlitchSettings {
             intensity: 1.0,
