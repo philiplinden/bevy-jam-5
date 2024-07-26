@@ -16,6 +16,8 @@ impl Plugin for AssetLoaderPlugin {
             LoadingState::new(LoadingStatus::Working)
                 .load_collection::<FontAssets>()
                 .load_collection::<SoundtrackAssets>()
+                .load_collection::<ShaderAssets>()
+                .init_resource::<ShaderAssets>(),
         );
         app.add_systems(
             Update, print_progress.run_if(in_state(LoadingStatus::Working))
@@ -61,4 +63,10 @@ pub struct FontAssets {
 
     #[asset(path = "fonts/monogram-extended.ttf")]
     pub mono: Handle<Font>,
+}
+
+#[derive(AssetCollection, Resource, Default)]
+pub struct ShaderAssets {
+    #[asset(path = "shaders/crt.wgsl")]
+    pub crt: Handle<Shader>,
 }
