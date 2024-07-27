@@ -2,7 +2,7 @@
 
 use {bevy::prelude::*, bevy_fundsp::prelude::*, uuid::Uuid};
 
-struct PianoPlugin;
+pub struct PianoPlugin;
 
 struct PianoDsp<F>(F);
 
@@ -17,10 +17,10 @@ impl<T: AudioUnit + 'static, F: Send + Sync + 'static + Fn() -> T> DspGraph for 
 }
 
 #[derive(Debug, Component)]
-struct PianoId(Uuid);
+pub struct PianoId(pub Uuid);
 
 #[derive(Component)]
-struct PitchVar(Shared);
+pub struct PitchVar(Shared);
 
 impl PitchVar {
     fn set_pitch(&self, pitch: Pitch) {

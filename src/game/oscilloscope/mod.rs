@@ -1,5 +1,6 @@
 pub mod display;
 pub mod waveform;
+pub mod display_dsp;
 
 use bevy::{
     prelude::*,
@@ -18,6 +19,7 @@ pub(super) fn plugin(app: &mut App) {
     app.add_plugins((
         display::plugin,
         waveform::plugin,
+        display_dsp::plugin,
     ));
     app.observe(new_oscilloscope);
 }
@@ -75,8 +77,8 @@ fn new_oscilloscope(
             begin: UVec2::new(0, 0),
             // channels: vec![Vec2::splat(0.0), Vec2::splat(1.)],
             channels: data,
-            mode: DisplayMode::XY,
-            // mode: Mode::TimeSeries,
+            // mode: DisplayMode::XY,
+            mode: DisplayMode::TimeSeries,
             // color_texture: Some(asset_server.load("branding/icon.png")),
         }),
         ..default()
