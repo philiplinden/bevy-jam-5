@@ -25,6 +25,7 @@ impl Default for Waveform {
 }
 
 impl Waveform {
+    /// Propagate the waveform forward by one timestep
     pub fn iter(&self, mut t: f32, dt: f32) -> impl Iterator<Item = f32> + '_{
         std::iter::from_fn(move || {
             t += dt;
@@ -34,7 +35,7 @@ impl Waveform {
 }
 
 
-
+/// Update the oscilloscope material to match the waveform's shape.
 pub fn update_wave_form(
     mut x_ctrl: Query<(&mut XAxis, &WaveformControls)>,
     mut y_ctrl: Query<(&mut XAxis, &WaveformControls)>,
@@ -42,7 +43,6 @@ pub fn update_wave_form(
 ) {
     let (x_axis, x_input) = x_ctrl.single_mut();
     let (y_axis, y_input) = y_ctrl.single_mut();
-
     for (_id, material) in materials.iter_mut() {
         let x = x_axis.0;
         let y = y_axis.0;
@@ -51,4 +51,9 @@ pub fn update_wave_form(
                                .take(100).map(|(x, y)| Vec2::new(x, y)).collect();
         material.channels = data;
     }
+}
+
+/// Compute (x, y) display coordinates of a sine wave over time.
+pub fn compute_coordinates() {
+    // no op
 }

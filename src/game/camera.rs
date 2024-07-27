@@ -1,10 +1,11 @@
 use bevy::prelude::*;
 use bevy_video_glitch::{VideoGlitchPlugin, VideoGlitchSettings};
-use crate::game::crt::CrtSettings;
+use crate::game::crt::{CrtPlugin, CrtSettings};
 
 pub(super) fn plugin(app: &mut App) {
     app.add_plugins((
         VideoGlitchPlugin,
+        CrtPlugin,
     ));
     app.register_type::<VideoGlitchSettings>();
     // Spawn the main camera.

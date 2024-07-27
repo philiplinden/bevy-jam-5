@@ -36,7 +36,7 @@ pub fn plugin(app: &mut App) {
 }
 
 /// It is generally encouraged to set up post processing effects as a plugin
-struct CrtPlugin;
+pub struct CrtPlugin;
 
 impl Plugin for CrtPlugin {
     fn build(&self, app: &mut App) {

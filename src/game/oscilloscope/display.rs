@@ -4,19 +4,15 @@ use bevy::{
     reflect::TypePath,
     render::{
         render_asset::RenderAssets,
-        render_resource::{
-            AsBindGroup, AsBindGroupShaderType, ShaderRef, ShaderType,
-        },
+        render_resource::{AsBindGroup, AsBindGroupShaderType, ShaderRef, ShaderType},
         texture::GpuImage,
     },
     sprite::{Material2d, Material2dPlugin},
 };
 
-
 pub(super) fn plugin(app: &mut App) {
     app.add_plugins((
         Material2dPlugin::<OscilloscopeMaterial>::default(),
-        // CrtPlugin,
     ));
 }
 
@@ -78,6 +74,34 @@ impl Material2d for OscilloscopeMaterial {
     }
 }
 
+/// Select the waveform plotting mode.
+///
+/// `Mode::Timeseries`: plots all waves on amplitude over time axes.
+/// ```
+///      +1 |   /\      /\      /\      /\      /\      /\
+///         |  /  \    /  \    /  \    /  \    /  \    /  \
+///      +0 | /    \  /    \  /    \  /    \  /    \  /    \
+///         |/      \/      \/      \/      \/      \/      \
+///      -1 |
+///         +-------------------------------------------------->
+///           0      1      2      3      4      5      6    Time
+/// ```
+///
+/// `Mode::XY`: Lissajous Pattern (Wave 1 Amplitude vs. Wave 2 Amplitude)
+/// ```
+///      +1 |    *   *
+///         |  *       *
+///         | *         *
+///      +0 |*           *
+///         | *         *
+///         |  *       *
+///      -1 |    *   *
+///         +-------------------->
+///         -1    0    +1
+/// ```
+///
+/// Note: The actual pattern may vary depending on the frequency and phase
+/// relationship between the two sine waves.
 #[derive(Debug, Default, Clone, Copy)]
 pub enum Mode {
     #[default]
@@ -85,4 +109,3 @@ pub enum Mode {
     #[allow(dead_code)]
     TimeSeries = 2,
 }
-
