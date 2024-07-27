@@ -8,10 +8,10 @@ use crate::ui::prelude::*;
 pub(super) fn plugin(app: &mut App) {
     app.add_systems(OnEnter(Screen::Credits), enter_credits);
 
-    // app.add_systems(
-    //     Update,
-    //     handle_credits_action.run_if(in_state(Screen::Credits)),
-    // );
+    app.add_systems(
+        Update,
+        handle_credits_action.run_if(in_state(Screen::Credits)),
+    );
     app.register_type::<CreditsAction>();
 }
 
@@ -28,8 +28,9 @@ fn enter_credits(mut commands: Commands) {
         .with_children(|children| {
             children.header("Made by");
             children.label("Philip Linden @philiplinden - Concept & Code");
-            children.label("Shane Celis @shanecelis - Art & Code");
+            children.label("Shane Celis @shanecelis - Shaders & Code");
             children.label("David Breen - Concept");
+            children.label("John Breen - UI Art");
 
             children.header("Assets");
             children.label("Bevy logo - All rights reserved by the Bevy Foundation. Used with permission.");
@@ -39,15 +40,15 @@ fn enter_credits(mut commands: Commands) {
         });
 }
 
-// fn handle_credits_action(
-//     mut next_screen: ResMut<NextState<Screen>>,
-//     mut button_query: InteractionQuery<&CreditsAction>,
-// ) {
-//     for (interaction, action) in &mut button_query {
-//         if matches!(interaction, Interaction::Pressed) {
-//             match action {
-//                 CreditsAction::Back => next_screen.set(Screen::Title),
-//             }
-//         }
-//     }
-// }
+fn handle_credits_action(
+    mut next_screen: ResMut<NextState<Screen>>,
+    mut button_query: InteractionQuery<&CreditsAction>,
+) {
+    for (interaction, action) in &mut button_query {
+        if matches!(interaction, Interaction::Pressed) {
+            match action {
+                CreditsAction::Back => next_screen.set(Screen::Title),
+            }
+        }
+    }
+}
