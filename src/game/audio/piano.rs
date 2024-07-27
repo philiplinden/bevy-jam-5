@@ -4,7 +4,7 @@ use {bevy::prelude::*, bevy_fundsp::prelude::*, uuid::Uuid};
 
 pub struct PianoPlugin;
 
-struct PianoDsp<F>(F);
+pub struct PianoDsp<F>(F);
 
 impl<T: AudioUnit + 'static, F: Send + Sync + 'static + Fn() -> T> DspGraph for PianoDsp<F> {
     fn id(&self) -> Uuid {
@@ -16,6 +16,9 @@ impl<T: AudioUnit + 'static, F: Send + Sync + 'static + Fn() -> T> DspGraph for 
     }
 }
 
+#[derive(Component, Deref, DerefMut)]
+pub struct PianoUnit(Box<dyn AudioUnit>);
+
 #[derive(Debug, Component)]
 pub struct PianoId(pub Uuid);
 
@@ -23,7 +26,7 @@ pub struct PianoId(pub Uuid);
 pub struct PitchVar(Shared);
 
 impl PitchVar {
-    fn set_pitch(&self, pitch: Pitch) {
+    fn set_pitch(&mut self, pitch: Pitch) {
         self.0.set_value(pitch.into());
     }
 }
@@ -47,18 +50,33 @@ enum Pitch {
 impl Pitch {
     fn to_f32(self) -> f32 {
         match self {
-            Pitch::C => 261.626,
-            Pitch::Cs => 277.183,
-            Pitch::D => 293.665,
-            Pitch::Ds => 311.127,
-            Pitch::E => 329.628,
-            Pitch::F => 349.228,
-            Pitch::Fs => 369.994,
-            Pitch::G => 391.995,
-            Pitch::Gs => 415.305,
-            Pitch::A => 440.0,
-            Pitch::As => 466.164,
-            Pitch::B => 493.883,
+            // Octave 4
+            // Pitch::C => 261.626,
+            // Pitch::Cs => 277.183,
+            // Pitch::D => 293.665,
+            // Pitch::Ds => 311.127,
+            // Pitch::E => 329.628,
+            // Pitch::F => 349.228,
+            // Pitch::Fs => 369.994,
+            // Pitch::G => 391.995,
+            // Pitch::Gs => 415.305,
+            // Pitch::A => 440.0,
+            // Pitch::As => 466.164,
+            // Pitch::B => 493.883,
+
+            // Octave 2
+            Pitch::C => 65.,
+            Pitch::Cs => 69.,
+            Pitch::D => 73.,
+            Pitch::Ds => 77.,
+            Pitch::E => 82.,
+            Pitch::F => 87.,
+            Pitch::Fs => 92.,
+            Pitch::G => 98.,
+            Pitch::Gs => 104.,
+            Pitch::A => 110.,
+            Pitch::As => 116.,
+            Pitch::B => 123.,
         }
     }
 }
@@ -84,12 +102,15 @@ fn setup_channel(number: u8) -> impl FnMut(Commands) {
     move |mut commands: Commands| {
         let pitch = shared(Pitch::C.into());
         let pitch2 = pitch.clone();
+        let pitch3 = pitch.clone();
 
         let piano = move || var(&pitch2) >> square() >> split::<U2>() * 0.2;
+
         let piano_dsp = PianoDsp(piano);
         let piano_id = piano_dsp.id();
         commands.add(Dsp(piano_dsp, SourceType::Dynamic));
         commands.spawn((Channel(0),
+                        PianoUnit(Box::new(var(&pitch3) >> square() >> split::<U2>() * 0.2)),
                         PitchVar(pitch),
                         PianoId(piano_id)));
     }
@@ -98,7 +119,7 @@ fn setup_channel(number: u8) -> impl FnMut(Commands) {
 fn switch_key(input: Res<ButtonInput<KeyCode>>, mut pitch_vars: Query<(&Channel, &mut PitchVar)>) {
     let mut keypress = |keycode, pitch| {
         if input.just_pressed(keycode) {
-            for (channel, pitch_var) in &mut pitch_vars {
+            for (channel, mut pitch_var) in &mut pitch_vars {
                 if channel.0 == 0 {
                     pitch_var.set_pitch(pitch);
                 }
