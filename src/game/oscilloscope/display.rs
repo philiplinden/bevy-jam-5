@@ -28,7 +28,7 @@ pub struct OscilloscopeMaterial {
     pub background: Color,
     pub offset: Vec2,
     pub begin: UVec2,
-    pub mode: Mode,
+    pub mode: DisplayMode,
     #[storage(2, read_only)]
     pub channels: Vec<Vec2>,
     // #[texture(3)]
@@ -103,7 +103,7 @@ impl Material2d for OscilloscopeMaterial {
 /// Note: The actual pattern may vary depending on the frequency and phase
 /// relationship between the two sine waves.
 #[derive(Debug, Default, Clone, Copy)]
-pub enum Mode {
+pub enum DisplayMode {
     #[default]
     XY = 1,
     #[allow(dead_code)]

@@ -14,7 +14,6 @@ pub(super) fn plugin(app: &mut App) {
         camera::plugin,
         audio::plugin,
         oscilloscope::plugin,
-        crt::plugin,
     ));
 }
 

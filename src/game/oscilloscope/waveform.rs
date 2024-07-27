@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-use super::{display::OscilloscopeMaterial, WaveformControls, XAxis};
+use super::{display::OscilloscopeMaterial, WaveformControls};
 
 pub(super) fn plugin(app: &mut App) {
     app.register_type::<Waveform>();
@@ -37,15 +37,15 @@ impl Waveform {
 
 /// Update the oscilloscope material to match the waveform's shape.
 pub fn update_wave_form(
-    mut x_ctrl: Query<(&mut XAxis, &WaveformControls)>,
-    mut y_ctrl: Query<(&mut XAxis, &WaveformControls)>,
+    // mut x_ctrl: Query<(&mut XAxis, &WaveformControls)>,
+    // mut y_ctrl: Query<(&mut XAxis, &WaveformControls)>,
     mut materials: ResMut<Assets<OscilloscopeMaterial>>,
 ) {
-    let (x_axis, x_input) = x_ctrl.single_mut();
-    let (y_axis, y_input) = y_ctrl.single_mut();
+    // let (x_axis, x_input) = x_ctrl.single_mut();
+    // let (y_axis, y_input) = y_ctrl.single_mut();
     for (_id, material) in materials.iter_mut() {
-        let x = x_axis.0;
-        let y = y_axis.0;
+        let x = Waveform::default();
+        let y = Waveform::default();
         let data: Vec<Vec2> = x.iter(0.0, 0.1)
                                .zip(y.iter(0.0, 0.1))
                                .take(100).map(|(x, y)| Vec2::new(x, y)).collect();
