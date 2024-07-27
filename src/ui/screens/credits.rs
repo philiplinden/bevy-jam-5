@@ -28,9 +28,9 @@ fn enter_credits(mut commands: Commands) {
         .with_children(|children| {
             children.header("Made by");
             children.label("Philip Linden @philiplinden - Concept & Code");
-            children.label("Shane Celis @shanecelis - Shaders & Code");
+            children.label("Shane Celis @shanecelis - Shaders, Audio & Code");
             children.label("David Breen - Concept");
-            children.label("John Breen - UI Art");
+            children.label("John Breen - Art");
 
             children.header("Assets");
             children.label("Bevy logo - All rights reserved by the Bevy Foundation. Used with permission.");
