@@ -11,8 +11,8 @@ mod widgets;
 pub mod prelude {
     pub use super::{
         interaction::{InteractionQuery, InteractionPalette},
-        palette as ui_palette,
         widgets::{Containers as _, Widgets as _},
+        palette,
         screens,
     };
 }
@@ -24,6 +24,7 @@ use winit::window::Icon;
 pub(super) fn plugin(app: &mut App) {
     app.add_plugins((interaction::plugin, screens::plugin));
     app.add_systems(Startup, set_window_icon);
+    app.insert_resource(ClearColor(palette::OSCILLOSCOPE_SCREEN_COLOR));
 }
 
 fn set_window_icon(
@@ -33,7 +34,7 @@ fn set_window_icon(
     // here we use the `image` crate to load our icon data from a png file
     // this is not a very bevy-native solution, but it will do
     let (icon_rgba, icon_width, icon_height) = {
-        let image = image::open("assets/images/radar-crt-screen.png")
+        let image = image::open("assets/images/icon.png")
             .expect("Failed to open icon path")
             .into_rgba8();
         let (width, height) = image.dimensions();
