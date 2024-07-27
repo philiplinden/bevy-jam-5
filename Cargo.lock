@@ -483,7 +483,6 @@ dependencies = [
  "bevy_asset_loader",
  "bevy_mod_debugdump",
  "bevy_mod_picking",
- "bevy_pancam",
  "bevy_vector_shapes",
  "bevy_video_glitch",
  "big_space",
@@ -1127,16 +1126,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "bevy_pancam"
-version = "0.12.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f911424ae6dad142b8e1b7475a5dfe16031cbe0fe7b54cc386e7e74a8722ae59"
-dependencies = [
- "bevy",
- "bevy_egui",
-]
-
-[[package]]
 name = "bevy_pbr"
 version = "0.14.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1615,8 +1604,7 @@ dependencies = [
 [[package]]
 name = "bevy_video_glitch"
 version = "0.2.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5ce556137f668dee65f811cef568e8340d54cc1ec78c398c2c1fed58185584a5"
+source = "git+https://github.com/shanecelis/bevy_video_glitch.git#e17daa9693503d35b28b4f08ef86b935b735feb4"
 dependencies = [
  "bevy",
 ]
@@ -3242,6 +3230,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "bebb7f3227809906ca7ccc981aedf7805b5edb422b4265290cc749316c0faba4"
 dependencies = [
  "bevy",
+ "bevy_egui",
  "derive_more",
  "itertools 0.13.0",
  "leafwing_input_manager_macros",

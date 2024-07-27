@@ -30,7 +30,5 @@ fn all_assets_loaded(
 }
 
 fn continue_to_next_screen(mut next_screen: ResMut<NextState<Screen>>) {
-    #[cfg(feature = "main_menu")]
-    next_screen.set(Screen::Title);
     next_screen.set(Screen::Playing);
 }

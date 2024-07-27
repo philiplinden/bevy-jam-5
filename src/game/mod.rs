@@ -4,15 +4,19 @@ use bevy::prelude::*;
 
 pub mod audio;
 pub mod camera;
-pub mod physics;
-pub mod settings;
-pub mod spawn;
+pub mod oscilloscope;
+pub mod crt;
+
+use crate::ui::interaction;
 
 pub(super) fn plugin(app: &mut App) {
     app.add_plugins((
         camera::plugin,
         audio::plugin,
-        spawn::plugin,
-        physics::plugin,
+        oscilloscope::plugin,
     ));
+}
+
+fn spawn_xy_waves(mut commands: Commands) {
+
 }

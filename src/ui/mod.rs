@@ -3,14 +3,14 @@
 // Unused utilities and re-exports may trigger these lints undesirably.
 #![allow(dead_code, unused_imports)]
 
-pub mod screens;
 pub mod interaction;
+pub mod screens;
 pub mod palette;
 mod widgets;
 
 pub mod prelude {
     pub use super::{
-        interaction::{InteractionPalette, InteractionQuery},
+        interaction::{InteractionQuery, InteractionPalette},
         palette as ui_palette,
         widgets::{Containers as _, Widgets as _},
         screens,

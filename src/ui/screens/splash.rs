@@ -11,12 +11,7 @@ use crate::{ui::prelude::*, AppSet};
 pub(super) fn plugin(app: &mut App) {
     // Spawn splash screen.
     app.insert_resource(ClearColor(SPLASH_BACKGROUND_COLOR));
-
-    #[cfg(not(feature = "no_splash"))]
     app.add_plugins(AnimatedSplashPlugin);
-
-    #[cfg(feature = "no_splash")]
-    app.add_systems(Startup, skip_splash);
 }
 
 const SPLASH_BACKGROUND_COLOR: Color = Color::srgb(0.157, 0.157, 0.157);
@@ -52,10 +47,6 @@ impl Plugin for AnimatedSplashPlugin {
                 .run_if(in_state(Screen::Splash)),
         );
     }
-}
-
-fn skip_splash(mut next_screen: ResMut<NextState<Screen>>) {
-    next_screen.set(Screen::Title);
 }
 
 fn spawn_splash(
@@ -157,6 +148,6 @@ fn tick_splash_timer(time: Res<Time>, mut timer: ResMut<SplashTimer>) {
 
 fn check_splash_timer(timer: ResMut<SplashTimer>, mut next_screen: ResMut<NextState<Screen>>) {
     if timer.0.just_finished() {
-        next_screen.set(Screen::Loading);
+        next_screen.set(Screen::Title);
     }
 }
