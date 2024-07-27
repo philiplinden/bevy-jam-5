@@ -40,6 +40,9 @@ bevy_video_glitch = "0.2.0"
 bevy_mod_debugdump = { version = "0.11.0", optional = true }
 bevy-inspector-egui = { version = "0.25.1", features = ["highlight_changes"] }
 big_space = "0.7.0"
+# audio
+bevy_fundsp = { git = "https://github.com/shanecelis/bevy_fundsp.git", branch = "bevy-0.14" }
+uuid = "1.10.0"
 
 [features]
 default = [

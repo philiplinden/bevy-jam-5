@@ -1,8 +1,9 @@
+use bevy::prelude::*;
+use bevy_fundsp::prelude::*;
+
 // pub mod sfx;
 // pub mod soundtrack;
 pub mod piano;
-
-use bevy::prelude::*;
 
 pub fn plugin(app: &mut App) {
     app
