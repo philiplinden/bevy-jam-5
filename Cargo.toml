@@ -52,7 +52,7 @@ dev = [
     "bevy/bevy_dev_tools",
     "iyes_progress/debug",
     "bevy_mod_debugdump",
-    # "no_splash",
+    # "autoplay",
 ]
 dev_native = [
     "dev",
@@ -61,8 +61,7 @@ dev_native = [
     # Enable embedded asset hot reloading for native dev builds.
     "bevy/embedded_watcher",
 ]
-no_splash = []
-
+autoplay = []
 
 # Idiomatic Bevy code often triggers these lints, and the CI workflow treats them as errors.
 # In some cases they may still signal poor code quality however, so consider commenting out these lines.

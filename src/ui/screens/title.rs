@@ -52,8 +52,5 @@ fn handle_title_action(
                 }
             }
         }
-
-        #[cfg(feature = "autoplay")]
-        next_screen.set(Screen::Loading);
     }
 }
