@@ -19,7 +19,7 @@ and host it on itch.io in an embedded Web Assembly player.
 ## Gameplay
 Core Gameplay:
 
-- [ ] Change parameters of two waveforms, displayed as a Lissajous pattern.
+- [x] Change parameters of two waveforms, displayed as a Lissajous pattern.
 - [ ] Control the X phase with A and D, control the Y phase with W and S.
 - [ ] Bullets are locked on rails to the Lissajou pattern and traverse the pattern
       for the duration of one period.
@@ -57,7 +57,7 @@ Stretch Goals:
 
 ## Before Release TODO
 
-- [ ] Publish new bevy_video_glitch; remove cargo patch.
+- [ ] Publish new `bevy_video_glitch`; remove cargo patch.
 
 ## Look & Feel
 The interface looks like a classic analog oscilloscope. Changing parameters with
