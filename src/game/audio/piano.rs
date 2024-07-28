@@ -121,7 +121,8 @@ pub fn setup_channel(number: u8) -> impl FnMut(Commands) {
         let buffer = Arc::new(Mutex::new(CircularBuffer::new()));
         let buffer2 = Arc::clone(&buffer);
 
-        let piano = move || var(&pitch2) >> square() * 0.2 >> tee(&buffer) >> split::<U2>();
+        // let piano = move || var(&pitch2) >> square() * 0.2 >> tee(&buffer) >> split::<U2>();
+        let piano = move || var(&pitch2) >> square() >> tee(&buffer) >> split::<U2>() * 0.2;
 
         let piano_dsp = PianoDsp(piano);
         let piano_id = piano_dsp.id();
