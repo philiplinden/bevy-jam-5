@@ -1,8 +1,12 @@
+use bevy::prelude::*;
+use bevy_fundsp::prelude::*;
+
 // pub mod sfx;
 // pub mod soundtrack;
-
-use bevy::prelude::*;
+pub mod piano;
 
 pub fn plugin(app: &mut App) {
-    // todo
+    app
+        .add_plugins(DspPlugin::default())
+        .add_plugins(piano::PianoPlugin);
 }

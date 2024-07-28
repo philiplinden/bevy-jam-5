@@ -145,3 +145,14 @@ rustflags = [
 # In most cases the gains are negligible, but if you are on macos and have slow compile times you should see significant gains.
 # [profile.dev]
 # debug = 1
+
+# If we want to run on wasm, install this `wasm-server-runner`,
+#
+# `cargo install wasm-server-runner`
+#
+# according to [the bevy cheatbook](https://bevy-cheatbook.github.io/platforms/wasm.html).
+[target.wasm32-unknown-unknown]
+runner = "wasm-server-runner"
+rustflags = [
+    "--cfg=web_sys_unstable_apis"
+]

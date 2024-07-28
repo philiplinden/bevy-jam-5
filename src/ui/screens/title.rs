@@ -3,7 +3,9 @@
 use bevy::prelude::*;
 
 use super::Screen;
-use crate::ui::prelude::*;
+use crate::{
+    assets::ShaderAssets, game::oscilloscope, ui::prelude::*
+};
 
 pub(super) fn plugin(app: &mut App) {
     app.add_systems(OnEnter(Screen::Title), enter_screen);
@@ -43,7 +45,7 @@ fn handle_title_action(
     for (interaction, action) in &mut button_query {
         if matches!(interaction, Interaction::Pressed) {
             match action {
-                TitleAction::Play => next_screen.set(Screen::Loading),
+                TitleAction::Play => next_screen.set(Screen::Playing),
                 TitleAction::Credits => next_screen.set(Screen::Credits),
 
                 #[cfg(not(target_family = "wasm"))]
@@ -52,8 +54,5 @@ fn handle_title_action(
                 }
             }
         }
-
-        #[cfg(feature = "autoplay")]
-        next_screen.set(Screen::Loading);
     }
 }
