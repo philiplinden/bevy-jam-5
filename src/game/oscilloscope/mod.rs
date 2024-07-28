@@ -11,7 +11,6 @@ pub use render::{DisplayMode, ToggleDisplayModeEvent, SetDisplayModeEvent};
 use crate::ui::palette::{OSCILLOSCOPE_SCREEN_COLOR, WAVEFORM_COLOR};
 use material::OscilloscopeMaterial;
 use waveform::Waveform;
-use controls::*;
 use crate::ui::palette::{OSCILLOSCOPE_SCREEN_COLOR, WAVEFORM_COLOR};
 
 
@@ -21,6 +20,7 @@ pub(super) fn plugin(app: &mut App) {
         render::plugin,
         waveform::plugin,
         controls::plugin
+        waveform::plugin,
     ));
     app.observe(new_oscilloscope);
 }
