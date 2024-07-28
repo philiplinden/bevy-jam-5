@@ -5,6 +5,9 @@ use bevy::{
 };
 use bevy_inspector_egui::quick::WorldInspectorPlugin;
 
+#[cfg(feature = "physics_debug")]
+use avian2d::prelude::PhysicsDebugPlugin;
+
 use crate::ui::screens::Screen;
 
 pub struct DebugPlugin;
@@ -16,6 +19,8 @@ impl Plugin for DebugPlugin {
         app.add_systems(Update, log_transitions::<Screen>);
         app.add_plugins((
             WorldInspectorPlugin::default(),
+            #[cfg(feature = "physics_debug")]
+            PhysicsDebugPlugin::default(),
         ));
     }
 }

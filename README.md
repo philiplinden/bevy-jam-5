@@ -6,11 +6,13 @@ Phase Shift is a bullet hell rhythm game created for
 ![demo](doc/assets/dynamic.mp4)
 
 ## Credits
-David Breen - Concept
-
 Philip Linden - Concept & code
 
-Shane Celis - Art
+Shane Celis - Audio, Shaders & Code
+
+John Breen - Art
+
+David Breen - Concept
 
 ## Platform
 Although Bevy is cross-platform, the focus of this project is to build for web

@@ -2,14 +2,14 @@ use std::fmt;
 
 use bevy::prelude::*;
 
-use super::{display::OscilloscopeMaterial, controls::WaveformControls};
+use super::material::OscilloscopeMaterial;
 
 pub(super) fn plugin(app: &mut App) {
     app.register_type::<Waveform>();
     // app.add_systems(Update, update_wave_form);
 }
 
-#[derive(Component, Reflect, Clone, Copy, Debug)]
+#[derive(Reflect, Clone, Copy, Debug)]
 pub struct Waveform {
     pub amp: f32,
     pub freq: f32,
