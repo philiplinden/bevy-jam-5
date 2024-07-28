@@ -25,11 +25,21 @@ pub struct PianoId(pub Uuid);
 #[derive(Component)]
 pub struct PitchVar(Shared);
 
+#[derive(Component)]
+pub struct VolVar(Shared);
+
 impl PitchVar {
     fn set_pitch(&mut self, pitch: Pitch) {
         self.0.set_value(pitch.into());
     }
 }
+
+impl VolVar {
+    fn set_vol(&mut self, vol: f32) {
+        self.0.set_value(vol);
+    }
+}
+
 
 #[derive(Debug, Clone, Copy)]
 enum Pitch {
@@ -103,29 +113,37 @@ fn setup_channel(number: u8) -> impl FnMut(Commands) {
         let pitch = shared(Pitch::C.into());
         let pitch2 = pitch.clone();
         let pitch3 = pitch.clone();
+        let vol = shared(1.0);
+        let vol2 = vol.clone();
+        let vol3 = vol.clone();
 
-        let piano = move || var(&pitch2) >> square() >> split::<U2>() * 0.2;
+        let piano = move || var(&pitch2) >> square() * 0.2 * var(&vol2) >> split::<U2>();
 
         let piano_dsp = PianoDsp(piano);
         let piano_id = piano_dsp.id();
         commands.add(Dsp(piano_dsp, SourceType::Dynamic));
         commands.spawn((Channel(0),
-                        PianoUnit(Box::new(var(&pitch3) >> square() >> split::<U2>() * 0.2)),
+                        // TODO: Should be able to avoid this duplication.
+                        PianoUnit(Box::new(var(&pitch3) >> square() * 0.2 * var(&vol3) >> split::<U2>())),
+                        VolVar(vol),
                         PitchVar(pitch),
                         PianoId(piano_id)));
     }
 }
 
-fn switch_key(input: Res<ButtonInput<KeyCode>>, mut pitch_vars: Query<(&Channel, &mut PitchVar)>) {
-    let mut keypress = |keycode, pitch| {
+fn switch_key(input: Res<ButtonInput<KeyCode>>,
+              mut pitch_vars: Query<(&Channel, &mut PitchVar, &mut VolVar)>) {
+    let mut maybe_pitch = None;
+    let mut just_released = false;
+    let mut keypress = |keycode, pitch: Pitch| {
         if input.just_pressed(keycode) {
-            for (channel, mut pitch_var) in &mut pitch_vars {
-                if channel.0 == 0 {
-                    pitch_var.set_pitch(pitch);
-                }
-            }
+            maybe_pitch = Some(pitch);
+        }
+        if input.just_released(keycode) {
+            just_released = true;
         }
     };
+
 
     keypress(KeyCode::KeyA, Pitch::C);
     keypress(KeyCode::KeyW, Pitch::Cs);
@@ -139,6 +157,20 @@ fn switch_key(input: Res<ButtonInput<KeyCode>>, mut pitch_vars: Query<(&Channel,
     keypress(KeyCode::KeyH, Pitch::A);
     keypress(KeyCode::KeyU, Pitch::As);
     keypress(KeyCode::KeyJ, Pitch::B);
+
+    if maybe_pitch.is_some() || just_released {
+        for (channel, mut pitch_var, mut vol_var) in &mut pitch_vars {
+            if channel.0 == 0 {
+                if let Some(p) = maybe_pitch {
+                    pitch_var.set_pitch(p.clone());
+                    vol_var.set_vol(1.0);
+                }
+                if just_released {
+                    vol_var.set_vol(0.0);
+                }
+            }
+        }
+    }
 }
 
 fn play_piano(

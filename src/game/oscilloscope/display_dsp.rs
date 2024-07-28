@@ -1,5 +1,5 @@
 use {bevy::prelude::*, bevy_fundsp::prelude::*, uuid::Uuid};
-use crate::game::audio::piano::{PianoId, PianoUnit, PitchVar};
+use crate::game::audio::piano::{PianoId, PianoUnit, PitchVar, VolVar};
 use crate::game::oscilloscope::OscilloscopeMaterial;
 
 pub fn plugin(app: &mut App) {
@@ -27,11 +27,11 @@ pub fn plugin(app: &mut App) {
 // }
 pub fn update_oscilloscope(
     dsp_manager: Res<DspManager>,
-    mut piano_units: Query<&mut PianoUnit, Changed<PitchVar>>,
+    mut piano_units: Query<&mut PianoUnit, Or<(Changed<VolVar>, Changed<PitchVar>)>>,
     mut materials: ResMut<Assets<OscilloscopeMaterial>>,
 ) {
-
     for mut piano_unit in &mut piano_units {
+        // eprintln!("."); // to ensure it only updates when changed.
         for (_id, material) in materials.iter_mut() {
 
             let input : [f32; 0] = [];
