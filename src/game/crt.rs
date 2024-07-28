@@ -312,17 +312,14 @@ impl FromWorld for CrtPipeline {
 #[derive(Component, Reflect, Clone, Copy, ExtractComponent, ShaderType)]
 #[reflect(Component, Default)]
 pub struct CrtSettings {
-    pub intensity: f32,
     // WebGL2 structs must be 16 byte aligned.
-    #[cfg(feature = "webgl2")]
     _webgl2_padding: Vec3,
 }
 
 impl Default for CrtSettings {
     fn default() -> Self {
-        Self { intensity: 1.0,
-               #[cfg(feature = "webgl2")]
-               _webgl2_padding: Vec3::ZERO
+        Self {
+            _webgl2_padding: Vec3::ZERO
         }
     }
 }

@@ -10,6 +10,8 @@ use bevy::{
     sprite::{Material2d, Material2dPlugin},
 };
 
+use crate::ui::palette::*;
+
 pub(super) fn plugin(app: &mut App) {
     app.add_plugins((
         Material2dPlugin::<OscilloscopeMaterial>::default(),
@@ -34,6 +36,19 @@ pub struct OscilloscopeMaterial {
     // #[texture(3)]
     // #[sampler(4)]
     // color_texture: Option<Handle<Image>>,
+}
+
+impl Default for OscilloscopeMaterial {
+    fn default() -> Self {
+        OscilloscopeMaterial {
+            foreground: WAVEFORM_COLOR,
+            background: OSCILLOSCOPE_SCREEN_COLOR,
+            offset: Vec2::new(0.35, -0.35),
+            begin: UVec2::new(0, 0),
+            channels: vec![Vec2::splat(0.0), Vec2::splat(1.)],
+            mode: DisplayMode::TimeSeries,
+        }
+    }
 }
 
 /// The GPU representation of the uniform data of a [`OscilloscopeMaterial`].

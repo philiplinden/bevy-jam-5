@@ -22,7 +22,7 @@ impl<T: Spawn> Widgets for T {
             Name::new("Button"),
             ButtonBundle {
                 style: Style {
-                    min_width: Px(100.0),
+                    min_width: Px(200.0),
                     min_height: Px(50.0),
                     justify_content: JustifyContent::Center,
                     align_items: AlignItems::Center,
@@ -64,7 +64,6 @@ impl<T: Spawn> Widgets for T {
                     align_items: AlignItems::Center,
                     ..default()
                 },
-                background_color: BackgroundColor(NODE_BACKGROUND),
                 ..default()
             },
         ));
@@ -74,7 +73,7 @@ impl<T: Spawn> Widgets for T {
                 TextBundle::from_section(
                     text,
                     TextStyle {
-                        font_size: 40.0,
+                        font_size: 32.0,
                         color: HEADER_TEXT,
                         ..default()
                     },
@@ -89,7 +88,7 @@ impl<T: Spawn> Widgets for T {
             Name::new("Label"),
             NodeBundle {
                 style: Style {
-                    width: Px(500.0),
+                    width: Px(800.0),
                     justify_content: JustifyContent::Center,
                     align_items: AlignItems::Center,
                     ..default()
