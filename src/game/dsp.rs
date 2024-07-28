@@ -1,6 +1,5 @@
 use {bevy::prelude::*, bevy_fundsp::prelude::*, uuid::Uuid};
-use crate::game::audio::piano::{PianoId, PianoUnit, PitchVar};
-use crate::game::oscilloscope::OscilloscopeMaterial;
+use crate::game::{audio::piano::{PianoId, PianoUnit, PitchVar}, oscilloscope::material::OscilloscopeMaterial};
 
 pub fn plugin(app: &mut App) {
     app.add_systems(Update, update_oscilloscope);

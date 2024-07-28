@@ -5,9 +5,9 @@ mod game;
 mod ui;
 
 use bevy::{
+    prelude::*,
     asset::AssetMetaCheck,
     audio::{AudioPlugin, Volume},
-    prelude::*,
     window::{EnabledButtons, WindowTheme},
 };
 

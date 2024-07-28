@@ -5,7 +5,8 @@
 
 
 struct CrtSettings {
-    intensity: f32, // 1
+    scanline_intensity: f32, // 0.01
+    bend_radius: f32, // 3.2
 #ifdef SIXTEEN_BYTE_ALIGNMENT
     // WebGL2 structs must be 16 byte aligned.
     _webgl2_padding: vec3<u32>
@@ -22,7 +23,7 @@ struct CrtSettings {
 
 fn scanline(coord: vec2<f32>, screen: vec3<f32>) -> vec3<f32> {
     var result = screen;
-    result -= sin((coord.y + (globals.time * 29.0))) * 0.02;
+    result -= sin((coord.y + (globals.time * 29.0))) * settings.scanline_intensity;
     return result;
 }
 
@@ -45,7 +46,7 @@ fn sample_split(coord: vec2<f32>) -> vec3<f32> {
 fn fragment(in: FullscreenVertexOutput) -> @location(0) vec4<f32> {
     var uv = in.uv;
     uv.y = 1.0 - uv.y; // flip tex
-    let crt_coords = crt(uv, 3.2);
+    let crt_coords = crt(uv, settings.bend_radius);
     let resolution = textureDimensions(screen_texture);
 
     // WGSL doesn't have a discard keyword, so we'll return a transparent color instead

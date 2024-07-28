@@ -53,7 +53,7 @@ impl Default for OscilloscopeMaterial {
 
 /// The GPU representation of the uniform data of a [`OscilloscopeMaterial`].
 #[derive(Clone, Default, ShaderType)]
-pub struct OscilloscopeMaterialUniform {
+struct OscilloscopeMaterialUniform {
     pub foreground: LinearRgba,
     pub background: LinearRgba,
     pub offset: Vec2,
