@@ -1,5 +1,4 @@
 use bevy::prelude::*;
-
 use super::ToggleDisplayModeEvent;
 
 pub fn plugin(app: &mut App) {
