@@ -66,7 +66,8 @@ pub fn update_wave_form(
         let data: Vec<Vec2> = x.iter(0.0, 0.1)
                                .zip(y.iter(0.0, 0.1))
                                .take(100).map(|(x, y)| Vec2::new(x, y)).collect();
-        material.channels = data;
+        material.points = data;
+        material.lines = vec![UVec2::new(0, material.points.len().saturating_sub(1) as u32)];
     }
 }
 
