@@ -483,7 +483,6 @@ dependencies = [
  "iyes_progress",
  "leafwing-input-manager",
  "log",
- "physical_constants",
  "rand",
  "uuid",
  "winit",
@@ -4222,15 +4221,6 @@ dependencies = [
  "indexmap",
  "serde",
  "serde_derive",
-]
-
-[[package]]
-name = "physical_constants"
-version = "0.5.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f3aad4556f19b1f2430b7d8492f251a8d152636595bcbf3224d099eead0e4c73"
-dependencies = [
- "regex",
 ]
 
 [[package]]

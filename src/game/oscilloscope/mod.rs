@@ -1,6 +1,7 @@
 pub mod display;
 pub mod waveform;
 pub mod display_dsp;
+pub mod controls;
 
 use bevy::{
     prelude::*,
@@ -9,10 +10,8 @@ use bevy::{
 
 use display::{OscilloscopeMaterial, DisplayMode};
 use waveform::Waveform;
-use crate::ui::{
-    interaction::*,
-    palette::{OSCILLOSCOPE_SCREEN_COLOR, WAVEFORM_COLOR},
-};
+use controls::*;
+use crate::ui::palette::{OSCILLOSCOPE_SCREEN_COLOR, WAVEFORM_COLOR};
 
 
 pub(super) fn plugin(app: &mut App) {
@@ -77,8 +76,8 @@ fn new_oscilloscope(
             begin: UVec2::new(0, 0),
             // channels: vec![Vec2::splat(0.0), Vec2::splat(1.)],
             channels: data,
-            // mode: DisplayMode::XY,
-            mode: DisplayMode::TimeSeries,
+            mode: DisplayMode::XY,
+            // mode: DisplayMode::TimeSeries,
             // color_texture: Some(asset_server.load("branding/icon.png")),
         }),
         ..default()
