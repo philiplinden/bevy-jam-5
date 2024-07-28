@@ -2,7 +2,7 @@ use std::fmt;
 
 use bevy::prelude::*;
 
-use super::{display::OscilloscopeMaterial, controls::WaveformControls};
+use super::material::OscilloscopeMaterial;
 
 pub(super) fn plugin(app: &mut App) {
     app.register_type::<Waveform>();

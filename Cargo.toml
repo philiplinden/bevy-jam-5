@@ -55,7 +55,7 @@ dev = [
     "bevy/bevy_dev_tools",
     "iyes_progress/debug",
     "bevy_mod_debugdump",
-    "autoplay",
+    # "autoplay",
 ]
 dev_native = [
     "dev",

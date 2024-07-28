@@ -14,5 +14,8 @@ pub(super) fn plugin(app: &mut App) {
 }
 
 fn enter_playing(mut commands: Commands) {
+<<<<<<< HEAD
     commands.trigger(SetDisplayModeEvent(DisplayMode::XY));
+=======
+>>>>>>> 7353240 (dev: changing things only to change them back)
 }
