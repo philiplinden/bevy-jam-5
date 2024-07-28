@@ -483,6 +483,7 @@ dependencies = [
  "iyes_progress",
  "leafwing-input-manager",
  "log",
+ "physical_constants",
  "rand",
  "uuid",
  "winit",
