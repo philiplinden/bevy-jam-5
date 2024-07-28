@@ -5,7 +5,7 @@ use crate::game::audio::piano::{PianoId, PitchVar, DspBuffer};
 use crate::game::oscilloscope::material::OscilloscopeMaterial;
 
 pub fn plugin(app: &mut App) {
-    // app.add_systems(Update, update_oscilloscope.run_if(on_timer(Duration::from_millis(100))));
+    app.add_systems(Update, update_oscilloscope.run_if(on_timer(Duration::from_millis(100))));
 }
 
 pub fn update_oscilloscope(
@@ -19,9 +19,10 @@ pub fn update_oscilloscope(
             if let Ok(ref mut mutex) = lock {
                 let mut i = mutex.iter().map(|x| Vec2::new(*x, *x));
                 if let Some(x) = i.next() {
-                    material.channels.clear();
-                    material.channels.push(x);
-                    material.channels.extend(i);
+                    material.points.clear();
+                    material.points.push(x);
+                    material.points.extend(i);
+                    material.lines = vec![UVec2::new(0, material.points.len().saturating_sub(1) as u32)];
                 } else {
                     continue;
                 }

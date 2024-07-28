@@ -28,11 +28,11 @@ const SHADER_ASSET_PATH: &str = "shaders/oscilloscope.wgsl";
 pub struct OscilloscopeMaterial {
     pub foreground: Color,
     pub background: Color,
-    pub offset: Vec2,
-    pub begin: UVec2,
-    pub mode: DisplayMode,
     #[storage(2, read_only)]
-    pub channels: Vec<Vec2>,
+    pub points: Vec<Vec2>,
+    #[storage(3, read_only)]
+    pub lines: Vec<UVec2>,
+
     // #[texture(3)]
     // #[sampler(4)]
     // color_texture: Option<Handle<Image>>,
@@ -43,10 +43,8 @@ impl Default for OscilloscopeMaterial {
         OscilloscopeMaterial {
             foreground: WAVEFORM_COLOR,
             background: OSCILLOSCOPE_SCREEN_COLOR,
-            offset: Vec2::new(0.35, -0.35),
-            begin: UVec2::new(0, 0),
-            channels: vec![Vec2::splat(0.0), Vec2::splat(1.)],
-            mode: DisplayMode::TimeSeries,
+            points: vec![],
+            lines: vec![],
         }
     }
 }
@@ -56,9 +54,6 @@ impl Default for OscilloscopeMaterial {
 struct OscilloscopeMaterialUniform {
     pub foreground: LinearRgba,
     pub background: LinearRgba,
-    pub offset: Vec2,
-    pub begin: UVec2,
-    pub mode: u32,
 }
 
 impl AsBindGroupShaderType<OscilloscopeMaterialUniform> for OscilloscopeMaterial {
@@ -74,9 +69,6 @@ impl AsBindGroupShaderType<OscilloscopeMaterialUniform> for OscilloscopeMaterial
         OscilloscopeMaterialUniform {
             foreground: LinearRgba::from(self.foreground),
             background: LinearRgba::from(self.background),
-            begin: self.begin,
-            offset: self.offset,
-            mode: self.mode as u32,
         }
     }
 }
