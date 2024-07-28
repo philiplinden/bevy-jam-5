@@ -1,6 +1,5 @@
 pub mod material;
 pub mod waveform;
-pub mod display_dsp;
 
 use bevy::{
     prelude::*,
@@ -16,7 +15,6 @@ pub(super) fn plugin(app: &mut App) {
     app.add_plugins((
         material::plugin,
         waveform::plugin,
-        display_dsp::plugin,
     ));
     app.observe(new_oscilloscope);
 }
