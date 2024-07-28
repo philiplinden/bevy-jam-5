@@ -11,7 +11,7 @@ use crate::{ui::prelude::*, AppSet};
 pub(super) fn plugin(app: &mut App) {
     // Spawn splash screen.
     app.insert_resource(ClearColor(SPLASH_BACKGROUND_COLOR));
-    app.add_plugins((AnimatedSplashPlugin));
+    app.add_plugins(AnimatedSplashPlugin);
 }
 
 const SPLASH_BACKGROUND_COLOR: Color = Color::srgb(0.157, 0.157, 0.157);
@@ -146,8 +146,8 @@ fn tick_splash_timer(time: Res<Time>, mut timer: ResMut<SplashTimer>) {
     timer.0.tick(time.delta());
 }
 
-fn check_splash_timer(timer: ResMut<SplashTimer>, mut progress_tracker: ResMut<ProgressCounter>) {
+fn check_splash_timer(timer: ResMut<SplashTimer>, mut next_screen: ResMut<NextState<Screen>>) {
     if timer.0.just_finished() {
-        next_screen.set(Screen::Title);
+        next_screen.set(Screen::Loading);
     }
 }

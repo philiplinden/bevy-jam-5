@@ -4,8 +4,7 @@ use bevy_asset_loader::prelude::*;
 pub struct AssetLoaderPlugin;
 
 impl Plugin for AssetLoaderPlugin {
-    fn build(&self, app: &mut App) {
-    }
+    fn build(&self, _app: &mut App) {}
 }
 
 #[derive(AssetCollection, Resource)]
@@ -22,15 +21,16 @@ pub struct SoundtrackAssets {
 
 #[derive(AssetCollection, Resource)]
 pub struct FontAssets {
-    #[asset(path = "fonts/divinity-sans-regular.ttf")]
-    pub sans: Handle<Font>,
-
-    #[asset(path = "fonts/monogram-extended.ttf")]
-    pub mono: Handle<Font>,
 }
 
 #[derive(AssetCollection, Resource, Default)]
 pub struct ShaderAssets {
+    #[asset(path = "shaders/oscilloscope.wgsl")]
+    pub oscilloscope: Handle<Shader>,
+
+    #[asset(path = "shaders/video-glitch.wgsl")]
+    pub glitch: Handle<Shader>,
+
     #[asset(path = "shaders/crt.wgsl")]
     pub crt: Handle<Shader>,
 }

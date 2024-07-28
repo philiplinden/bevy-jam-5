@@ -1,3 +1,5 @@
+use std::fmt;
+
 use bevy::prelude::*;
 
 use super::{display::OscilloscopeMaterial, WaveformControls};
@@ -24,13 +26,28 @@ impl Default for Waveform {
     }
 }
 
+impl fmt::Display for Waveform {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "Waveform {{ amp: {}, freq: {}, phase: {} }}", self.amp, self.freq, self.phase)
+    }
+}
+
 impl Waveform {
-    /// Propagate the waveform forward by one timestep
+    /// An iterator that propagates the wave forward one time step every iteration
+    ///
+    /// Inputs:
+    ///     t   the initial time
+    ///     dt  the duration of one time step
     pub fn iter(&self, mut t: f32, dt: f32) -> impl Iterator<Item = f32> + '_{
         std::iter::from_fn(move || {
             t += dt;
             Some(self.amp * (self.freq * t + self.phase).sin())
         })
+    }
+
+    /// A timeseries at time step dt for the first N samples.
+    pub fn timeseries(&self, samples: usize, dt: f32) -> Vec<f32> {
+        self.iter(0.0, dt).take(samples).collect()
     }
 }
 

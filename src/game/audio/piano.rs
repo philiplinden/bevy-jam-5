@@ -23,16 +23,20 @@ pub struct PianoUnit(Box<dyn AudioUnit>);
 pub struct PianoId(pub Uuid);
 
 #[derive(Component)]
-pub struct PitchVar(Shared);
+pub struct PitchVar(pub Shared);
 
 impl PitchVar {
-    fn set_pitch(&mut self, pitch: Pitch) {
+    pub fn set_pitch(&mut self, pitch: Pitch) {
         self.0.set_value(pitch.into());
+    }
+
+    pub fn set_frequency(&mut self, freq: f32) {
+        self.0.set_value(freq);
     }
 }
 
-#[derive(Debug, Clone, Copy)]
-enum Pitch {
+#[derive(Debug, Clone, Copy, PartialEq, Reflect)]
+pub enum Pitch {
     C,
     Cs,
     D,
@@ -51,18 +55,18 @@ impl Pitch {
     fn to_f32(self) -> f32 {
         match self {
             // Octave 4
-            // Pitch::C => 261.626,
-            // Pitch::Cs => 277.183,
-            // Pitch::D => 293.665,
-            // Pitch::Ds => 311.127,
-            // Pitch::E => 329.628,
-            // Pitch::F => 349.228,
-            // Pitch::Fs => 369.994,
-            // Pitch::G => 391.995,
-            // Pitch::Gs => 415.305,
-            // Pitch::A => 440.0,
-            // Pitch::As => 466.164,
-            // Pitch::B => 493.883,
+            // Pitch::HighC => 261.626,
+            // Pitch::HighCs => 277.183,
+            // Pitch::HighD => 293.665,
+            // Pitch::HighDs => 311.127,
+            // Pitch::HighE => 329.628,
+            // Pitch::HighF => 349.228,
+            // Pitch::HighFs => 369.994,
+            // Pitch::HighG => 391.995,
+            // Pitch::HighGs => 415.305,
+            // Pitch::HighA => 440.0,
+            // Pitch::HighAs => 466.164,
+            // Pitch::HighB => 493.883,
 
             // Octave 2
             Pitch::C => 65.,
@@ -88,17 +92,25 @@ impl From<Pitch> for f32 {
 }
 
 #[derive(Component)]
-struct Channel(u8);
+pub struct Channel(pub u8);
 
 impl Plugin for PianoPlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(Startup, setup_channel(0))
            .add_systems(Update, switch_key)
-           .add_systems(PostStartup, play_piano);
+           .add_systems(PostStartup, play_pianos);
     }
 }
 
-fn setup_channel(number: u8) -> impl FnMut(Commands) {
+#[derive(Bundle)]
+struct PianoBundle{
+    channel: Channel,
+    unit: PianoUnit,
+    pitch: PitchVar,
+    id: PianoId,
+}
+
+pub fn setup_channel(number: u8) -> impl FnMut(Commands) {
     move |mut commands: Commands| {
         let pitch = shared(Pitch::C.into());
         let pitch2 = pitch.clone();
@@ -109,10 +121,12 @@ fn setup_channel(number: u8) -> impl FnMut(Commands) {
         let piano_dsp = PianoDsp(piano);
         let piano_id = piano_dsp.id();
         commands.add(Dsp(piano_dsp, SourceType::Dynamic));
-        commands.spawn((Channel(0),
-                        PianoUnit(Box::new(var(&pitch3) >> square() >> split::<U2>() * 0.2)),
-                        PitchVar(pitch),
-                        PianoId(piano_id)));
+        commands.spawn(PianoBundle {
+            channel: Channel(0),
+            unit: PianoUnit(Box::new(var(&pitch3) >> square() >> split::<U2>() * 0.2)),
+            pitch: PitchVar(pitch),
+            id: PianoId(piano_id),
+        });
     }
 }
 
@@ -141,21 +155,21 @@ fn switch_key(input: Res<ButtonInput<KeyCode>>, mut pitch_vars: Query<(&Channel,
     keypress(KeyCode::KeyJ, Pitch::B);
 }
 
-fn play_piano(
+fn play_pianos(
     mut commands: Commands,
     mut assets: ResMut<Assets<DspSource>>,
     dsp_manager: Res<DspManager>,
     piano_ids: Query<&PianoId>,
 ) {
     for piano_id in piano_ids.iter() {
-    let source = assets.add(
-        dsp_manager
-            .get_graph_by_id(&piano_id.0)
-            .expect("DSP source"),
-    );
-    commands.spawn(AudioSourceBundle {
-        source,
-        ..default()
-    });
+        let source = assets.add(
+            dsp_manager
+                .get_graph_by_id(&piano_id.0)
+                .expect("DSP source"),
+        );
+        commands.spawn(AudioSourceBundle {
+            source,
+            ..default()
+        });
     }
 }

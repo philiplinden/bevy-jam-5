@@ -26,7 +26,7 @@ pub fn plugin(app: &mut App) {
 //     }
 // }
 pub fn update_oscilloscope(
-    dsp_manager: Res<DspManager>,
+    _dsp_manager: Res<DspManager>,
     mut piano_units: Query<&mut PianoUnit, Changed<PitchVar>>,
     mut materials: ResMut<Assets<OscilloscopeMaterial>>,
 ) {

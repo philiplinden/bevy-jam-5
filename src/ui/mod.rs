@@ -12,10 +12,11 @@ pub mod prelude {
     pub use super::{
         interaction::{InteractionQuery, InteractionPalette},
         widgets::{Containers as _, Widgets as _},
-        palette,
-        screens,
+        palette::*,
+        screens::*,
     };
 }
+pub use screens::Screen;
 
 use bevy::prelude::*;
 use bevy::winit::WinitWindows;
