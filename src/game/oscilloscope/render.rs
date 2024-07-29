@@ -104,10 +104,10 @@ pub fn render_xy_oscilloscope(
 ///           0      1      2      3      4      5      6    Time
 /// ```
 pub fn render_time_series_oscilloscope(
-    mut dsp_buffers: Query<&DspBuffer>,
+    dsp_buffers: Query<&DspBuffer>,
     mut materials: ResMut<Assets<OscilloscopeMaterial>>,
 ) {
-    for mut dsp_buffer in &dsp_buffers {
+    for dsp_buffer in &dsp_buffers {
         for (_id, material) in materials.iter_mut() {
             let mut lock = dsp_buffer.0.try_lock();
             if let Ok(ref mut mutex) = lock {

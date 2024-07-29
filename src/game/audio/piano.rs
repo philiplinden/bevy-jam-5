@@ -7,6 +7,14 @@ use {bevy::prelude::*, bevy_fundsp::prelude::*, uuid::Uuid};
 
 pub struct PianoPlugin;
 
+impl Plugin for PianoPlugin {
+    fn build(&self, app: &mut App) {
+        app.add_systems(Startup, setup_channel(0));
+        app.add_systems(PostStartup, play_pianos);
+        app.observe(switch_key);
+    }
+}
+
 pub struct PianoDsp<F>(F);
 
 impl<T: AudioUnit + 'static, F: Send + Sync + 'static + Fn() -> T> DspGraph for PianoDsp<F> {
@@ -99,11 +107,14 @@ impl From<Pitch> for f32 {
 #[derive(Component)]
 pub struct Channel(pub u8);
 
-impl Plugin for PianoPlugin {
-    fn build(&self, app: &mut App) {
-        app.add_systems(Startup, setup_channel(0))
-           .add_systems(Update, switch_key)
-           .add_systems(PostStartup, play_pianos);
+#[derive(Event)]
+pub struct SetPitchEvent(pub Pitch);
+
+fn switch_key(trigger: Trigger<SetPitchEvent>, mut pitch_vars: Query<(&Channel, &mut PitchVar)>) {
+    for (channel, mut pitch_var) in &mut pitch_vars {
+        if channel.0 == 0 {
+            pitch_var.set_pitch(trigger.event().0);
+        }
     }
 }
 
@@ -135,31 +146,6 @@ pub fn setup_channel(number: u8) -> impl FnMut(Commands) {
             DspBuffer(buffer2)),
         );
     }
-}
-
-fn switch_key(input: Res<ButtonInput<KeyCode>>, mut pitch_vars: Query<(&Channel, &mut PitchVar)>) {
-    let mut keypress = |keycode, pitch| {
-        if input.just_pressed(keycode) {
-            for (channel, mut pitch_var) in &mut pitch_vars {
-                if channel.0 == 0 {
-                    pitch_var.set_pitch(pitch);
-                }
-            }
-        }
-    };
-
-    keypress(KeyCode::KeyA, Pitch::C);
-    keypress(KeyCode::KeyW, Pitch::Cs);
-    keypress(KeyCode::KeyS, Pitch::D);
-    keypress(KeyCode::KeyE, Pitch::Ds);
-    keypress(KeyCode::KeyD, Pitch::E);
-    keypress(KeyCode::KeyF, Pitch::F);
-    keypress(KeyCode::KeyT, Pitch::Fs);
-    keypress(KeyCode::KeyG, Pitch::G);
-    keypress(KeyCode::KeyY, Pitch::Gs);
-    keypress(KeyCode::KeyH, Pitch::A);
-    keypress(KeyCode::KeyU, Pitch::As);
-    keypress(KeyCode::KeyJ, Pitch::B);
 }
 
 fn play_pianos(

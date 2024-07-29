@@ -1,6 +1,7 @@
 use bevy::prelude::*;
 
 use super::ToggleDisplayModeEvent;
+use crate::game::audio::piano::{SetPitchEvent, Pitch};
 
 pub fn plugin(app: &mut App) {
     app.add_systems(Update, handle_inputs);
@@ -28,7 +29,22 @@ enum InputAction {
 // }
 
 fn handle_inputs(mut commands: Commands, input: Res<ButtonInput<KeyCode>>) {
-    if input.just_pressed(KeyCode::Space) {
-        commands.trigger(ToggleDisplayModeEvent);
-    }
+    for keycode in input.get_just_pressed() {
+        match keycode {
+            KeyCode::Space => commands.trigger(ToggleDisplayModeEvent),
+            KeyCode::KeyA  => commands.trigger(SetPitchEvent(Pitch::C)),
+            KeyCode::KeyW  => commands.trigger(SetPitchEvent(Pitch::Cs)),
+            KeyCode::KeyS  => commands.trigger(SetPitchEvent(Pitch::D)),
+            KeyCode::KeyE  => commands.trigger(SetPitchEvent(Pitch::Ds)),
+            KeyCode::KeyD  => commands.trigger(SetPitchEvent(Pitch::E)),
+            KeyCode::KeyF  => commands.trigger(SetPitchEvent(Pitch::F)),
+            KeyCode::KeyT  => commands.trigger(SetPitchEvent(Pitch::Fs)),
+            KeyCode::KeyG  => commands.trigger(SetPitchEvent(Pitch::G)),
+            KeyCode::KeyY  => commands.trigger(SetPitchEvent(Pitch::Gs)),
+            KeyCode::KeyH  => commands.trigger(SetPitchEvent(Pitch::A)),
+            KeyCode::KeyU  => commands.trigger(SetPitchEvent(Pitch::As)),
+            KeyCode::KeyJ  => commands.trigger(SetPitchEvent(Pitch::B)),
+            _ => {},
+        };
+    };
 }

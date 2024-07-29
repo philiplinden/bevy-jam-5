@@ -70,8 +70,3 @@ pub fn update_wave_form(
         material.lines = vec![UVec2::new(0, material.points.len().saturating_sub(1) as u32)];
     }
 }
-
-/// Compute (x, y) display coordinates of a sine wave over time.
-pub fn compute_coordinates() {
-    // no op
-}
