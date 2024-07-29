@@ -17,7 +17,7 @@ pub(super) fn plugin(app: &mut App) {
         material::plugin,
         render::plugin,
         waveform::plugin,
-        controls::plugin
+        controls::plugin,
     ));
     app.observe(new_oscilloscope);
 }

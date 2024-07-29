@@ -3,7 +3,7 @@
 use bevy::prelude::*;
 use avian2d::prelude::PhysicsSet;
 
-use crate::game::audio::piano::DspBuffer;
+use crate::game::dsp::DspBuffer;
 use super::OscilloscopeMaterial;
 
 pub(super) fn plugin(app: &mut App) {
@@ -69,10 +69,10 @@ fn set_display_mode(
 ///         -1    0    +1
 /// ```
 pub fn render_xy_oscilloscope(
-    mut dsp_buffers: Query<&DspBuffer>,
+    dsp_buffers: Query<&DspBuffer>,
     mut materials: ResMut<Assets<OscilloscopeMaterial>>,
 ) {
-    for mut dsp_buffer in &dsp_buffers {
+    for dsp_buffer in &dsp_buffers {
         for (_id, material) in materials.iter_mut() {
             let mut lock = dsp_buffer.0.try_lock();
             if let Ok(ref mut mutex) = lock {

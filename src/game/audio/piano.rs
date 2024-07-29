@@ -1,9 +1,6 @@
-#![allow(clippy::precedence)]
-use std::sync::{Mutex, Arc};
-use super::tee::tee;
-use circular_buffer::CircularBuffer;
-
 use {bevy::prelude::*, bevy_fundsp::prelude::*, uuid::Uuid};
+use super::tee::tee;
+use crate::game::dsp::DspBuffer;
 
 pub struct PianoPlugin;
 
@@ -27,13 +24,8 @@ impl<T: AudioUnit + 'static, F: Send + Sync + 'static + Fn() -> T> DspGraph for 
     }
 }
 
-pub const BUFFER_SIZE: usize = 1000;
-
 #[derive(Debug, Component)]
 pub struct PianoId(pub Uuid);
-
-#[derive(Debug, Component)]
-pub struct DspBuffer(pub Arc<Mutex<CircularBuffer<BUFFER_SIZE, f32>>>);
 
 #[derive(Component)]
 pub struct PitchVar(pub Shared);
@@ -129,11 +121,11 @@ pub fn setup_channel(number: u8) -> impl FnMut(Commands) {
     move |mut commands: Commands| {
         let pitch = shared(Pitch::C.into());
         let pitch2 = pitch.clone();
-        let buffer = Arc::new(Mutex::new(CircularBuffer::new()));
-        let buffer2 = Arc::clone(&buffer);
+        let buffer = DspBuffer::new();
+        let buffer2 = DspBuffer::from(&buffer);
 
         // let piano = move || var(&pitch2) >> square() * 0.2 >> tee(&buffer) >> split::<U2>();
-        let piano = move || var(&pitch2) >> square() >> tee(&buffer) >> split::<U2>() * 0.2;
+        let piano = move || var(&pitch2) >> square() >> tee(&buffer.0) >> split::<U2>() * 0.2;
 
         let piano_dsp = PianoDsp(piano);
         let piano_id = piano_dsp.id();
@@ -143,8 +135,8 @@ pub fn setup_channel(number: u8) -> impl FnMut(Commands) {
             pitch: PitchVar(pitch),
             id: PianoId(piano_id),
         },
-            DspBuffer(buffer2)),
-        );
+            buffer2,
+        ));
     }
 }
 
