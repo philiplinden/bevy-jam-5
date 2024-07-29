@@ -1,22 +1,12 @@
 use bevy::prelude::*;
 
 use super::ToggleDisplayModeEvent;
+#[cfg(feature = "piano_mode")]
 use crate::game::audio::piano::{SetPitchEvent, Pitch};
 
 pub fn plugin(app: &mut App) {
     app.add_systems(Update, handle_inputs);
 }
-
-#[derive(PartialEq, Eq, Clone, Copy, Hash, Debug, Reflect)]
-enum InputAction {
-    ToggleDisplayMode,
-    ChangeXPhase,
-    ChangeXFrequency,
-    ChangeYPhase,
-    ChangeYFrequency,
-    Pause,
-}
-
 
 // #[derive(Component)]
 // pub struct WaveformControls {
@@ -32,7 +22,15 @@ fn handle_inputs(mut commands: Commands, input: Res<ButtonInput<KeyCode>>) {
     for keycode in input.get_just_pressed() {
         #[cfg(not(feature = "piano_mode"))]
         match keycode {
-            KeyCode::Space => commands.trigger(ToggleDisplayModeEvent),
+            KeyCode::Space      => commands.trigger(ToggleDisplayModeEvent),
+            KeyCode::KeyW       => commands.trigger(IncrementFrequencyLeftEvent),
+            KeyCode::KeyS       => commands.trigger(DecrementFrequencyLeftEvent),
+            KeyCode::KeyD       => commands.trigger(IncrementPhaseLeftEvent),
+            KeyCode::KeyA       => commands.trigger(DecrementPhaseLeftEvent),
+            KeyCode::ArrowUp    => commands.trigger(IncrementFrequencyRightEvent),
+            KeyCode::ArrowDown  => commands.trigger(DecrementFrequencyRightEvent),
+            KeyCode::ArrowRight => commands.trigger(IncrementPhaseRightEvent),
+            KeyCode::ArrowLeft  => commands.trigger(DecrementPhaseRightEvent),
             _ => {},
         }
         #[cfg(feature = "piano_mode")]

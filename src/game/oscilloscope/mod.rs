@@ -1,26 +1,26 @@
 //! This is the base module for rendering the oscilloscope display.
 
 pub mod controls;
+mod crt;
 mod material;
 mod render;
-mod crt;
 
-use bevy::{prelude::*,
-           sprite::MaterialMesh2dBundle,
-           render::{
-               view::RenderLayers,
-
-               render_resource::{
-                   Extent3d, TextureDescriptor, TextureDimension, TextureFormat, TextureUsages,
-               },
-           }
+use bevy::{
+    prelude::*,
+    render::{
+        render_resource::{
+            Extent3d, TextureDescriptor, TextureDimension, TextureFormat, TextureUsages,
+        },
+        view::RenderLayers,
+    },
+    sprite::MaterialMesh2dBundle,
 };
 use bevy_video_glitch::VideoGlitchSettings;
 
+use crate::ui::Screen;
 use crt::{CrtPlugin, CrtSettings};
 use material::OscilloscopeMaterial;
-pub use render::{DisplayMode, ToggleDisplayModeEvent, SetDisplayModeEvent};
-use crate::ui::Screen;
+pub use render::{DisplayMode, SetDisplayModeEvent, ToggleDisplayModeEvent};
 
 pub(super) fn plugin(app: &mut App) {
     app.add_plugins((
@@ -56,31 +56,27 @@ pub fn new_oscilloscope(
     // We query the window to get its current width and height. This is used to scale the display.
     let window = window.single();
 
-    commands.spawn((MaterialMesh2dBundle {
-        mesh: meshes
-            .add(Rectangle::new(
-                window.resolution.width(),
-                window.resolution.height(),
-            ))
-            .into(),
-        transform: Transform::default(),
-        material: materials.add(OscilloscopeMaterial::default()),
-        ..default()
-    },
-    RenderLayers::layer(1),
-    StateScoped(Screen::Playing),
+    commands.spawn((
+        MaterialMesh2dBundle {
+            mesh: meshes
+                .add(Rectangle::new(
+                    window.resolution.width(),
+                    window.resolution.height(),
+                ))
+                .into(),
+            transform: Transform::default(),
+            material: materials.add(OscilloscopeMaterial::default()),
+            ..default()
+        },
+        RenderLayers::layer(1),
+        StateScoped(Screen::Playing),
     ));
-
 }
 
 #[derive(Resource)]
 pub struct OscilloscopeImage(pub Handle<Image>);
 
-pub fn setup_camera(
-    mut commands: Commands,
-    mut images: ResMut<Assets<Image>>,
-) {
-
+pub fn setup_camera(mut commands: Commands, mut images: ResMut<Assets<Image>>) {
     let size = Extent3d {
         width: 1218,
         height: 975,
