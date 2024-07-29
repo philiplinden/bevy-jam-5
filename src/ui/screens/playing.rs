@@ -27,17 +27,27 @@ fn enter_playing(
     commands
         .ui_root()
         .insert(StateScoped(Screen::Playing))
-        .with_children(|children| {
-            children.label("Playing");
-            children.slider_large(&images);
-            children.spawn(ImageBundle {
+        .with_children(|parent| {
+            parent.spawn(ImageBundle {
                 style: Style {
-                    width: Val::Px(1218.),
-                    height: Val::Px(975.),
+                    width: Val::Px(3280.),
+                    height: Val::Px(2038.),
                     ..default()
                 },
-                image: osc_image.0.clone().into(),
+                image: images.reference_no_bg.clone().into(),
                 ..default()
+            }).with_children(|parent| {
+                parent.label("Playing");
+                parent.slider_large(&images);
+                parent.spawn(ImageBundle {
+                    style: Style {
+                        width: Val::Px(1218.),
+                        height: Val::Px(975.),
+                        ..default()
+                    },
+                    image: osc_image.0.clone().into(),
+                    ..default()
+                });
             });
         });
 }

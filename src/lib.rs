@@ -37,7 +37,7 @@ impl Plugin for AppPlugin {
                         canvas: Some("#bevy".to_string()),
                         fit_canvas_to_parent: true,
                         prevent_default_event_handling: true,
-                        resolution: (1024., 1024.).into(),
+                        resolution: (1640., 1019.).into(),
                         resizable: false,
                         window_theme: Some(WindowTheme::Dark),
                         enabled_buttons: EnabledButtons {
