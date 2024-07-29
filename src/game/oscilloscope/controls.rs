@@ -30,6 +30,12 @@ enum InputAction {
 
 fn handle_inputs(mut commands: Commands, input: Res<ButtonInput<KeyCode>>) {
     for keycode in input.get_just_pressed() {
+        #[cfg(not(feature = "piano_mode"))]
+        match keycode {
+            KeyCode::Space => commands.trigger(ToggleDisplayModeEvent),
+            _ => {},
+        }
+        #[cfg(feature = "piano_mode")]
         match keycode {
             KeyCode::Space => commands.trigger(ToggleDisplayModeEvent),
             KeyCode::KeyA  => commands.trigger(SetPitchEvent(Pitch::C)),

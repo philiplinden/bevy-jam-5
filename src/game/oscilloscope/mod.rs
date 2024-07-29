@@ -30,6 +30,7 @@ pub(super) fn plugin(app: &mut App) {
         controls::plugin,
     ));
     app.observe(new_oscilloscope);
+    app.add_systems(Startup, setup_camera);
 }
 
 #[derive(Bundle)]

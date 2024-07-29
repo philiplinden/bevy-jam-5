@@ -18,13 +18,7 @@ use crate::{
 #[cfg(not(feature = "autoplay"))]
 const POST_LOADING_SCREEN: Screen = Screen::Title;
 #[cfg(feature = "autoplay")]
-#[cfg(not(feature = "dev_interface"))]
 const POST_LOADING_SCREEN: Screen = Screen::Playing;
-#[cfg(feature = "autoplay")]
-#[cfg(feature = "dev_interface")]
-const POST_LOADING_SCREEN: Screen = Screen::Dev;
-
-
 
 pub(super) fn plugin(app: &mut App) {
     app.init_state::<LoadingStatus>();
