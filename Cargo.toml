@@ -28,9 +28,6 @@ iyes_progress = { version = "0.12.0", features = [
     "bevy_log",
 ] }
 
-# physics
-avian2d = "0.1.1"
-
 # rendering
 image = "0.25.2"
 winit = "0.30.4"
@@ -65,7 +62,6 @@ dev_native = [
     "bevy/embedded_watcher",
 ]
 autoplay = []
-piano_mode = []
 
 # Idiomatic Bevy code often triggers these lints, and the CI workflow treats them as errors.
 # In some cases they may still signal poor code quality however, so consider commenting out these lines.

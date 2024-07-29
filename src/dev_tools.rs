@@ -5,22 +5,19 @@ use bevy::{
 };
 use bevy_inspector_egui::quick::WorldInspectorPlugin;
 
-#[cfg(feature = "physics_debug")]
-use avian2d::prelude::PhysicsDebugPlugin;
-
-use crate::ui::screens::Screen;
-
 pub struct DebugPlugin;
 
 impl Plugin for DebugPlugin {
     fn build(&self, app: &mut App) {
         app.add_plugins(FrameTimeDiagnosticsPlugin);
         // Print state transitions in dev builds
-        app.add_systems(Update, log_transitions::<Screen>);
+        app.add_systems(Update, (
+            log_transitions::<crate::ui::screens::Screen>,
+            log_transitions::<crate::ui::screens::loading::LoadingStatus>,
+            log_transitions::<crate::game::oscilloscope::render::DisplayMode>,
+        ));
         app.add_plugins((
             WorldInspectorPlugin::default(),
-            #[cfg(feature = "physics_debug")]
-            PhysicsDebugPlugin::default(),
         ));
     }
 }

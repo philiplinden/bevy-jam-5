@@ -7,12 +7,7 @@ use {bevy::prelude::*, bevy_fundsp::prelude::*, uuid::Uuid};
 
 pub const BUFFER_SIZE: usize = 1000;
 
-pub fn plugin(app: &mut App) {
-
-}
-
-#[derive(Component)]
-pub struct Channel(pub u8);
+pub fn plugin(app: &mut App) {}
 
 pub struct SynthDsp<F>(pub F);
 
