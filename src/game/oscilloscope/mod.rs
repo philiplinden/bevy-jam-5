@@ -46,7 +46,7 @@ pub fn new_oscilloscope(
 
     let x = Waveform::default();
     let y = Waveform::default();
-    let data = x.iter(0.0, 0.1)
+    let data: Vec<Vec2> = x.iter(0.0, 0.1)
         .zip(y.iter(0.0, 0.1))
                 .take(1000).map(|(x, y)| Vec2::new(x, y)).collect();
 
@@ -56,13 +56,8 @@ pub fn new_oscilloscope(
         material: materials.add(OscilloscopeMaterial {
             foreground: WAVEFORM_COLOR,
             background: OSCILLOSCOPE_SCREEN_COLOR,
-            offset: Vec2::new(0.35, -0.35),
-            begin: UVec2::new(0, 0),
-            // channels: vec![Vec2::splat(0.0), Vec2::splat(1.)],
-            channels: data,
-            // mode: DisplayMode::XY,
-            mode: DisplayMode::TimeSeries,
-            // color_texture: Some(asset_server.load("branding/icon.png")),
+            lines: vec![UVec2::new(0, data.len().saturating_sub(1) as u32)],
+            points: data,
         }),
         ..default()
     });

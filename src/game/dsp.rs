@@ -1,47 +1,95 @@
+use std::time::Duration;
 use {bevy::prelude::*, bevy_fundsp::prelude::*, uuid::Uuid};
-use crate::game::{audio::piano::{PianoId, PianoUnit, PitchVar}, oscilloscope::material::OscilloscopeMaterial};
+use bevy::time::common_conditions::on_timer;
+use crate::game::audio::piano::{PianoId, PitchVar, DspBuffer};
+use crate::game::oscilloscope::material::OscilloscopeMaterial;
 
 pub fn plugin(app: &mut App) {
-    app.add_systems(Update, update_oscilloscope);
+    app
+        .init_state::<DisplayMode>()
+        .add_systems(Update, render_xy_oscilloscope.run_if(in_state(DisplayMode::XY).and_then(on_timer(Duration::from_millis(100)))))
+        .add_systems(Update, render_time_series_oscilloscope.run_if(in_state(DisplayMode::TimeSeries).and_then(on_timer(Duration::from_millis(100)))))
+        ;
 }
 
-/// Update the oscilloscope material to match the waveform's shape.
-// pub fn update_oscilloscope(
-//     dsp_manager: Res<DspManager>,
-//     // piano_ids: Query<&PianoId, Changed<PitchVar>>,
-//     piano_ids: Query<&PianoId>,
-//     mut materials: ResMut<Assets<OscilloscopeMaterial>>,
-// ) {
+/// Select the waveform plotting mode.
+///
+/// `Mode::Timeseries`: plots all waves on amplitude over time axes.
+/// ```
+///      +1 |   /\      /\      /\      /\      /\      /\
+///         |  /  \    /  \    /  \    /  \    /  \    /  \
+///      +0 | /    \  /    \  /    \  /    \  /    \  /    \
+///         |/      \/      \/      \/      \/      \/      \
+///      -1 |
+///         +-------------------------------------------------->
+///           0      1      2      3      4      5      6    Time
+/// ```
+///
+/// `Mode::XY`: Lissajous Pattern (Wave 1 Amplitude vs. Wave 2 Amplitude)
+/// ```
+///      +1 |    *   *
+///         |  *       *
+///         | *         *
+///      +0 |*           *
+///         | *         *
+///         |  *       *
+///      -1 |    *   *
+///         +-------------------->
+///         -1    0    +1
+/// ```
+///
+/// Note: The actual pattern may vary depending on the frequency and phase
+/// relationship between the two sine waves.
+#[derive(States, Debug, Default, Clone, Copy, PartialEq, Hash, Eq)]
+pub enum DisplayMode {
+    XY,
+    #[default]
+    TimeSeries,
+}
 
-//     for piano_id in &piano_ids {
-//     for (_id, material) in materials.iter_mut() {
-//         let mut audio_unit = dsp_manager
-//             .get_graph_by_id(&piano_id.0)
-//             .expect("graph");
-
-//         material.channels.clear();
-//         material.channels.extend(audio_unit.into_iter().take(1000).map(|[a, b]| Vec2::new(a,b)));
-//     }
-//     }
-// }
-pub fn update_oscilloscope(
-    _dsp_manager: Res<DspManager>,
-    mut piano_units: Query<&mut PianoUnit, Changed<PitchVar>>,
+pub fn render_xy_oscilloscope(
+    mut dsp_buffers: Query<&DspBuffer>,
     mut materials: ResMut<Assets<OscilloscopeMaterial>>,
 ) {
-
-    for mut piano_unit in &mut piano_units {
+    for mut dsp_buffer in &dsp_buffers {
         for (_id, material) in materials.iter_mut() {
 
-            let input : [f32; 0] = [];
-            let mut output : [f32; 2] = [0., 0.];
+            let mut lock = dsp_buffer.0.try_lock();
+            if let Ok(ref mut mutex) = lock {
+                let mut i = mutex.iter().map(|x| Vec2::new(*x, *x));
+                if let Some(x) = i.next() {
+                    material.points.clear();
+                    material.points.push(x);
+                    material.points.extend(i);
+                    material.lines = vec![UVec2::new(0, material.points.len().saturating_sub(1) as u32)];
+                } else {
+                    continue;
+                }
+            }
+        }
+    }
+}
 
-            piano_unit.set_sample_rate(4410.0); // instead of 44,100 Hz
+pub fn render_time_series_oscilloscope(
+    mut dsp_buffers: Query<&DspBuffer>,
+    mut materials: ResMut<Assets<OscilloscopeMaterial>>,
+) {
+    for mut dsp_buffer in &dsp_buffers {
+        for (_id, material) in materials.iter_mut() {
 
-            material.channels.clear();
-            for i in 0..1000 {
-                piano_unit.tick(&input, &mut output);
-                material.channels.push(Vec2::new(output[0], output[1]));
+            let mut lock = dsp_buffer.0.try_lock();
+            if let Ok(ref mut mutex) = lock {
+                let l = mutex.len();
+                let dt = 2.0 / l as f32;
+                let mut i = mutex.iter().enumerate().map(|(n, x)| Vec2::new(-1. + n as f32 * dt, *x));
+                if let Some(x) = i.next() {
+                    material.points.clear();
+                    material.points.push(x);
+                    material.points.extend(i);
+                    material.lines = vec![UVec2::new(0, material.points.len().saturating_sub(1) as u32)];
+                } else {
+                    continue;
+                }
             }
         }
     }

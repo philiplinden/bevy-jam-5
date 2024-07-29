@@ -18,14 +18,11 @@
 struct OscilloscopeMaterial {
     foreground: vec4<f32>,
     background: vec4<f32>,
-    offset: vec2<f32>,
-    begin: vec2<u32>,
-    mode: u32,
 };
 
 @group(2) @binding(0) var<uniform> material: OscilloscopeMaterial;
-// @group(2) @binding(1) var<uniform> material.background: vec4<f32>;
-@group(2) @binding(2) var<storage> channel: array<vec2<f32>>;
+@group(2) @binding(2) var<storage> points: array<vec2<f32>>;
+@group(2) @binding(3) var<storage> lines: array<vec2<u32>>;
 
 fn sd_segment(p: vec2<f32>, a: vec2<f32>, b: vec2<f32>) -> f32 {
     let pa = p - a;
@@ -35,49 +32,20 @@ fn sd_segment(p: vec2<f32>, a: vec2<f32>, b: vec2<f32>) -> f32 {
 }
 
 fn sdf(p: vec2<f32>) -> f32 {
-    if material.mode == 1u {
-        return xy_mode(p);
-    } else { //if material.mode == 2u {
-        return time_series(p);
-    }
-}
 
-
-fn time_series(p: vec2<f32>) -> f32 {
     var d = 16777216.0;
-    let n = arrayLength(&channel);
-    var t = -1.0;
-    let dt = 2.0/f32(n);
-    var a = vec2<f32>(t, channel[material.begin.x + 0].x + material.offset.x);
-    for (var i = 1u; i < n; i++) {
-        t += dt;
-        let b = vec2<f32>(t, channel[(material.begin.x + i) % n].x + material.offset.x);
-        d = min(d, sd_segment(p, a, b));
-        a = b;
-    }
-
-    t = -1.0;
-    a = vec2<f32>(t, channel[material.begin.y + 0].y + material.offset.y);
-    for (var i = 1u; i < n; i++) {
-        t += dt;
-        let b = vec2<f32>(t, channel[(material.begin.y + i) % n].y + material.offset.y);
-        d = min(d, sd_segment(p, a, b));
-        a = b;
+    let n = arrayLength(&lines);
+    for (var i = 0u; i < n; i++) {
+        var a = points[lines[i].x];
+        for (var j = lines[i].x + 1; j < lines[i].y; j++) {
+            let b = points[j];
+            d = min(d, sd_segment(p, a, b));
+            a = b;
+        }
     }
     return d;
 }
 
-fn xy_mode(p: vec2<f32>) -> f32 {
-    var d = 16777216.0;
-    let n = arrayLength(&channel);
-    var a = channel[0];
-    for (var i = 1u; i < n; i++) {
-        let b = channel[i];
-        d = min(d, sd_segment(p, a, b));
-        a = b;
-    }
-    return d;
-}
 
 fn effect(d: f32, pp: vec2<f32>, resolution: vec2<f32>) -> vec3<f32> {
     let aa: f32 = 2.0 / resolution.y;

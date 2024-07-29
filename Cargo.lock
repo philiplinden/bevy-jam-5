@@ -479,6 +479,7 @@ dependencies = [
  "bevy_mod_debugdump",
  "bevy_mod_picking",
  "bevy_video_glitch",
+ "circular-buffer",
  "image 0.25.2",
  "iyes_progress",
  "leafwing-input-manager",
@@ -1875,6 +1876,12 @@ name = "cfg_aliases"
 version = "0.2.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "613afe47fcd5fac7ccf1db93babcb082c5994d996f20b8b159f2ad1658eb5724"
+
+[[package]]
+name = "circular-buffer"
+version = "0.1.7"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "da987586004ae7c43b7df5e3f7693775068522e1086f8d9b2d74c778a0f43313"
 
 [[package]]
 name = "clang-sys"
