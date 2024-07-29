@@ -13,6 +13,7 @@ license = "MIT"
 bevy = { version = "0.14.0", features = ["multi_threaded"] }
 bevy_asset_loader = { version = "0.21.0", features = ["progress_tracking"] }
 rand = "0.8.5"
+uuid = "1.10.0"
 
 # Disable low-severity logs at compile time for performance.
 log = { version = "0.4.22", features = [
@@ -41,7 +42,6 @@ bevy-inspector-egui = { version = "0.25.1", features = ["highlight_changes"] }
 
 # audio
 bevy_fundsp = { git = "https://github.com/shanecelis/bevy_fundsp.git", branch = "bevy-0.14" }
-uuid = "1.10.0"
 circular-buffer = "0.1.7"
 
 [features]

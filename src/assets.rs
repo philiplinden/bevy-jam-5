@@ -20,10 +20,34 @@ pub struct SoundtrackAssets {
 }
 
 #[derive(AssetCollection, Resource)]
+pub struct ImageAssets {
+    #[asset(path = "images/Knobs/1/knob1-1.png")]
+    pub knob1_1: Handle<Image>,
+
+    #[asset(path = "images/Knobs/1/knob1-2.png")]
+    pub knob1_2: Handle<Image>,
+
+    #[asset(path = "images/Knobs/1/knob1-3.png")]
+    pub knob1_3: Handle<Image>,
+
+    #[asset(path = "images/Slider/Slider LARGE-1.png")]
+    pub slider_large: Handle<Image>,
+
+    #[asset(path = "images/Slider/Slider LARGE-2.png")]
+    pub slider_large_thumb: Handle<Image>,
+
+    #[asset(path = "images/Slider/Slider SMALL-1.png")]
+    pub slider_small: Handle<Image>,
+
+    #[asset(path = "images/Slider/Slider SMALL-2.png")]
+    pub slider_small_thumb: Handle<Image>,
+}
+
+#[derive(AssetCollection, Resource)]
 pub struct FontAssets {
 }
 
-#[derive(AssetCollection, Resource, Default)]
+#[derive(AssetCollection, Resource)]
 pub struct ShaderAssets {
     #[asset(path = "shaders/oscilloscope.wgsl")]
     pub oscilloscope: Handle<Shader>,

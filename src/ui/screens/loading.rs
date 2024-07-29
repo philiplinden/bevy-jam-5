@@ -30,14 +30,15 @@ pub(super) fn plugin(app: &mut App) {
     );
     app.add_plugins((
         ProgressPlugin::new(LoadingStatus::Working).continue_to(LoadingStatus::Done),
-        ProgressPlugin::new(Screen::Loading).continue_to(POST_LOADING_SCREEN),
+        // ProgressPlugin::new(Screen::Loading).continue_to(POST_LOADING_SCREEN),
     ));
     app.add_loading_state(
         LoadingState::new(LoadingStatus::Working)
+            .continue_to_state(LoadingStatus::Done)
             .load_collection::<FontAssets>()
             .load_collection::<SoundtrackAssets>()
+            .load_collection::<ImageAssets>()
             .load_collection::<ShaderAssets>()
-            .init_resource::<ShaderAssets>(),
     );
     app.add_systems(
         Update,
@@ -48,7 +49,8 @@ pub(super) fn plugin(app: &mut App) {
     );
 }
 
-fn spawn_loading_screen(mut commands: Commands) {
+fn spawn_loading_screen(mut commands: Commands, mut loading: ResMut<NextState<LoadingStatus>>) {
+    loading.set(LoadingStatus::Working);
     commands
         .ui_root()
         .insert(StateScoped(Screen::Loading))
@@ -60,6 +62,7 @@ fn spawn_loading_screen(mut commands: Commands) {
 #[derive(Clone, Eq, PartialEq, Debug, Hash, Default, States, Resource)]
 enum LoadingStatus {
     #[default]
+    Waiting,
     Working,
     Done,
 }
