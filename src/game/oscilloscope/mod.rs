@@ -2,7 +2,7 @@
 
 pub mod waveform;
 mod material;
-mod render;
+pub mod render;
 
 use avian2d::prelude::PhysicsSet;
 use bevy::{prelude::*, sprite::MaterialMesh2dBundle};
@@ -18,7 +18,6 @@ pub(super) fn plugin(app: &mut App) {
         render::plugin,
         waveform::plugin,
     ));
-    app.add_plugins((material::plugin, waveform::plugin));
     app.init_state::<DisplayMode>();
     app.observe(new_oscilloscope);
     app.observe(toggle_display_mode);
