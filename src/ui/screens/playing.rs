@@ -5,7 +5,9 @@ use bevy::prelude::*;
 use super::Screen;
 use crate::{
     assets::ImageAssets,
-    game::oscilloscope::{self, render::{DisplayMode, SetDisplayModeEvent}, OscilloscopeImage},
+    game::oscilloscope::{
+        self, DisplayMode, OscilloscopeImage, SetDisplayModeEvent, SpawnOscilloscope,
+    },
     ui::{interaction, palette::OSCILLOSCOPE_SCREEN_COLOR, widgets::*},
 };
 
@@ -14,9 +16,13 @@ pub(super) fn plugin(app: &mut App) {
     app.insert_resource(ClearColor(OSCILLOSCOPE_SCREEN_COLOR));
 }
 
-fn enter_playing(mut commands: Commands, osc_image: Res<OscilloscopeImage>, images: Res<ImageAssets>) {
-    commands.trigger(oscilloscope::SpawnOscilloscope);
-    //commands.trigger(SetDisplayModeEvent(DisplayMode::XY));
+fn enter_playing(
+    mut commands: Commands,
+    osc_image: Res<OscilloscopeImage>,
+    images: Res<ImageAssets>,
+) {
+    commands.trigger(SpawnOscilloscope);
+    commands.trigger(SetDisplayModeEvent(DisplayMode::XY));
 
     commands
         .ui_root()
@@ -26,7 +32,8 @@ fn enter_playing(mut commands: Commands, osc_image: Res<OscilloscopeImage>, imag
             children.slider_large(&images);
             children.spawn(ImageBundle {
                 style: Style {
-                    width: Val::Px(1218.), height: Val::Px(975.),
+                    width: Val::Px(1218.),
+                    height: Val::Px(975.),
                     ..default()
                 },
                 image: osc_image.0.clone().into(),

@@ -1,8 +1,6 @@
 // This is a module to handle interactions between UI elements and user actions, not game controls.
 use bevy::prelude::*;
 
-use crate::game::oscilloscope::waveform::*;
-
 pub(super) fn plugin(app: &mut App) {
     app.register_type::<InteractionPalette>();
     app.add_systems(Update, apply_interaction_palette);
