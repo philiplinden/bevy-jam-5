@@ -20,6 +20,18 @@ pub struct SoundtrackAssets {
 }
 
 #[derive(AssetCollection, Resource)]
+pub struct ImageAssets {
+    #[asset(path = "images/Knobs/1/knob1-1.png")]
+    pub knob1_1: Handle<AudioSource>,
+
+    #[asset(path = "images/Knobs/1/knob1-2.png")]
+    pub knob1_2: Handle<AudioSource>,
+
+    #[asset(path = "images/Knobs/1/knob1-3.png")]
+    pub knob1_3: Handle<AudioSource>,
+}
+
+#[derive(AssetCollection, Resource)]
 pub struct FontAssets {
 }
 
