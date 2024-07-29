@@ -1,6 +1,7 @@
+//! Generate synth tones by pitch.
 use {bevy::prelude::*, bevy_fundsp::prelude::*, uuid::Uuid};
 use super::tee::tee;
-use crate::game::dsp::DspBuffer;
+use crate::game::audio::dsp::{DspBuffer, Channel};
 
 pub struct PianoPlugin;
 
@@ -96,9 +97,6 @@ impl From<Pitch> for f32 {
     }
 }
 
-#[derive(Component)]
-pub struct Channel(pub u8);
-
 #[derive(Event)]
 pub struct SetPitchEvent(pub Pitch);
 
@@ -131,7 +129,7 @@ pub fn setup_channel(number: u8) -> impl FnMut(Commands) {
         let piano_id = piano_dsp.id();
         commands.add(Dsp(piano_dsp, SourceType::Dynamic));
         commands.spawn((PianoBundle {
-            channel: Channel(0),
+            channel: Channel(number),
             pitch: PitchVar(pitch),
             id: PianoId(piano_id),
         },

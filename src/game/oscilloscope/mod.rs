@@ -1,22 +1,18 @@
 //! This is the base module for rendering the oscilloscope display.
 
 pub mod controls;
-pub mod waveform;
 mod material;
 mod render;
 
 use bevy::{prelude::*, sprite::MaterialMesh2dBundle};
 
 pub use render::{DisplayMode, ToggleDisplayModeEvent, SetDisplayModeEvent};
-use crate::ui::palette::{OSCILLOSCOPE_SCREEN_COLOR, WAVEFORM_COLOR};
 use material::OscilloscopeMaterial;
-use waveform::Waveform;
 
 pub(super) fn plugin(app: &mut App) {
     app.add_plugins((
         material::plugin,
         render::plugin,
-        waveform::plugin,
         controls::plugin,
     ));
     app.observe(new_oscilloscope);
@@ -45,15 +41,6 @@ pub fn new_oscilloscope(
     // We query the window to get its current width and height. This is used to scale the display.
     let window = window.single();
 
-    let x = Waveform::default();
-    let y = Waveform::default();
-    let data: Vec<Vec2> = x
-        .iter(0.0, 0.1)
-        .zip(y.iter(0.0, 0.1))
-        .take(1000)
-        .map(|(x, y)| Vec2::new(x, y))
-        .collect();
-
     commands.spawn(MaterialMesh2dBundle {
         mesh: meshes
             .add(Rectangle::new(
@@ -62,12 +49,7 @@ pub fn new_oscilloscope(
             ))
             .into(),
         transform: Transform::default(),
-        material: materials.add(OscilloscopeMaterial {
-            foreground: WAVEFORM_COLOR,
-            background: OSCILLOSCOPE_SCREEN_COLOR,
-            lines: vec![UVec2::new(0, data.len().saturating_sub(1) as u32)],
-            points: data,
-        }),
+        material: materials.add(OscilloscopeMaterial::default()),
         ..default()
     });
 }

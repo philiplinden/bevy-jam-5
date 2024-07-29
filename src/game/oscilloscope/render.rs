@@ -3,7 +3,7 @@
 use bevy::prelude::*;
 use avian2d::prelude::PhysicsSet;
 
-use crate::game::dsp::DspBuffer;
+use crate::game::audio::dsp::DspBuffer;
 use super::OscilloscopeMaterial;
 
 pub(super) fn plugin(app: &mut App) {
