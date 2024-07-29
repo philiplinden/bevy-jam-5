@@ -80,39 +80,3 @@ impl Material2d for OscilloscopeMaterial {
         SHADER_ASSET_PATH.into()
     }
 }
-
-/// Select the waveform plotting mode.
-///
-/// `Mode::Timeseries`: plots all waves on amplitude over time axes.
-/// ```
-///      +1 |   /\      /\      /\      /\      /\      /\
-///         |  /  \    /  \    /  \    /  \    /  \    /  \
-///      +0 | /    \  /    \  /    \  /    \  /    \  /    \
-///         |/      \/      \/      \/      \/      \/      \
-///      -1 |
-///         +-------------------------------------------------->
-///           0      1      2      3      4      5      6    Time
-/// ```
-///
-/// `Mode::XY`: Lissajous Pattern (Wave 1 Amplitude vs. Wave 2 Amplitude)
-/// ```
-///      +1 |    *   *
-///         |  *       *
-///         | *         *
-///      +0 |*           *
-///         | *         *
-///         |  *       *
-///      -1 |    *   *
-///         +-------------------->
-///         -1    0    +1
-/// ```
-///
-/// Note: The actual pattern may vary depending on the frequency and phase
-/// relationship between the two sine waves.
-#[derive(Debug, Default, Clone, Copy)]
-pub enum DisplayMode {
-    #[default]
-    XY = 1,
-    #[allow(dead_code)]
-    TimeSeries = 2,
-}
