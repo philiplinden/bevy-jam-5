@@ -4,7 +4,8 @@ use bevy::prelude::*;
 
 use super::Screen;
 use crate::{
-    ui::{interaction, slider::*},
+    assets::ImageAssets,
+    ui::{interaction, slider::*, widgets::Widgets},
 };
 
 pub(super) fn plugin(app: &mut App) {
@@ -12,7 +13,7 @@ pub(super) fn plugin(app: &mut App) {
     app.add_systems(OnEnter(Screen::Dev), enter_dev);
 }
 
-fn enter_dev(mut commands: Commands) {
+fn enter_dev(mut commands: Commands, images: Res<ImageAssets>) {
     commands.spawn(SliderBundle {
         style: Style {
             width: Val::Px(200.),
@@ -22,19 +23,17 @@ fn enter_dev(mut commands: Commands) {
         },
         background_color: Color::srgb(0.8, 0.8, 0.8).into(),
         ..default()
-    })
-            .with_children(|parent| {
-                // Adding the slider handle
-                parent.spawn(SliderHandleBundle {
-                    style: Style {
-                        width: Val::Px(15.), height: Val::Px(20.),
-                        ..default()
-                    },
-                    background_color: Color::BLACK.into(),
-                    ..default()
-                });
-            });
-
-    ;
+    }).with_children(|parent| {
+        // Adding the slider handle
+        parent.spawn(SliderHandleBundle {
+            style: Style {
+                width: Val::Px(15.), height: Val::Px(20.),
+                ..default()
+            },
+            background_color: Color::BLACK.into(),
+            ..default()
+        });
+    });
+    commands.slider_large(&images);
 
 }

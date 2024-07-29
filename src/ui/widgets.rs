@@ -2,7 +2,8 @@
 
 use bevy::{ecs::system::EntityCommands, prelude::*, ui::Val::*};
 
-use super::{interaction::InteractionPalette, palette::*};
+use super::{interaction::InteractionPalette, palette::*, slider::*};
+use crate::assets::ImageAssets;
 
 /// An extension trait for spawning UI widgets.
 pub trait Widgets {
@@ -14,6 +15,8 @@ pub trait Widgets {
 
     /// Spawn a simple text label.
     fn label(&mut self, text: impl Into<String>) -> EntityCommands;
+
+    fn slider_large(&mut self, images: &ImageAssets) -> EntityCommands;
 }
 
 impl<T: Spawn> Widgets for T {
@@ -108,6 +111,31 @@ impl<T: Spawn> Widgets for T {
                     },
                 ),
             ));
+        });
+        entity
+    }
+
+    fn slider_large(&mut self, images: &ImageAssets) -> EntityCommands {
+
+        let mut entity = self.spawn(SliderBundle {
+            style: Style {
+                width: Val::Px(489.),
+                height: Val::Px(88.),
+                align_items: AlignItems::Center,
+                ..default()
+            },
+            image: images.slider_large.clone().into(),
+            ..default()
+        });
+        entity.with_children(|parent| {
+            parent.spawn(SliderHandleBundle {
+                style: Style {
+                    width: Val::Px(127.), height: Val::Px(75.),
+                    ..default()
+                },
+                image: images.slider_large_thumb.clone().into(),
+                ..default()
+            });
         });
         entity
     }
