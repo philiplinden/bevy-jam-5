@@ -18,7 +18,7 @@ impl Plugin for DebugPlugin {
         // Print state transitions in dev builds
         app.add_systems(Update, log_transitions::<Screen>);
         app.add_plugins((
-            WorldInspectorPlugin::default(),
+            // WorldInspectorPlugin::default(),
             #[cfg(feature = "physics_debug")]
             PhysicsDebugPlugin::default(),
         ));

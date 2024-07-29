@@ -14,5 +14,6 @@ pub(super) fn plugin(app: &mut App) {
 }
 
 fn enter_playing(mut commands: Commands) {
+    commands.trigger(oscilloscope::SpawnOscilloscope);
     commands.trigger(SetDisplayModeEvent(DisplayMode::XY));
 }
