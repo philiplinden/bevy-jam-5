@@ -1,7 +1,5 @@
 use bevy::{audio::PlaybackMode, prelude::*};
 
-use crate::assets::{HandleMap, SoundtrackKey};
-
 pub(super) fn plugin(app: &mut App) {
     app.register_type::<IsSoundtrack>();
     app.observe(play_soundtrack);

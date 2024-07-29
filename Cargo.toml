@@ -28,9 +28,6 @@ iyes_progress = { version = "0.12.0", features = [
     "bevy_log",
 ] }
 
-# physics
-avian2d = "0.1.1"
-
 # rendering
 image = "0.25.2"
 winit = "0.30.4"

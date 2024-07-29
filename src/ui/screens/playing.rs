@@ -5,9 +5,9 @@ use bevy::prelude::*;
 use super::Screen;
 use crate::{
     assets::ImageAssets,
-    game::oscilloscope::{
+    game::{audio, oscilloscope::{
         self, DisplayMode, OscilloscopeImage, SetDisplayModeEvent, SpawnOscilloscope,
-    },
+    }},
     ui::{interaction, palette::OSCILLOSCOPE_SCREEN_COLOR, widgets::*},
 };
 
@@ -20,10 +20,12 @@ fn enter_playing(
     mut commands: Commands,
     osc_image: Res<OscilloscopeImage>,
     images: Res<ImageAssets>,
+    mut next_play_state: ResMut<NextState<audio::synth::SynthPlayer>>
+
 ) {
     commands.trigger(SpawnOscilloscope);
     commands.trigger(SetDisplayModeEvent(DisplayMode::XY));
-
+    next_play_state.set(audio::synth::SynthPlayer::Playing);
     commands
         .ui_root()
         .insert(StateScoped(Screen::Playing))

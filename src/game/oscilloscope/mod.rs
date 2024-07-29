@@ -3,7 +3,7 @@
 pub mod controls;
 mod crt;
 mod material;
-mod render;
+pub mod render;
 
 use bevy::{
     prelude::*,
