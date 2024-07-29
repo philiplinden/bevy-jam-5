@@ -27,6 +27,8 @@ use bevy::{
     },
 };
 
+use bevy_video_glitch::{VideoGlitchPlugin, VideoGlitchSettings};
+
 /// This example uses a shader source file from the assets subdirectory
 const SHADER_ASSET_PATH: &str = "shaders/crt.wgsl";
 
@@ -36,7 +38,9 @@ pub struct CrtPlugin;
 impl Plugin for CrtPlugin {
     fn build(&self, app: &mut App) {
         app.register_type::<CrtSettings>();
+        app.register_type::<VideoGlitchSettings>();
         app.add_plugins((
+            VideoGlitchPlugin,
             // The settings will be a component that lives in the main world but will
             // be extracted to the render world every frame.
             // This makes it possible to control the effect from the main world.
