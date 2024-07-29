@@ -30,7 +30,7 @@ fn scanline(coord: vec2<f32>, screen: vec3<f32>) -> vec3<f32> {
 fn crt(coord: vec2<f32>, bend: f32) -> vec2<f32> {
     var result = (coord - 0.5) * 2.0;
     result *= 1.1;
-    result *= 1.0 + pow((abs(result.yx) / bend), vec2(2.0, 2.0));
+    result *= 1.0 + pow((abs(result.yx) / bend), vec2(2.4, 2.4));
     result = (result / 2.0) + 0.5;
     return result;
 }

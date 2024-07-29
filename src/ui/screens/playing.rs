@@ -39,18 +39,20 @@ fn enter_playing(
             }).with_children(|parent| {
                 parent.label("Playing");
                 parent.slider_large(&images);
-                parent.spawn(ImageBundle {
+                parent.spawn((
+                    Name::new("Oscilloscope Node"),
+                    ImageBundle {
                     style: Style {
                         position_type: PositionType::Absolute,
-                        left: Val::Px(1016.),
-                        top: Val::Px(490.),
-                        width: Val::Px(1218.),
-                        height: Val::Px(975.),
+                        left: Val::Px(933.),
+                        top: Val::Px(421.),
+                        width: Val::Px(1416.),
+                        height: Val::Px(1142.),
                         ..default()
                     },
                     image: osc_image.0.clone().into(),
                     ..default()
-                });
+                }));
             });
         });
 }
