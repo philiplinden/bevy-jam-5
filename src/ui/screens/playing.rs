@@ -41,6 +41,9 @@ fn enter_playing(
                 parent.slider_large(&images);
                 parent.spawn(ImageBundle {
                     style: Style {
+                        position_type: PositionType::Absolute,
+                        left: Val::Px(1016.),
+                        top: Val::Px(490.),
                         width: Val::Px(1218.),
                         height: Val::Px(975.),
                         ..default()
