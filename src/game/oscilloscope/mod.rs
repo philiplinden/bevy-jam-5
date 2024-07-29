@@ -7,12 +7,19 @@ mod render;
 
 use bevy::{prelude::*, sprite::MaterialMesh2dBundle};
 
+pub use render::{DisplayMode, ToggleDisplayModeEvent, SetDisplayModeEvent};
 use crate::ui::palette::{OSCILLOSCOPE_SCREEN_COLOR, WAVEFORM_COLOR};
 use material::OscilloscopeMaterial;
 use waveform::Waveform;
 
 pub(super) fn plugin(app: &mut App) {
-    app.add_plugins((material::plugin, waveform::plugin, render::plugin, controls::plugin));
+    app.add_plugins((
+        material::plugin,
+        render::plugin,
+        waveform::plugin,
+        controls::plugin
+    ));
+    app.observe(new_oscilloscope);
 }
 
 #[derive(Bundle)]
@@ -64,7 +71,3 @@ pub fn new_oscilloscope(
         ..default()
     });
 }
-
-/// Trigger the display to change modes.
-#[derive(Event)]
-pub struct ToggleDisplayModeEvent;

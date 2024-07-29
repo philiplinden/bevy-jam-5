@@ -4,11 +4,14 @@ use bevy::prelude::*;
 use avian2d::prelude::PhysicsSet;
 
 use crate::game::audio::piano::DspBuffer;
-use super::{OscilloscopeMaterial, ToggleDisplayModeEvent};
+use super::OscilloscopeMaterial;
 
 pub(super) fn plugin(app: &mut App) {
     app.init_state::<DisplayMode>();
     app.observe(toggle_display_mode);
+    app.observe(set_display_mode);
+    app.add_event::<ToggleDisplayModeEvent>();
+    app.add_event::<SetDisplayModeEvent>();
     app.add_systems(
         Update,
         (
@@ -28,6 +31,10 @@ pub enum DisplayMode {
     TimeSeries,
 }
 
+/// Trigger the display to change modes.
+#[derive(Event)]
+pub struct ToggleDisplayModeEvent;
+
 fn toggle_display_mode(
     _trigger: Trigger<ToggleDisplayModeEvent>,
     mode: Res<State<DisplayMode>>,
@@ -38,6 +45,17 @@ fn toggle_display_mode(
         DisplayMode::TimeSeries => next_mode.set(DisplayMode::XY),
     }
 }
+
+#[derive(Event)]
+pub struct SetDisplayModeEvent(pub DisplayMode);
+
+fn set_display_mode(
+    trigger: Trigger<SetDisplayModeEvent>,
+    mut next_mode: ResMut<NextState<DisplayMode>>,
+) {
+    next_mode.set(trigger.event().0);
+}
+
 /// `Mode::XY`: Lissajous Pattern (Wave 1 Amplitude vs. Wave 2 Amplitude)
 /// ```
 ///      +1 |    *   *
