@@ -30,10 +30,10 @@ pub(super) fn plugin(app: &mut App) {
 
 fn spawn_camera(mut commands: Commands) {
     let mut camera_bundle = Camera2dBundle::default();
-    camera_bundle.projection.scaling_mode = bevy::render::camera::ScalingMode::Fixed {
-        width: 512.,
-        height: 512.,
-    };
+    // camera_bundle.projection.scaling_mode = bevy::render::camera::ScalingMode::Fixed {
+    //     width: 512.,
+    //     height: 512.,
+    // };
     commands.spawn((
         Name::new("Camera"),
         camera_bundle,
@@ -44,11 +44,5 @@ fn spawn_camera(mut commands: Commands) {
         // [ui node outlines](https://bevyengine.org/news/bevy-0-14/#ui-node-outline-gizmos)
         // for debugging. So it's good to have this here for future-proofing.
         IsDefaultUiCamera,
-        // This component is also used to determine on which camera to run the post processing effect.
-        VideoGlitchSettings {
-            intensity: 0.1,
-            color_aberration: Mat3::IDENTITY,
-        },
-        CrtSettings::default(),
     ));
 }
