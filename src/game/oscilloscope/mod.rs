@@ -5,10 +5,21 @@ mod material;
 pub mod render;
 
 use avian2d::prelude::PhysicsSet;
-use bevy::{prelude::*, sprite::MaterialMesh2dBundle};
+use bevy::{prelude::*,
+           sprite::MaterialMesh2dBundle,
+           render::{
+               view::RenderLayers,
 
-use crate::ui::palette::{OSCILLOSCOPE_SCREEN_COLOR, WAVEFORM_COLOR};
+               render_resource::{
+                   Extent3d, TextureDescriptor, TextureDimension, TextureFormat, TextureUsages,
+               },
+           }
+};
+use bevy_video_glitch::VideoGlitchSettings;
+
+use crate::ui::{Screen, palette::{OSCILLOSCOPE_SCREEN_COLOR, WAVEFORM_COLOR}};
 use crate::game::audio::piano::DspBuffer;
+use crate::game::crt::CrtSettings;
 use material::OscilloscopeMaterial;
 use waveform::Waveform;
 
@@ -21,6 +32,8 @@ pub(super) fn plugin(app: &mut App) {
     app.init_state::<DisplayMode>();
     app.observe(new_oscilloscope);
     app.observe(toggle_display_mode);
+    app.add_systems(Startup, setup_camera);
+    // app.add_systems(OnEnter(Screen::Playing), new_oscilloscope);
     app.add_systems(Update, (
         render_xy_oscilloscope.run_if(in_state(DisplayMode::XY)),
         render_time_series_oscilloscope.run_if(in_state(DisplayMode::TimeSeries)),
@@ -59,7 +72,7 @@ pub fn new_oscilloscope(
         .map(|(x, y)| Vec2::new(x, y))
         .collect();
 
-    commands.spawn(MaterialMesh2dBundle {
+    commands.spawn((MaterialMesh2dBundle {
         mesh: meshes
             .add(Rectangle::new(
                 window.resolution.width(),
@@ -74,7 +87,81 @@ pub fn new_oscilloscope(
             points: data,
         }),
         ..default()
-    });
+    },
+    RenderLayers::layer(1),
+                    StateScoped(Screen::Playing),
+    ));
+
+}
+
+#[derive(Resource)]
+pub struct OscilloscopeImage(pub Handle<Image>);
+
+fn setup_camera(
+    mut commands: Commands,
+    mut images: ResMut<Assets<Image>>,
+) {
+
+    let size = Extent3d {
+        width: 1218,
+        height: 975,
+        ..default()
+    };
+
+    // This is the texture that will be rendered to.
+    let mut image = Image {
+        texture_descriptor: TextureDescriptor {
+            label: None,
+            size,
+            dimension: TextureDimension::D2,
+            format: TextureFormat::Bgra8UnormSrgb,
+            mip_level_count: 1,
+            sample_count: 1,
+            usage: TextureUsages::TEXTURE_BINDING
+                | TextureUsages::COPY_DST
+                | TextureUsages::RENDER_ATTACHMENT,
+            view_formats: &[],
+        },
+        ..default()
+    };
+
+    // fill image.data with zeroes
+    image.resize(size);
+
+    let image_handle = images.add(image);
+
+    // let mut camera_bundle = Camera2dBundle::default();
+    // camera_bundle.projection.scaling_mode = bevy::render::camera::ScalingMode::Fixed {
+    //     width: 512.,
+    //     height: 512.,
+    // };
+    commands.spawn((
+        Name::new("Oscilloscope Camera"),
+        Camera2dBundle {
+            camera: Camera {
+                order: -1,
+                clear_color: Color::BLACK.into(),
+                target: image_handle.clone().into(),
+                ..default()
+            },
+            ..default()
+        },
+        // camera_bundle,
+        // Render all UI to this camera.
+        // Not strictly necessary since we only use one camera,
+        // but if we don't use this component, our UI will disappear as soon
+        // as we add another camera. This includes indirect ways of adding cameras like using
+        // [ui node outlines](https://bevyengine.org/news/bevy-0-14/#ui-node-outline-gizmos)
+        // for debugging. So it's good to have this here for future-proofing.
+        // This component is also used to determine on which camera to run the post processing effect.
+        VideoGlitchSettings {
+            intensity: 0.1,
+            color_aberration: Mat3::IDENTITY,
+        },
+        CrtSettings::default(),
+        RenderLayers::layer(1),
+    ));
+    commands.insert_resource(OscilloscopeImage(image_handle));
 }
 
 /// Select the waveform plotting mode.
