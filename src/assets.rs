@@ -41,6 +41,9 @@ pub struct ImageAssets {
 
     #[asset(path = "images/Slider/Slider SMALL-2.png")]
     pub slider_small_thumb: Handle<Image>,
+
+    #[asset(path = "images/Reference no BKG.png")]
+    pub reference_no_bg: Handle<Image>,
 }
 
 #[derive(AssetCollection, Resource)]

@@ -56,20 +56,22 @@ pub fn new_oscilloscope(
     // We query the window to get its current width and height. This is used to scale the display.
     let window = window.single();
 
-    commands.spawn((
-        MaterialMesh2dBundle {
-            mesh: meshes
-                .add(Rectangle::new(
-                    window.resolution.width(),
-                    window.resolution.height(),
-                ))
-                .into(),
-            transform: Transform::default(),
-            material: materials.add(OscilloscopeMaterial::default()),
-            ..default()
-        },
-        RenderLayers::layer(1),
-        StateScoped(Screen::Playing),
+    commands.spawn((MaterialMesh2dBundle {
+        mesh: meshes
+            .add(Rectangle::new(
+                1218.0,
+                917.0,
+
+                // window.resolution.width(),
+                // window.resolution.height(),
+            ))
+            .into(),
+        transform: Transform::default(),
+        material: materials.add(OscilloscopeMaterial::default()),
+        ..default()
+    },
+    RenderLayers::layer(1),
+    StateScoped(Screen::Playing),
     ));
 }
 
