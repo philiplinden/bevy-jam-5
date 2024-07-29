@@ -1,11 +1,17 @@
-#![allow(clippy::precedence)]
-use std::sync::{Mutex, Arc};
-use super::tee::tee;
-use circular_buffer::CircularBuffer;
-
+//! Generate synth tones by pitch.
 use {bevy::prelude::*, bevy_fundsp::prelude::*, uuid::Uuid};
+use super::tee::tee;
+use crate::game::audio::dsp::{DspBuffer, Channel};
 
 pub struct PianoPlugin;
+
+impl Plugin for PianoPlugin {
+    fn build(&self, app: &mut App) {
+        app.add_systems(Startup, setup_channel(0));
+        app.add_systems(PostStartup, play_pianos);
+        app.observe(switch_key);
+    }
+}
 
 pub struct PianoDsp<F>(F);
 
@@ -19,13 +25,8 @@ impl<T: AudioUnit + 'static, F: Send + Sync + 'static + Fn() -> T> DspGraph for 
     }
 }
 
-pub const BUFFER_SIZE: usize = 1000;
-
 #[derive(Debug, Component)]
 pub struct PianoId(pub Uuid);
-
-#[derive(Debug, Component)]
-pub struct DspBuffer(pub Arc<Mutex<CircularBuffer<BUFFER_SIZE, f32>>>);
 
 #[derive(Component)]
 pub struct PitchVar(pub Shared);
@@ -96,15 +97,14 @@ impl From<Pitch> for f32 {
     }
 }
 
-#[derive(Component)]
-pub struct Channel(pub u8);
+#[derive(Event)]
+pub struct SetPitchEvent(pub Pitch);
 
-impl Plugin for PianoPlugin {
-    fn build(&self, app: &mut App) {
-        app.add_systems(Startup, setup_channel(0))
-           .add_systems(Update, switch_key)
-           .add_systems(PostStartup, play_pianos)
-           ;
+fn switch_key(trigger: Trigger<SetPitchEvent>, mut pitch_vars: Query<(&Channel, &mut PitchVar)>) {
+    for (channel, mut pitch_var) in &mut pitch_vars {
+        if channel.0 == 0 {
+            pitch_var.set_pitch(trigger.event().0);
+        }
     }
 }
 
@@ -119,48 +119,23 @@ pub fn setup_channel(number: u8) -> impl FnMut(Commands) {
     move |mut commands: Commands| {
         let pitch = shared(Pitch::C.into());
         let pitch2 = pitch.clone();
-        let buffer = Arc::new(Mutex::new(CircularBuffer::new()));
-        let buffer2 = Arc::clone(&buffer);
+        let buffer = DspBuffer::new();
+        let buffer2 = DspBuffer::from(&buffer);
 
         // let piano = move || var(&pitch2) >> square() * 0.2 >> tee(&buffer) >> split::<U2>();
-        let piano = move || var(&pitch2) >> square() >> tee(&buffer) >> split::<U2>() * 0.2;
+        let piano = move || var(&pitch2) >> square() >> tee(&buffer.0) >> split::<U2>() * 0.2;
 
         let piano_dsp = PianoDsp(piano);
         let piano_id = piano_dsp.id();
         commands.add(Dsp(piano_dsp, SourceType::Dynamic));
         commands.spawn((PianoBundle {
-            channel: Channel(0),
+            channel: Channel(number),
             pitch: PitchVar(pitch),
             id: PianoId(piano_id),
         },
-            DspBuffer(buffer2)),
-        );
+            buffer2,
+        ));
     }
-}
-
-fn switch_key(input: Res<ButtonInput<KeyCode>>, mut pitch_vars: Query<(&Channel, &mut PitchVar)>) {
-    let mut keypress = |keycode, pitch| {
-        if input.just_pressed(keycode) {
-            for (channel, mut pitch_var) in &mut pitch_vars {
-                if channel.0 == 0 {
-                    pitch_var.set_pitch(pitch);
-                }
-            }
-        }
-    };
-
-    keypress(KeyCode::KeyA, Pitch::C);
-    keypress(KeyCode::KeyW, Pitch::Cs);
-    keypress(KeyCode::KeyS, Pitch::D);
-    keypress(KeyCode::KeyE, Pitch::Ds);
-    keypress(KeyCode::KeyD, Pitch::E);
-    keypress(KeyCode::KeyF, Pitch::F);
-    keypress(KeyCode::KeyT, Pitch::Fs);
-    keypress(KeyCode::KeyG, Pitch::G);
-    keypress(KeyCode::KeyY, Pitch::Gs);
-    keypress(KeyCode::KeyH, Pitch::A);
-    keypress(KeyCode::KeyU, Pitch::As);
-    keypress(KeyCode::KeyJ, Pitch::B);
 }
 
 fn play_pianos(
