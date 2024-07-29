@@ -33,4 +33,5 @@ fn spawn_camera(mut commands: Commands) {
         // for debugging. So it's good to have this here for future-proofing.
         IsDefaultUiCamera,
     ));
+    commands.insert_resource(UiScale(0.5));
 }

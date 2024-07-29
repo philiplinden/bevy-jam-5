@@ -59,8 +59,11 @@ pub fn new_oscilloscope(
     commands.spawn((MaterialMesh2dBundle {
         mesh: meshes
             .add(Rectangle::new(
-                window.resolution.width(),
-                window.resolution.height(),
+                1218.0,
+                917.0,
+
+                // window.resolution.width(),
+                // window.resolution.height(),
             ))
             .into(),
         transform: Transform::default(),
