@@ -1,15 +1,16 @@
 [package]
 name = "bevy-jam-5"
-authors = ["Philip Linden <lindenphilipj@gmail.com>"]
+authors = [
+    "Philip Linden <lindenphilipj@gmail.com>",
+    "Shane Celis <shane.celis@gmail.com>",
+]
 version = "0.1.0"
 edition = "2021"
 license = "MIT"
 
 [dependencies]
 # core crates
-bevy = { version = "0.14.0", features = [
-    "multi_threaded",
-] }
+bevy = { version = "0.14.0", features = ["multi_threaded"] }
 bevy_asset_loader = { version = "0.21.0", features = ["progress_tracking"] }
 rand = "0.8.5"
 
@@ -20,17 +21,18 @@ log = { version = "0.4.22", features = [
 ] }
 
 # UI
-image = "0.25.2"
-winit = "0.30.4"
-iyes_progress = { version = "0.12.0", features = ["assets", "bevy_asset", "bevy_log"] }
-leafwing-input-manager = { version = "0.14.0", features = ["egui"] }
-bevy_mod_picking = { version = "0.20.1", features = ["backend_avian", "bevy_picking_avian",  "bevy_picking_highlight"] }
+iyes_progress = { version = "0.12.0", features = [
+    "assets",
+    "bevy_asset",
+    "bevy_log",
+] }
 
 # physics
-avian2d ="0.1.1"
-physical_constants = "0.5.0"
+avian2d = "0.1.1"
 
 # rendering
+image = "0.25.2"
+winit = "0.30.4"
 bevy_video_glitch = "0.2.0"
 
 # dev tools
@@ -63,6 +65,7 @@ dev_native = [
     "bevy/embedded_watcher",
 ]
 autoplay = []
+physics_debug = []
 
 # Idiomatic Bevy code often triggers these lints, and the CI workflow treats them as errors.
 # In some cases they may still signal poor code quality however, so consider commenting out these lines.

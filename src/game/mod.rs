@@ -4,7 +4,6 @@ use bevy::prelude::*;
 
 pub mod audio;
 pub mod camera;
-pub mod controls;
 pub mod crt;
 pub mod dsp;
 pub mod oscilloscope;
