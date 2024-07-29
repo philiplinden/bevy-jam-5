@@ -55,7 +55,8 @@ dev = [
     "bevy/bevy_dev_tools",
     "iyes_progress/debug",
     "bevy_mod_debugdump",
-    # "autoplay",
+    "autoplay",
+    "dev_interface",
 ]
 dev_native = [
     "dev",
@@ -65,7 +66,7 @@ dev_native = [
     "bevy/embedded_watcher",
 ]
 autoplay = []
-physics_debug = []
+dev_interface = []
 
 # Idiomatic Bevy code often triggers these lints, and the CI workflow treats them as errors.
 # In some cases they may still signal poor code quality however, so consider commenting out these lines.
