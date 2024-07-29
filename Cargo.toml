@@ -1,15 +1,16 @@
 [package]
 name = "bevy-jam-5"
-authors = ["Philip Linden <lindenphilipj@gmail.com>"]
+authors = [
+    "Philip Linden <lindenphilipj@gmail.com>",
+    "Shane Celis <shane.celis@gmail.com>",
+]
 version = "0.1.0"
 edition = "2021"
 license = "MIT"
 
 [dependencies]
 # core crates
-bevy = { version = "0.14.0", features = [
-    "multi_threaded",
-] }
+bevy = { version = "0.14.0", features = ["multi_threaded"] }
 bevy_asset_loader = { version = "0.21.0", features = ["progress_tracking"] }
 rand = "0.8.5"
 uuid = "1.10.0"
@@ -21,12 +22,11 @@ log = { version = "0.4.22", features = [
 ] }
 
 # UI
-iyes_progress = { version = "0.12.0", features = ["assets", "bevy_asset", "bevy_log"] }
-leafwing-input-manager = { version = "0.14.0", features = ["egui"] }
-bevy_mod_picking = { version = "0.20.1", features = ["backend_avian", "bevy_picking_avian",  "bevy_picking_highlight"] }
-
-# physics
-avian2d ="0.1.1"
+iyes_progress = { version = "0.12.0", features = [
+    "assets",
+    "bevy_asset",
+    "bevy_log",
+] }
 
 # rendering
 image = "0.25.2"
@@ -39,6 +39,7 @@ bevy-inspector-egui = { version = "0.25.1", features = ["highlight_changes"] }
 
 # audio
 bevy_fundsp = { git = "https://github.com/shanecelis/bevy_fundsp.git", branch = "bevy-0.14" }
+circular-buffer = "0.1.7"
 
 [features]
 default = [
@@ -61,7 +62,6 @@ dev_native = [
     "bevy/embedded_watcher",
 ]
 autoplay = []
-physics_debug = []
 
 # Idiomatic Bevy code often triggers these lints, and the CI workflow treats them as errors.
 # In some cases they may still signal poor code quality however, so consider commenting out these lines.

@@ -1,9 +1,5 @@
 // This is a module to handle interactions between UI elements and user actions, not game controls.
-
 use bevy::prelude::*;
-use leafwing_input_manager::prelude::*;
-
-use crate::game::oscilloscope::waveform::*;
 
 pub(super) fn plugin(app: &mut App) {
     app.register_type::<InteractionPalette>();

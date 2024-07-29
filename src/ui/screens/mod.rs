@@ -1,16 +1,16 @@
 //! The game's main screen states and transitions between them.
 
 mod credits;
-mod loading;
-mod playing;
+pub mod loading;
+pub mod playing;
 mod splash;
 mod title;
+mod dev;
 
 use bevy::prelude::*;
 
 pub(super) fn plugin(app: &mut App) {
     app.init_state::<Screen>();
-    app.init_resource::<Screen>();
     app.enable_state_scoped_entities::<Screen>();
     app.add_plugins((
         splash::plugin,
@@ -18,11 +18,12 @@ pub(super) fn plugin(app: &mut App) {
         title::plugin,
         playing::plugin,
         credits::plugin,
+        dev::plugin,
     ));
 }
 
 /// The game's main screen states.
-#[derive(States, Resource, Debug, Hash, PartialEq, Eq, Clone, Default)]
+#[derive(States, Debug, Hash, PartialEq, Eq, Clone, Default)]
 pub enum Screen {
     #[default]
     Splash,
@@ -30,4 +31,5 @@ pub enum Screen {
     Title,
     Credits,
     Playing,
+    Dev,
 }

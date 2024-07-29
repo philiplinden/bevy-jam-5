@@ -6,6 +6,7 @@
 pub mod interaction;
 pub mod screens;
 pub mod palette;
+pub mod slider;
 mod widgets;
 
 pub mod prelude {
