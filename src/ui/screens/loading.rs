@@ -57,7 +57,7 @@ fn spawn_loading_screen(mut commands: Commands, mut loading: ResMut<NextState<Lo
 }
 
 #[derive(Clone, Eq, PartialEq, Debug, Hash, Default, States, Resource)]
-enum LoadingStatus {
+pub enum LoadingStatus {
     #[default]
     Waiting,
     Working,

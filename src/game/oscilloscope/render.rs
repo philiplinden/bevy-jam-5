@@ -1,7 +1,6 @@
 //! Render signals as waves on the display.
 
 use bevy::prelude::*;
-use avian2d::prelude::PhysicsSet;
 
 use crate::game::audio::dsp::DspBuffer;
 use super::OscilloscopeMaterial;
@@ -13,12 +12,11 @@ pub(super) fn plugin(app: &mut App) {
     app.add_event::<ToggleDisplayModeEvent>();
     app.add_event::<SetDisplayModeEvent>();
     app.add_systems(
-        Update,
+        PostUpdate,
         (
             render_xy_oscilloscope.run_if(in_state(DisplayMode::XY)),
             render_time_series_oscilloscope.run_if(in_state(DisplayMode::TimeSeries)),
         )
-            .in_set(PhysicsSet::StepSimulation),
     );
 }
 

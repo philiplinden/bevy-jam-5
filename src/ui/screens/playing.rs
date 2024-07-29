@@ -5,9 +5,9 @@ use bevy::prelude::*;
 use super::Screen;
 use crate::{
     assets::ImageAssets,
-    game::oscilloscope::{
+    game::{audio, oscilloscope::{
         self, DisplayMode, OscilloscopeImage, SetDisplayModeEvent, SpawnOscilloscope,
-    },
+    }},
     ui::{interaction, palette::OSCILLOSCOPE_SCREEN_COLOR, widgets::*},
 };
 
@@ -20,6 +20,7 @@ fn enter_playing(
     mut commands: Commands,
     osc_image: Res<OscilloscopeImage>,
     images: Res<ImageAssets>,
+
 ) {
     commands.trigger(SpawnOscilloscope);
     commands.trigger(SetDisplayModeEvent(DisplayMode::XY));
