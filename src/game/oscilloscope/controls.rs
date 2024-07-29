@@ -2,9 +2,7 @@ use bevy::prelude::*;
 use std::f32::consts::FRAC_PI_8;
 
 use super::ToggleDisplayModeEvent;
-#[cfg(feature = "piano_mode")]
 use crate::game::audio::piano::{Pitch, SetPitchEvent};
-use crate::game::audio::{synth::*, LeftAudioChannel, RightAudioChannel};
 
 const DEFAULT_INCREMENT: f32 = 0.1;
 
@@ -36,68 +34,64 @@ struct FrequencyIncrement(f32);
 fn handle_inputs(
     mut commands: Commands,
     input: Res<ButtonInput<KeyCode>>,
-    left_channel: Res<LeftAudioChannel>,
-    right_channel: Res<RightAudioChannel>,
     delta: Res<ModulationDelta>,
 ) {
-    let left = left_channel.0;
-    let right = right_channel.0;
     if input.pressed(KeyCode::Space) {
         // push to talk!
     }
     for keycode in input.get_just_pressed() {
-        #[cfg(not(feature = "piano_mode"))]
-        match keycode {
-            KeyCode::Enter => commands.trigger(ToggleDisplayModeEvent),
-            // KeyCode::Tab => commands.trigger(ToggleMusicMixEvent),
-            KeyCode::KeyW => commands.trigger(ModulateChannelEvent {
-                channel: left,
-                parameter: WaveParam::Frequency,
-                delta: delta.frequency_hz,
-            }),
-            KeyCode::KeyS => commands.trigger(ModulateChannelEvent {
-                channel: left,
-                parameter: WaveParam::Frequency,
-                delta: delta.frequency_hz,
-            }),
-            KeyCode::KeyD => commands.trigger(ModulateChannelEvent {
-                channel: left,
-                parameter: WaveParam::Phase,
-                delta: delta.phase_radians,
-            }),
-            KeyCode::KeyA => commands.trigger(ModulateChannelEvent {
-                channel: left,
-                parameter: WaveParam::Phase,
-                delta: delta.phase_radians,
-            }),
-            KeyCode::ArrowUp => commands.trigger(ModulateChannelEvent {
-                channel: right,
-                parameter: WaveParam::Frequency,
-                delta: delta.frequency_hz,
-            }),
-            KeyCode::ArrowDown => commands.trigger(ModulateChannelEvent {
-                channel: right,
-                parameter: WaveParam::Frequency,
-                delta: delta.frequency_hz,
-            }),
-            KeyCode::ArrowRight => commands.trigger(ModulateChannelEvent {
-                channel: right,
-                parameter: WaveParam::Phase,
-                delta: delta.phase_radians,
-            }),
-            KeyCode::ArrowLeft => commands.trigger(ModulateChannelEvent {
-                channel: right,
-                parameter: WaveParam::Phase,
-                delta: delta.phase_radians,
-            }),
+        // #[cfg(not(feature = "piano_mode"))]
+        // match keycode {
+        //     KeyCode::Enter => commands.trigger(ToggleDisplayModeEvent),
+        //     // KeyCode::Tab => commands.trigger(ToggleMusicMixEvent),
+        //     KeyCode::KeyW => commands.trigger(ModulateChannelEvent {
+        //         channel: left,
+        //         parameter: WaveParam::Frequency,
+        //         delta: delta.frequency_hz,
+        //     }),
+        //     KeyCode::KeyS => commands.trigger(ModulateChannelEvent {
+        //         channel: left,
+        //         parameter: WaveParam::Frequency,
+        //         delta: delta.frequency_hz,
+        //     }),
+        //     KeyCode::KeyD => commands.trigger(ModulateChannelEvent {
+        //         channel: left,
+        //         parameter: WaveParam::Phase,
+        //         delta: delta.phase_radians,
+        //     }),
+        //     KeyCode::KeyA => commands.trigger(ModulateChannelEvent {
+        //         channel: left,
+        //         parameter: WaveParam::Phase,
+        //         delta: delta.phase_radians,
+        //     }),
+        //     KeyCode::ArrowUp => commands.trigger(ModulateChannelEvent {
+        //         channel: right,
+        //         parameter: WaveParam::Frequency,
+        //         delta: delta.frequency_hz,
+        //     }),
+        //     KeyCode::ArrowDown => commands.trigger(ModulateChannelEvent {
+        //         channel: right,
+        //         parameter: WaveParam::Frequency,
+        //         delta: delta.frequency_hz,
+        //     }),
+        //     KeyCode::ArrowRight => commands.trigger(ModulateChannelEvent {
+        //         channel: right,
+        //         parameter: WaveParam::Phase,
+        //         delta: delta.phase_radians,
+        //     }),
+        //     KeyCode::ArrowLeft => commands.trigger(ModulateChannelEvent {
+        //         channel: right,
+        //         parameter: WaveParam::Phase,
+        //         delta: delta.phase_radians,
+        //     }),
 
-            KeyCode::Digit1 => commands.trigger(SetWaveShapeEvent(WaveShape::Sine)),
-            KeyCode::Digit2 => commands.trigger(SetWaveShapeEvent(WaveShape::Square)),
-            KeyCode::Digit3 => commands.trigger(SetWaveShapeEvent(WaveShape::Triangle)),
-            KeyCode::Digit4 => commands.trigger(SetWaveShapeEvent(WaveShape::Sawtooth)),
-            _ => {}
-        }
-        #[cfg(feature = "piano_mode")]
+        //     KeyCode::Digit1 => commands.trigger(SetWaveShapeEvent(WaveShape::Sine)),
+        //     KeyCode::Digit2 => commands.trigger(SetWaveShapeEvent(WaveShape::Square)),
+        //     KeyCode::Digit3 => commands.trigger(SetWaveShapeEvent(WaveShape::Triangle)),
+        //     KeyCode::Digit4 => commands.trigger(SetWaveShapeEvent(WaveShape::Sawtooth)),
+        //     _ => {}
+        // }
+        // #[cfg(feature = "piano_mode")]
         match keycode {
             KeyCode::Space => commands.trigger(ToggleDisplayModeEvent),
             KeyCode::KeyA => commands.trigger(SetPitchEvent(Pitch::C)),
