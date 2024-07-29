@@ -4,7 +4,7 @@ use bevy::prelude::*;
 
 use super::Screen;
 use crate::{
-    game::oscilloscope::{DisplayMode, SetDisplayModeEvent},
+    game::oscilloscope::{self, render::{DisplayMode, SetDisplayModeEvent}},
     ui::{interaction, palette::OSCILLOSCOPE_SCREEN_COLOR},
 };
 
@@ -13,7 +13,7 @@ pub(super) fn plugin(app: &mut App) {
     app.insert_resource(ClearColor(OSCILLOSCOPE_SCREEN_COLOR));
 }
 
-fn enter_playing(mut commands: Commands) {
+fn enter_playing(mut commands: Commands, ) {
     commands.trigger(oscilloscope::SpawnOscilloscope);
     commands.trigger(SetDisplayModeEvent(DisplayMode::XY));
 }
