@@ -33,6 +33,7 @@ pub(super) fn plugin(app: &mut App) {
         LoadingState::new(LoadingStatus::Working)
             .load_collection::<FontAssets>()
             .load_collection::<SoundtrackAssets>()
+            .load_collection::<ImageAssets>()
             .load_collection::<ShaderAssets>()
             .init_resource::<ShaderAssets>(),
     );
