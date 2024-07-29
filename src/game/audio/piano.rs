@@ -103,7 +103,7 @@ impl Plugin for PianoPlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(Startup, setup_channel(0))
            .add_systems(Update, switch_key)
-           // .add_systems(PostStartup, play_pianos)
+           .add_systems(PostStartup, play_pianos)
            ;
     }
 }

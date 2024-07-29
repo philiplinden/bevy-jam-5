@@ -47,7 +47,7 @@ pub struct ImageAssets {
 pub struct FontAssets {
 }
 
-#[derive(AssetCollection, Resource, Default)]
+#[derive(AssetCollection, Resource)]
 pub struct ShaderAssets {
     #[asset(path = "shaders/oscilloscope.wgsl")]
     pub oscilloscope: Handle<Shader>,
