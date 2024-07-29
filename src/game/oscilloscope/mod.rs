@@ -1,28 +1,29 @@
-pub mod material;
+//! This is the base module for rendering the oscilloscope display.
+
+pub mod controls;
 pub mod waveform;
+mod material;
+mod render;
 
-use bevy::{
-    prelude::*,
-    sprite::MaterialMesh2dBundle,
-};
+use bevy::{prelude::*, sprite::MaterialMesh2dBundle};
 
-use material::{OscilloscopeMaterial, DisplayMode};
-use waveform::Waveform;
+pub use render::{DisplayMode, ToggleDisplayModeEvent, SetDisplayModeEvent};
 use crate::ui::palette::{OSCILLOSCOPE_SCREEN_COLOR, WAVEFORM_COLOR};
-
+use material::OscilloscopeMaterial;
+use waveform::Waveform;
 
 pub(super) fn plugin(app: &mut App) {
     app.add_plugins((
         material::plugin,
+        render::plugin,
         waveform::plugin,
+        controls::plugin
     ));
     app.observe(new_oscilloscope);
 }
 
 #[derive(Bundle)]
-pub struct OscilloscopeBundle {
-
-}
+pub struct OscilloscopeBundle {}
 
 /// We want to spawn the oscilloscope display on command. This is set up as an Observer because not every game screen
 /// needs the display. We let the game screen systems decide when to spawn the display, and can keep the display scoped
@@ -46,12 +47,20 @@ pub fn new_oscilloscope(
 
     let x = Waveform::default();
     let y = Waveform::default();
-    let data: Vec<Vec2> = x.iter(0.0, 0.1)
+    let data: Vec<Vec2> = x
+        .iter(0.0, 0.1)
         .zip(y.iter(0.0, 0.1))
-                .take(1000).map(|(x, y)| Vec2::new(x, y)).collect();
+        .take(1000)
+        .map(|(x, y)| Vec2::new(x, y))
+        .collect();
 
     commands.spawn(MaterialMesh2dBundle {
-        mesh: meshes.add(Rectangle::new(window.resolution.width(), window.resolution.height())).into(),
+        mesh: meshes
+            .add(Rectangle::new(
+                window.resolution.width(),
+                window.resolution.height(),
+            ))
+            .into(),
         transform: Transform::default(),
         material: materials.add(OscilloscopeMaterial {
             foreground: WAVEFORM_COLOR,
