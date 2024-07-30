@@ -4,17 +4,17 @@
 #![allow(dead_code, unused_imports)]
 
 pub mod interaction;
-pub mod screens;
 pub mod palette;
+pub mod screens;
 pub mod slider;
 mod widgets;
 
 pub mod prelude {
     pub use super::{
-        interaction::{InteractionQuery, InteractionPalette},
-        widgets::{Containers as _, Widgets as _},
+        interaction::{InteractionPalette, InteractionQuery},
         palette::*,
         screens::*,
+        widgets::{Containers as _, Widgets as _},
     };
 }
 pub use screens::Screen;
@@ -25,10 +25,13 @@ use winit::window::Icon;
 
 pub(super) fn plugin(app: &mut App) {
     app.add_plugins((interaction::plugin, screens::plugin));
-    app.add_systems(Startup, set_window_icon);
     app.insert_resource(ClearColor(palette::OSCILLOSCOPE_SCREEN_COLOR));
+
+    #[cfg(not(target_arch = "wasm32"))]
+    app.add_systems(Startup, set_window_icon);
 }
 
+#[cfg(not(target_arch = "wasm32"))]
 fn set_window_icon(
     // we have to use `NonSend` here
     windows: NonSend<WinitWindows>,
