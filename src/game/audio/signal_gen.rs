@@ -17,11 +17,12 @@ impl Plugin for SignalGeneratorPlugin {
     }
 }
 
-#[derive(Component)]
-pub struct SignalGenerator {
+#[derive(Bundle)]
+pub struct SignalGeneratorBundle {
     pub waveform: Waveform,
     pub channel: AudioChannel,
     pub id: SignalId,
+    pub buffer: DspBuffer,
 }
 
 #[derive(Component)]
@@ -39,7 +40,7 @@ impl Waveform {
     }
 }
 
-#[derive(Clone, Copy, PartialEq, Debug, Default, Reflect)]
+#[derive(Component, Clone, Copy, PartialEq, Debug, Default, Reflect)]
 pub enum AudioChannel {
     Left,
     Right,
@@ -80,18 +81,17 @@ fn spawn_signal(trigger: Trigger<SpawnSignalEvent>, mut commands: Commands) {
     let signal_id = signal_dsp.id();
 
     commands.add(Dsp(signal_dsp, SourceType::Dynamic));
-    commands.spawn((
-        SignalGenerator {
+    commands.spawn(
+        SignalGeneratorBundle {
             waveform: Waveform { frequency, phase },
             channel,
             id: SignalId(signal_id),
-        },
-        buffer_clone,
-    ));
+            buffer: buffer_clone,
+        });
 }
 
 fn update_signal_parameters(
-    mut signals: Query<(&mut SignalGenerator, &AudioSink)>,
+    mut signals: Query<(&mut Waveform, &AudioChannel, &AudioSink)>,
     keyboard_input: Res<ButtonInput<KeyCode>>,
     time: Res<Time>,
     mut master_volume: ResMut<MasterVolume>,
@@ -106,10 +106,10 @@ fn update_signal_parameters(
         master_volume.0 = (master_volume.0 - 0.1 * delta).max(0.0);
     }
 
-    for (mut signal, sink) in signals.iter_mut() {
-        let mut frequency = signal.waveform.frequency.value();
-        let mut phase = signal.waveform.phase.value();
-        match signal.channel {
+    for (mut waveform, channel, sink) in signals.iter_mut() {
+        let mut frequency = waveform.frequency.value();
+        let mut phase = waveform.phase.value();
+        match channel {
             AudioChannel::Left => {
                 // Phase control for left channel
                 if keyboard_input.pressed(KeyCode::KeyA) {
@@ -169,13 +169,11 @@ fn update_signal_parameters(
         }
 
         // Ensure phase stays within 0 to 2π
-        signal
-            .waveform
+        waveform
             .set_phase(phase.rem_euclid(std::f32::consts::TAU));
 
         // Clamp frequency to a reasonable range (e.g., 20 Hz to 20000 Hz)
-        signal
-            .waveform
+        waveform
             .set_frequency(frequency.clamp(20.0, 20000.0));
 
         // Update the AudioSink with new parameters
@@ -208,6 +206,7 @@ fn play_signals(
     signal_ids: Query<&SignalId>,
 ) {
     for signal_id in signal_ids.iter() {
+        info!("Trying to play dsp source {:?}", signal_id);
         let source = assets.add(
             dsp_manager
                 .get_graph_by_id(&signal_id.0)

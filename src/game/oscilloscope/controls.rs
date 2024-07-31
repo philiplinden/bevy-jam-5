@@ -4,8 +4,6 @@ use super::ToggleDisplayModeEvent;
 #[cfg(feature = "piano_mode")]
 use crate::game::audio::piano::{Pitch, SetPitchEvent};
 
-const DEFAULT_INCREMENT: f32 = 0.1;
-
 pub fn plugin(app: &mut App) {
     app.add_systems(Update, handle_inputs);
 }
