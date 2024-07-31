@@ -26,12 +26,6 @@ fn enter_playing(
 ) {
     commands.trigger(SpawnOscilloscope);
     commands.trigger(SetDisplayModeEvent(DisplayMode::XY));
-    commands.trigger(SpawnSignalEvent {
-        frequency: 440., phase: 0.0, channel: AudioChannel::Left,
-    });
-    commands.trigger(SpawnSignalEvent {
-        frequency: 440., phase: FRAC_PI_2, channel: AudioChannel::Right,
-    });
     commands.trigger(PlaySignalsEvent);
 
     commands

@@ -1,3 +1,5 @@
+use std::f32::consts::FRAC_PI_2;
+
 use bevy::prelude::*;
 use bevy_fundsp::prelude::*;
 use uuid::Uuid;
@@ -11,7 +13,10 @@ impl Plugin for SignalGeneratorPlugin {
         app.add_systems(Update, update_signal_parameters);
         app.register_type::<AudioChannel>();
         app.add_event::<SpawnSignalEvent>();
-        app.observe(spawn_signal);
+        app.add_systems(Startup, (
+            spawn_signal(440.0, 0.0, AudioChannel::Left),
+            spawn_signal(440.0, FRAC_PI_2, AudioChannel::Right),
+        ));
         app.add_event::<PlaySignalsEvent>();
         app.observe(play_signals);
     }
@@ -58,36 +63,38 @@ pub struct SpawnSignalEvent {
     pub channel: AudioChannel,
 }
 
-fn spawn_signal(trigger: Trigger<SpawnSignalEvent>, mut commands: Commands) {
-    let event = trigger.event();
+fn spawn_signal(frequency: f32, phase: f32, channel: AudioChannel) -> impl FnMut(Commands) {
 
-    let frequency = shared(event.frequency);
-    let phase = shared(event.phase);
-    let channel = event.channel;
-    let buffer = DspBuffer::new();
-    let buffer_clone = DspBuffer::from(&buffer);
+    move |mut commands: Commands| {
 
-    let signal_pan = match channel {
-        AudioChannel::Left => -1.0,
-        AudioChannel::Right => 1.0,
-        AudioChannel::Both => 0.0,
-    };
-    let freq = frequency.clone();
-    let ph = phase.clone();
-    // let source = move || sine() * var(&freq) >> pan(signal_pan) >> rotate(ph.value(), 1.0) >> tee(&buffer.0);
-    let source = move || sine_hz(freq.value()) >> tee(&buffer.0);
+        let frequency = shared(frequency);
+        let phase = shared(phase);
+        let channel = channel;
+        let buffer = DspBuffer::new();
+        let buffer_clone = DspBuffer::from(&buffer);
 
-    let signal_dsp = SignalGeneratorDsp(source);
-    let signal_id = signal_dsp.id();
+        let signal_pan = match channel {
+            AudioChannel::Left => -1.0,
+            AudioChannel::Right => 1.0,
+            AudioChannel::Both => 0.0,
+        };
+        let freq = frequency.clone();
+        let ph = phase.clone();
+        // let source = move || sine() * var(&freq) >> pan(signal_pan) >> rotate(ph.value(), 1.0) >> tee(&buffer.0);
+        let source = move || sine_hz(freq.value()) >> tee(&buffer.0);
 
-    commands.add(Dsp(signal_dsp, SourceType::Dynamic));
-    commands.spawn(
-        SignalGeneratorBundle {
-            waveform: Waveform { frequency, phase },
-            channel,
-            id: SignalId(signal_id),
-            buffer: buffer_clone,
-        });
+        let signal_dsp = SignalGeneratorDsp(source);
+        let signal_id = signal_dsp.id();
+
+        commands.add(Dsp(signal_dsp, SourceType::Dynamic));
+        commands.spawn(
+            SignalGeneratorBundle {
+                waveform: Waveform { frequency, phase },
+                channel,
+                id: SignalId(signal_id),
+                buffer: buffer_clone,
+            });
+        }
 }
 
 fn update_signal_parameters(
@@ -210,7 +217,7 @@ fn play_signals(
         let source = assets.add(
             dsp_manager
                 .get_graph_by_id(&signal_id.0)
-                .expect("DSP source"),
+                .expect("Could not spawn DSP source"),
         );
         commands.spawn(AudioSourceBundle {
             source,
