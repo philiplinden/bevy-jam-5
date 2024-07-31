@@ -1,31 +1,13 @@
 use bevy::prelude::*;
-use std::f32::consts::FRAC_PI_8;
 
 use super::ToggleDisplayModeEvent;
+#[cfg(feature = "piano_mode")]
 use crate::game::audio::piano::{Pitch, SetPitchEvent};
 
 const DEFAULT_INCREMENT: f32 = 0.1;
 
 pub fn plugin(app: &mut App) {
-    app.init_resource::<ModulationDelta>();
     app.add_systems(Update, handle_inputs);
-}
-
-#[derive(Resource)]
-struct ModulationDelta {
-    pub amplitude_db: f32,
-    pub phase_radians: f32,
-    pub frequency_hz: f32,
-}
-
-impl Default for ModulationDelta {
-    fn default() -> Self {
-        Self {
-            amplitude_db: 1.0,
-            phase_radians: FRAC_PI_8,
-            frequency_hz: 10.0,
-        }
-    }
 }
 
 #[derive(Resource)]
@@ -34,15 +16,14 @@ struct FrequencyIncrement(f32);
 fn handle_inputs(
     mut commands: Commands,
     input: Res<ButtonInput<KeyCode>>,
-    delta: Res<ModulationDelta>,
 ) {
     if input.pressed(KeyCode::Space) {
         // push to talk!
     }
     for keycode in input.get_just_pressed() {
         // #[cfg(not(feature = "piano_mode"))]
-        // match keycode {
-        //     KeyCode::Enter => commands.trigger(ToggleDisplayModeEvent),
+        match keycode {
+            KeyCode::Space => commands.trigger(ToggleDisplayModeEvent),
         //     // KeyCode::Tab => commands.trigger(ToggleMusicMixEvent),
         //     KeyCode::KeyW => commands.trigger(ModulateChannelEvent {
         //         channel: left,
@@ -89,9 +70,9 @@ fn handle_inputs(
         //     KeyCode::Digit2 => commands.trigger(SetWaveShapeEvent(WaveShape::Square)),
         //     KeyCode::Digit3 => commands.trigger(SetWaveShapeEvent(WaveShape::Triangle)),
         //     KeyCode::Digit4 => commands.trigger(SetWaveShapeEvent(WaveShape::Sawtooth)),
-        //     _ => {}
-        // }
-        // #[cfg(feature = "piano_mode")]
+            _ => {}
+        }
+        #[cfg(feature = "piano_mode")]
         match keycode {
             KeyCode::Space => commands.trigger(ToggleDisplayModeEvent),
             KeyCode::KeyA => commands.trigger(SetPitchEvent(Pitch::C)),

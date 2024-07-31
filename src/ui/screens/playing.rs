@@ -1,11 +1,13 @@
 //! The screen state for the main game loop.
 
+use std::f32::consts::FRAC_PI_2;
+
 use bevy::prelude::*;
 
 use super::Screen;
 use crate::{
     assets::ImageAssets,
-    game::{audio, oscilloscope::{
+    game::{audio::{self, signal_gen::{AudioChannel, PlaySignalsEvent, SpawnSignalEvent}}, oscilloscope::{
         self, DisplayMode, OscilloscopeImage, SetDisplayModeEvent, SpawnOscilloscope,
     }},
     ui::{interaction, palette::OSCILLOSCOPE_SCREEN_COLOR, widgets::*},
@@ -24,6 +26,13 @@ fn enter_playing(
 ) {
     commands.trigger(SpawnOscilloscope);
     commands.trigger(SetDisplayModeEvent(DisplayMode::XY));
+    commands.trigger(SpawnSignalEvent {
+        frequency: 440., phase: 0.0, channel: AudioChannel::Left,
+    });
+    commands.trigger(SpawnSignalEvent {
+        frequency: 440., phase: FRAC_PI_2, channel: AudioChannel::Right,
+    });
+    commands.trigger(PlaySignalsEvent);
 
     commands
         .ui_root()
