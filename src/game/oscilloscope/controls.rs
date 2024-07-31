@@ -10,9 +10,6 @@ pub fn plugin(app: &mut App) {
     app.add_systems(Update, handle_inputs);
 }
 
-#[derive(Resource)]
-struct FrequencyIncrement(f32);
-
 fn handle_inputs(
     mut commands: Commands,
     input: Res<ButtonInput<KeyCode>>,

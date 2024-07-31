@@ -2,7 +2,7 @@ use bevy::prelude::*;
 use bevy_fundsp::prelude::*;
 use uuid::Uuid;
 
-use super::MasterVolume;
+use super::{dsp::DspBuffer, tee::tee, MasterVolume};
 
 pub struct SignalGeneratorPlugin;
 
@@ -63,6 +63,8 @@ fn spawn_signal(trigger: Trigger<SpawnSignalEvent>, mut commands: Commands) {
     let frequency = shared(event.frequency);
     let phase = shared(event.phase);
     let channel = event.channel;
+    let buffer = DspBuffer::new();
+    let buffer_clone = DspBuffer::from(&buffer);
 
     let signal_pan = match channel {
         AudioChannel::Left => -1.0,
@@ -71,17 +73,21 @@ fn spawn_signal(trigger: Trigger<SpawnSignalEvent>, mut commands: Commands) {
     };
     let freq = frequency.clone();
     let ph = phase.clone();
-    let source = move || sine() * var(&freq) >> pan(signal_pan) >> rotate(ph.value(), 1.0);
+    // let source = move || sine() * var(&freq) >> pan(signal_pan) >> rotate(ph.value(), 1.0) >> tee(&buffer.0);
+    let source = move || sine_hz(freq.value()) >> tee(&buffer.0);
 
     let signal_dsp = SignalGeneratorDsp(source);
     let signal_id = signal_dsp.id();
 
     commands.add(Dsp(signal_dsp, SourceType::Dynamic));
-    commands.spawn(SignalGenerator {
-        waveform: Waveform { frequency, phase },
-        channel,
-        id: SignalId(signal_id),
-    });
+    commands.spawn((
+        SignalGenerator {
+            waveform: Waveform { frequency, phase },
+            channel,
+            id: SignalId(signal_id),
+        },
+        buffer_clone,
+    ));
 }
 
 fn update_signal_parameters(
