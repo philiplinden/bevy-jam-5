@@ -12,9 +12,9 @@ impl Plugin for DebugPlugin {
         app.add_plugins(FrameTimeDiagnosticsPlugin);
         // Print state transitions in dev builds
         app.add_systems(Update, (
-            log_transitions::<crate::ui::screens::Screen>,
-            log_transitions::<crate::ui::screens::loading::LoadingStatus>,
-            log_transitions::<crate::game::oscilloscope::render::DisplayMode>,
+            log_transitions::<crate::ui::menus::Screen>,
+            log_transitions::<crate::ui::menus::loading::LoadingStatus>,
+            log_transitions::<crate::ui::oscilloscope::render::DisplayMode>,
         ));
         app.add_plugins((
             WorldInspectorPlugin::default(),

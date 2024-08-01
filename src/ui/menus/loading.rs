@@ -11,7 +11,6 @@ use log::info;
 use super::Screen;
 use crate::{
     assets::*,
-    game::oscilloscope::{DisplayMode, SetDisplayModeEvent, SpawnOscilloscope},
     ui::prelude::*,
 };
 
@@ -75,7 +74,7 @@ fn print_progress(progress: Option<Res<ProgressCounter>>, mut last_done: Local<u
 
 /// We spawn the interface as we exit the loading screen so we can use it on the title screen and playing screen
 fn spawn_interface(mut commands: Commands, mut screen: ResMut<NextState<Screen>>) {
-    commands.trigger(SpawnOscilloscope);
+    commands.trigger(oscilloscope::SpawnOscilloscope);
     screen.set(POST_LOADING_SCREEN);
     // screen.set(Screen::Dev);
   }

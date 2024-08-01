@@ -1,6 +1,4 @@
 //! This is the base module for rendering the oscilloscope display.
-
-pub mod controls;
 mod crt;
 mod material;
 pub mod render;
@@ -27,7 +25,6 @@ pub(super) fn plugin(app: &mut App) {
         CrtPlugin,
         material::plugin,
         render::plugin,
-        controls::plugin,
     ));
     app.observe(new_oscilloscope);
     app.add_systems(Startup, setup_camera);

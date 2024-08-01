@@ -1,56 +1,71 @@
+#![allow(clippy::precedence)]
 use std::f32::consts::FRAC_PI_2;
-
 use bevy::prelude::*;
 use bevy_fundsp::prelude::*;
-use uuid::Uuid;
 
-use super::{dsp::DspBuffer, tee::tee, MasterVolume};
+use super::{MasterVolume, AudioChannel};
 
-pub struct SignalGeneratorPlugin;
+pub const BUFFER_SIZE: usize = 1000;
 
-impl Plugin for SignalGeneratorPlugin {
+// https://github.com/harudagondi/bevy_fundsp/pull/6
+//Added
+// A way to play streaming DSP sources. See SourceType::Dynamic.
+// You can play DSP sources using Audio::play_dsp.
+// Two iterators on streaming audio sources: Iter and IterMono.
+//Changed
+// Adding the DSP plugin.
+// No more initializing using DspAssets!
+// Just add your DSP function using app.add_dsp_source
+// Playing DSP sources require Audio to be mutable. (Use ResMut)
+
+pub fn plugin(app: &mut App) {
+    app.add_plugins((
+        DspPlugin::default(),
+        WaveformGeneratorPlugin,
+    ));
+}
+
+pub struct WaveformGeneratorPlugin;
+
+impl Plugin for WaveformGeneratorPlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(Update, update_signal_parameters);
         app.register_type::<AudioChannel>();
-        app.add_event::<SpawnSignalEvent>();
-        app.add_systems(Startup, (
-            spawn_signal(440.0, 0.0, AudioChannel::Left),
-            spawn_signal(440.0, FRAC_PI_2, AudioChannel::Right),
-        ));
-        app.add_event::<PlaySignalsEvent>();
-        app.observe(play_signals);
+        app.add_systems(Startup, setup_channel(0));
+        // app.add_systems(PostStartup, (
+        //     spawn_signal(440.0, 0.0, AudioChannel::Left),
+        //     spawn_signal(440.0, FRAC_PI_2, AudioChannel::Right),
+        // ));
+        // app.add_systems(Update, update_signal_parameters);
+        // app.add_event::<PlaySignalsEvent>();
+        // app.observe(play_signals);
     }
 }
 
-#[derive(Bundle)]
-pub struct SignalGeneratorBundle {
+#[derive(Debug, PartialEq)]
+pub enum Waveform {
+    Sine,
+    Saw,
+    Square,
+    Triangle,
+    Organ,
+    Hammond,
+    Pulse,
+    Pluck,
+    Noise,
+}
+
+struct Signal {
     pub waveform: Waveform,
-    pub channel: AudioChannel,
-    pub id: SignalId,
-    pub buffer: DspBuffer,
+    frequency: Shared,
+    phase: Shared,
 }
-
-#[derive(Component)]
-pub struct Waveform {
-    pub frequency: Shared,
-    pub phase: Shared,
-}
-
-impl Waveform {
+impl Signal {
     pub fn set_frequency(&mut self, freq: f32) {
         self.frequency.set_value(freq);
     }
     pub fn set_phase(&mut self, phase: f32) {
         self.phase.set_value(phase);
     }
-}
-
-#[derive(Component, Clone, Copy, PartialEq, Debug, Default, Reflect)]
-pub enum AudioChannel {
-    Left,
-    Right,
-    #[default]
-    Both,
 }
 
 #[derive(Debug, Component, Reflect)]
@@ -73,11 +88,6 @@ fn spawn_signal(frequency: f32, phase: f32, channel: AudioChannel) -> impl FnMut
         let buffer = DspBuffer::new();
         let buffer_clone = DspBuffer::from(&buffer);
 
-        let signal_pan = match channel {
-            AudioChannel::Left => -1.0,
-            AudioChannel::Right => 1.0,
-            AudioChannel::Both => 0.0,
-        };
         let freq = frequency.clone();
         let ph = phase.clone();
         // let source = move || sine() * var(&freq) >> pan(signal_pan) >> rotate(ph.value(), 1.0) >> tee(&buffer.0);
@@ -114,65 +124,7 @@ fn update_signal_parameters(
     }
 
     for (mut waveform, channel, sink) in signals.iter_mut() {
-        let mut frequency = waveform.frequency.value();
-        let mut phase = waveform.phase.value();
-        match channel {
-            AudioChannel::Left => {
-                // Phase control for left channel
-                if keyboard_input.pressed(KeyCode::KeyA) {
-                    phase -= 0.1 * delta;
-                }
-                if keyboard_input.pressed(KeyCode::KeyD) {
-                    phase += 0.1 * delta;
-                }
-                // Frequency control for left channel
-                if keyboard_input.pressed(KeyCode::KeyW) {
-                    frequency *= 1.01;
-                }
-                if keyboard_input.pressed(KeyCode::KeyS) {
-                    frequency *= 0.99;
-                }
-            }
-            AudioChannel::Right => {
-                // Phase control for right channel
-                if keyboard_input.pressed(KeyCode::ArrowLeft) {
-                    phase -= 0.1 * delta;
-                }
-                if keyboard_input.pressed(KeyCode::ArrowRight) {
-                    phase += 0.1 * delta;
-                }
-                // Frequency control for right channel
-                if keyboard_input.pressed(KeyCode::ArrowUp) {
-                    frequency *= 1.01;
-                }
-                if keyboard_input.pressed(KeyCode::ArrowDown) {
-                    frequency *= 0.99;
-                }
-            }
-            AudioChannel::Both => {
-                // For signals on both channels, we'll update based on either set of controls
-                // Phase control
-                if keyboard_input.pressed(KeyCode::KeyA)
-                    || keyboard_input.pressed(KeyCode::ArrowLeft)
-                {
-                    phase -= 0.1 * delta;
-                }
-                if keyboard_input.pressed(KeyCode::KeyD)
-                    || keyboard_input.pressed(KeyCode::ArrowRight)
-                {
-                    phase += 0.1 * delta;
-                }
-                // Frequency control
-                if keyboard_input.pressed(KeyCode::KeyW) || keyboard_input.pressed(KeyCode::ArrowUp)
-                {
-                    frequency *= 1.01;
-                }
-                if keyboard_input.pressed(KeyCode::KeyS)
-                    || keyboard_input.pressed(KeyCode::ArrowDown)
-                {
-                    frequency *= 0.99;
-                }
-            }
+
         }
 
         // Ensure phase stays within 0 to 2π
@@ -224,4 +176,40 @@ fn play_signals(
             ..default()
         });
     }
+}
+
+pub struct SynthDsp<F>(pub F);
+
+impl<T: AudioUnit + 'static, F: Send + Sync + 'static + Fn() -> T> DspGraph for SynthDsp<F> {
+    fn id(&self) -> Uuid {
+        Uuid::from_u128(0xa1a2a3a4b1b2c1c2d1d2d3d4d5d6d7d8u128)
+    }
+
+    fn generate_graph(&self) -> Box<dyn AudioUnit> {
+        Box::new((self.0)())
+    }
+}
+
+#[derive(Debug, Component)]
+pub struct DspBuffer(pub Arc<Mutex<CircularBuffer<BUFFER_SIZE, f32>>>);
+
+impl DspBuffer {
+    pub fn new() -> Self {
+        DspBuffer(Arc::new(Mutex::new(CircularBuffer::new())))
+    }
+}
+
+impl From<&DspBuffer> for DspBuffer {
+    fn from(value: &DspBuffer) -> Self {
+        DspBuffer(Arc::clone(&value.0))
+    }
+}
+
+/// Compute (x, y) display coordinates of a sine wave over time.
+pub fn to_xy() {
+    // no op
+}
+
+fn mix_sources() {
+    // no op
 }

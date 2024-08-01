@@ -1,7 +1,8 @@
 #[cfg(feature = "dev")]
-mod dev_tools;
 mod assets;
-mod game;
+mod audio;
+mod controls;
+mod dev_tools;
 mod ui;
 
 use bevy::{
@@ -33,7 +34,7 @@ impl Plugin for AppPlugin {
                 })
                 .set(WindowPlugin {
                     primary_window: Window {
-                        title: "[ p h a s e ~ s h i f t ]".to_string(),
+                        title: "HellScope".to_string(),
                         canvas: Some("#bevy".to_string()),
                         fit_canvas_to_parent: true,
                         prevent_default_event_handling: true,
@@ -60,7 +61,8 @@ impl Plugin for AppPlugin {
         // Add other plugins.
         app.add_plugins((
             assets::AssetLoaderPlugin,
-            game::plugin,
+            audio::plugin,
+            controls::plugin,
             ui::plugin,
         ));
 

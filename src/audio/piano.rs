@@ -1,7 +1,7 @@
 //! Generate synth tones by pitch.
 use {bevy::prelude::*, bevy_fundsp::prelude::*, uuid::Uuid};
 use super::tee::tee;
-use crate::game::audio::{Channel, dsp::DspBuffer};
+use crate::audio::{Channel, dsp::DspBuffer};
 
 pub struct PianoPlugin;
 

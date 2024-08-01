@@ -1,18 +1,13 @@
 use bevy::prelude::*;
-use bevy_fundsp::prelude::*;
 
 pub mod dsp;
 pub mod piano;
-// pub mod soundtrack;
-pub mod tee;
-pub mod signal_gen;
 
 pub fn plugin(app: &mut App) {
-    app.add_plugins(DspPlugin::default()).add_plugins((
-        dsp::plugin,
+    app.add_plugins((
         // soundtrack::plugin,
         // piano::PianoPlugin,
-        signal_gen::SignalGeneratorPlugin
+        dsp::plugin,
     ));
     app.init_resource::<MasterVolume>();
 }
@@ -26,5 +21,23 @@ pub struct MasterVolume(f32);
 impl Default for MasterVolume {
     fn default() -> Self {
         MasterVolume(0.2)
+    }
+}
+
+#[derive(Component, Clone, Copy, PartialEq, Debug, Default, Reflect)]
+pub enum AudioChannel {
+    Left,
+    Right,
+    #[default]
+    Both,
+}
+
+impl AudioChannel {
+    fn pan(&self) -> f32 {
+        match self {
+            AudioChannel::Left => -1.0,
+            AudioChannel::Right => 1.0,
+            AudioChannel::Both => 0.0,
+        }
     }
 }

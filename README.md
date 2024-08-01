@@ -1,28 +1,21 @@
-# `phase / shift`
+# HellScope
 
-Phase Shift is a bullet hell rhythm game created for
+A bullet hell rhythm game created for
 [Bevy Jam #5](https://itch.io/jam/bevy-jam-5) with the theme: **cycles**.
 
 ![demo](doc/assets/dynamic.mp4)
 
 ## Credits
-Philip Linden - Concept & code
-
-Shane Celis - Audio, Shaders & Code
-
-John Breen - Art
-
-David Breen - Concept
-
-## Platform
-Although Bevy is cross-platform, the focus of this project is to build for web
-and host it on itch.io in an embedded Web Assembly player.
+|Philip Linden | Audio, Concept & Code |
+|Shane Celis   | Audio, Shaders & Code |
+|John Breen    | Art                   |
+|David Breen   | Concept               |
 
 ## Gameplay
 Core Gameplay:
 
 - [x] Change parameters of two waveforms, displayed as a Lissajous pattern.
-- [ ] Control the X phase with A and D, control the Y phase with W and S.
+- [ ] Control the X phase with A and D, control the Y phase with W and S. (Maybe change this with the mouse position?)
 - [ ] Bullets are locked on rails to the Lissajou pattern and traverse the pattern
       for the duration of one period.
 - [ ] Left click to fire bullets whose lifetime is tied to the X waveform period,
@@ -73,3 +66,88 @@ intense bloom, and video glitches during anomalies.
 
 ![inspiration 3](doc/assets/lissajous.gif)
 [inspiration - lissajous tutorial](https://www.youtube.com/watch?v=t6nGiBzGLD8)
+
+# Signal Processing
+
+This game is inspired by digital signal processing (DSP) for audio sythesizers
+and the way analog oscilloscopes visualize two signals as orthogonal axes.
+
+Here, the idea is to play an audio signal as a stereo pair of tones. The right
+audio channel plays waveform X while the left audio channel plays waveform Y.
+Audio is normally presented as two waveforms showing signal over time. For
+this game, we want to show these waveforms as signals plotted together on 
+orthogonal axes. This is visualized as a [Lissajous curve](https://academo.org/demos/lissajous-curves/).
+
+![o-scope](doc/assets/dynamic.mp4)
+
+## Lissajous Curves
+The Lissajous curve is created by converting each wave into its cartesian form,
+and plotting them on orthogonal axes. Recall the unit circle is defined in (x,y)
+coordinates:
+
+```
+                y
+                ↑
+           (0,1)|               sin(θ + φ)
+            . - + - .          /
+         .'     |     '.      /
+       '        |       o (x,y)
+      '         |      / '  \   
+     '          |     /   '  \
+     '          |    /    '  cos(θ + φ) 
+      '         |  θ/     '
+       '        |  /     '
+         '.     | / φ .'
+-----+----------+---------+--> x
+   (-1,0)       |         (1,0)
+                |
+
+x = cos(θ + φ) = cos(ωt + φ)
+y = sin(θ + φ) = sin(ωt + φ)
+
+where:
+θ = ωt = angle (in radians)
+ω = angular frequency (rad/s)
+t = time (s)
+φ = phase shift (in radians)
+
+Point (x,y) rotates counterclockwise as t increases.
+Phase shift φ moves the starting point of rotation.
+```
+
+The Lissajous curve is formed by setting x and y to be driven by two waveforms.
+The amplitudes, frequencies, and phases of waveform X and waveform Y are plotted
+using the same relationships that built the unit circle. When the parameters
+for each wave become distinct, you get some wild patterns.
+```
+x = A*cos(ω₁t + φ₁)
+y = B*sin(ω₂t + φ₂)
+
+where:
+A, B = amplitudes
+ω₁, ω₂ = angular frequencies (rad/s)
+t = time (s)
+φ₁, φ₂ = phase shifts (in radians)
+
+for example, 
+    if
+        ω₁== ω₂
+    and φ₁== φ₂
+    
+    Then the pattern is an ellipse. 
+```
+![lissajous](doc/assets/lissajous.gif)
+
+## Wave Generation in FunDSP
+We use [FunDSP](https://github.com/SamiPerttu/fundsp) in [Bevy](https://bevyengine.org/)
+via [bevy_fundsp](https://github.com/harudagondi/bevy_fundsp).
+
+FunDSP approaches audio synthesis and DSP with node graphs. Every synthesized
+waveform signal begins its life as a simple oscillator like a [sine, square,
+or sawtooth wave](https://www.perfectcircuit.com/signal/difference-between-waveforms).
+
+![wave examples](https://i.imgur.com/I16C1Bd.png)
+
+These signals are filtered, combined, and altered by a FunDSP's linear operators.
+
+![fundsp operators](https://github.com/SamiPerttu/fundsp/raw/master/operators.png)

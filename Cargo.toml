@@ -3,8 +3,10 @@ name = "bevy-jam-5"
 authors = [
     "Philip Linden <lindenphilipj@gmail.com>",
     "Shane Celis <shane.celis@gmail.com>",
+    "John Breen",
+    "David Breen",
 ]
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
 license = "MIT"
 

@@ -4,7 +4,7 @@ use bevy::prelude::*;
 
 use super::Screen;
 use crate::{
-    assets::ShaderAssets, game::oscilloscope, ui::prelude::*
+    assets::ShaderAssets, ui::prelude::*
 };
 
 pub(super) fn plugin(app: &mut App) {

@@ -2,7 +2,7 @@
 
 use bevy::prelude::*;
 
-use crate::game::audio::dsp::DspBuffer;
+use crate::audio::dsp::DspBuffer;
 use super::OscilloscopeMaterial;
 
 pub(super) fn plugin(app: &mut App) {

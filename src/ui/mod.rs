@@ -2,30 +2,29 @@
 
 // Unused utilities and re-exports may trigger these lints undesirably.
 #![allow(dead_code, unused_imports)]
-
-pub mod interaction;
+pub mod oscilloscope;
 pub mod palette;
-pub mod screens;
+pub mod menus;
 pub mod slider;
 mod widgets;
 
 pub mod prelude {
     pub use super::{
-        interaction::{InteractionPalette, InteractionQuery},
         palette::*,
-        screens::*,
+        menus::*,
+        oscilloscope,
         widgets::{Containers as _, Widgets as _},
     };
 }
-pub use screens::Screen;
+pub use menus::Screen;
 
 use bevy::prelude::*;
 use bevy::winit::WinitWindows;
 use winit::window::Icon;
 
 pub(super) fn plugin(app: &mut App) {
-    app.add_plugins((interaction::plugin, screens::plugin));
     app.insert_resource(ClearColor(palette::OSCILLOSCOPE_SCREEN_COLOR));
+    app.add_plugins(menus::plugin);
 
     #[cfg(not(target_arch = "wasm32"))]
     app.add_systems(Startup, set_window_icon);
