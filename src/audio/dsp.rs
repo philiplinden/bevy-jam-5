@@ -44,8 +44,8 @@ impl Plugin for WaveformGeneratorPlugin {
 #[derive(Debug, PartialEq)]
 pub enum Waveform {
     Sine,
-    Saw,
     Square,
+    Saw,
     Triangle,
     Organ,
     Hammond,
@@ -55,14 +55,34 @@ pub enum Waveform {
 }
 
 struct Signal {
-    pub waveform: Waveform,
+    waveform: Waveform,
     frequency: Shared,
     phase: Shared,
 }
 impl Signal {
+    pub fn generate(&self) -> impl AudioUnit32 {
+        let freq = self.frequency.get_value();
+        match self.waveform {
+            Waveform::Sine => sine_hz(freq),
+            Waveform::Square => square_hz(freq),
+            Waveform::Saw => todo!(),
+            Waveform::Triangle => todo!(),
+            Waveform::Organ => todo!(),
+            Waveform::Hammond => todo!(),
+            Waveform::Pulse => todo!(),
+            Waveform::Pluck => todo!(),
+            Waveform::Noise => todo!(),
+        }
+    }
+
+    pub fn set_waveform(&mut self, shape: Waveform) {
+        self.waveform = shape;
+    }
+
     pub fn set_frequency(&mut self, freq: f32) {
         self.frequency.set_value(freq);
     }
+
     pub fn set_phase(&mut self, phase: f32) {
         self.phase.set_value(phase);
     }
@@ -70,6 +90,12 @@ impl Signal {
 
 #[derive(Debug, Component, Reflect)]
 pub struct SignalId(pub Uuid);
+
+#[derive(Bundle)]
+pub struct SignalBundle {
+    signal: Signal,
+    id: SignalId,
+}
 
 #[derive(Event)]
 pub struct SpawnSignalEvent {
