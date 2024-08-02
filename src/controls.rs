@@ -2,6 +2,13 @@ use bevy::prelude::*;
 
 pub(super) fn plugin(app: &mut App) {
 }
+// // Global volume control
+// if keyboard_input.pressed(KeyCode::Equal) || keyboard_input.pressed(KeyCode::NumpadAdd) {
+//     master_volume.0 = (master_volume.0 + 0.1 * delta).min(1.0);
+// }
+// if keyboard_input.pressed(KeyCode::Minus) || keyboard_input.pressed(KeyCode::NumpadSubtract) {
+//     master_volume.0 = (master_volume.0 - 0.1 * delta).max(0.0);
+// }
 //         let mut frequency = waveform.frequency.value();
 //         let mut phase = waveform.phase.value();
 //         match channel {

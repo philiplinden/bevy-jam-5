@@ -1,3 +1,5 @@
+//! We make our own version of linux's `tee()` command line function for convenience
+
 use std::sync::{Arc, Mutex};
 use circular_buffer::CircularBuffer;
 use bevy::prelude::*;
