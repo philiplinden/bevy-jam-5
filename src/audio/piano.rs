@@ -60,20 +60,6 @@ pub enum Pitch {
 impl Pitch {
     fn to_f32(self) -> f32 {
         match self {
-            // Octave 4
-            // Pitch::HighC => 261.626,
-            // Pitch::HighCs => 277.183,
-            // Pitch::HighD => 293.665,
-            // Pitch::HighDs => 311.127,
-            // Pitch::HighE => 329.628,
-            // Pitch::HighF => 349.228,
-            // Pitch::HighFs => 369.994,
-            // Pitch::HighG => 391.995,
-            // Pitch::HighGs => 415.305,
-            // Pitch::HighA => 440.0,
-            // Pitch::HighAs => 466.164,
-            // Pitch::HighB => 493.883,
-
             // Octave 2
             Pitch::C => 65.,
             Pitch::Cs => 69.,

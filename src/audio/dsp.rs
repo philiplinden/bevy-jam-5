@@ -10,22 +10,25 @@ use super::{MasterVolume, AudioChannel};
 
 pub const BUFFER_SIZE: usize = 1000;
 
-// https://github.com/harudagondi/bevy_fundsp/pull/6
-//Added
-// A way to play streaming DSP sources. See SourceType::Dynamic.
-// You can play DSP sources using Audio::play_dsp.
-// Two iterators on streaming audio sources: Iter and IterMono.
-//Changed
-// Adding the DSP plugin.
-// No more initializing using DspAssets!
-// Just add your DSP function using app.add_dsp_source
-// Playing DSP sources require Audio to be mutable. (Use ResMut)
-
 pub fn plugin(app: &mut App) {
     app.add_plugins((
         DspPlugin::default(),
         SignalGeneratorPlugin,
     ));
+}
+
+struct AudioBufferPlugin;
+
+impl Plugin for AudioBufferPlugin {
+    fn build(&self, app: &mut App) {
+
+    }
+}
+
+/// A two-channel audio buffer.
+#[derive(Resource)]
+struct AudioBuffer {
+    buffer: bevy_fundsp::prelude::Buffer
 }
 
 /// Generates clean tones.
