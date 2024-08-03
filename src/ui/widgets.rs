@@ -2,7 +2,7 @@
 
 use bevy::{ecs::system::EntityCommands, prelude::*, ui::Val::*};
 
-use super::{interaction::InteractionPalette, palette::*, slider::*};
+use super::{menus::InteractionPalette, palette::*, slider::*};
 use crate::assets::ImageAssets;
 
 /// An extension trait for spawning UI widgets.

@@ -1,8 +1,10 @@
 #[cfg(feature = "dev")]
 mod assets;
-mod audio;
+// mod audio;
+mod camera;
 mod controls;
 mod dev_tools;
+mod oscilloscope;
 mod ui;
 
 use bevy::{
@@ -61,8 +63,10 @@ impl Plugin for AppPlugin {
         // Add other plugins.
         app.add_plugins((
             assets::AssetLoaderPlugin,
-            audio::plugin,
+            // audio::plugin,
+            camera::plugin,
             controls::plugin,
+            oscilloscope::plugin,
             ui::plugin,
         ));
 

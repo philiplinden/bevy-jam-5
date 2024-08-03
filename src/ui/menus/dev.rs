@@ -5,7 +5,7 @@ use bevy::prelude::*;
 use super::Screen;
 use crate::{
     assets::ImageAssets,
-    ui::{interaction, slider::*, widgets::Widgets},
+    ui::{slider::*, widgets::Widgets},
 };
 
 pub(super) fn plugin(app: &mut App) {

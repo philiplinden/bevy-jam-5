@@ -2,7 +2,6 @@
 
 // Unused utilities and re-exports may trigger these lints undesirably.
 #![allow(dead_code, unused_imports)]
-pub mod oscilloscope;
 pub mod palette;
 pub mod menus;
 pub mod slider;
@@ -12,7 +11,6 @@ pub mod prelude {
     pub use super::{
         palette::*,
         menus::*,
-        oscilloscope,
         widgets::{Containers as _, Widgets as _},
     };
 }

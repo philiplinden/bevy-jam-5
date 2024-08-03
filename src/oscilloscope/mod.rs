@@ -18,7 +18,7 @@ use bevy_video_glitch::VideoGlitchSettings;
 use crate::ui::Screen;
 use crt::{CrtPlugin, CrtSettings};
 use material::OscilloscopeMaterial;
-pub use render::{DisplayMode, SetDisplayModeEvent, ToggleDisplayModeEvent};
+// pub use render::{DisplayMode, SetDisplayModeEvent, ToggleDisplayModeEvent};
 
 pub(super) fn plugin(app: &mut App) {
     app.add_plugins((

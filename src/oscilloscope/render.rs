@@ -2,7 +2,7 @@
 
 use bevy::prelude::*;
 
-use crate::audio::dsp::DspBuffer;
+// use crate::audio::dsp::DspBuffer;
 use super::OscilloscopeMaterial;
 
 pub(super) fn plugin(app: &mut App) {
@@ -67,28 +67,28 @@ fn set_display_mode(
 ///         -1    0    +1
 /// ```
 pub fn render_xy_oscilloscope(
-    dsp_buffers: Query<&DspBuffer>,
-    mut materials: ResMut<Assets<OscilloscopeMaterial>>,
+    // dsp_buffers: Query<&DspBuffer>,
+    // mut materials: ResMut<Assets<OscilloscopeMaterial>>,
 ) {
-    for dsp_buffer in &dsp_buffers {
-        for (_id, material) in materials.iter_mut() {
-            let mut lock = dsp_buffer.0.try_lock();
-            if let Ok(ref mut mutex) = lock {
-                let mut i = mutex.iter().map(|x| Vec2::new(*x, *x));
-                if let Some(x) = i.next() {
-                    material.points.clear();
-                    material.points.push(x);
-                    material.points.extend(i);
-                    material.lines = vec![UVec2::new(
-                        0,
-                        material.points.len().saturating_sub(1) as u32,
-                    )];
-                } else {
-                    continue;
-                }
-            }
-        }
-    }
+//     for dsp_buffer in &dsp_buffers {
+//         for (_id, material) in materials.iter_mut() {
+//             let mut lock = dsp_buffer.0.try_lock();
+//             if let Ok(ref mut mutex) = lock {
+//                 let mut i = mutex.iter().map(|x| Vec2::new(*x, *x));
+//                 if let Some(x) = i.next() {
+//                     material.points.clear();
+//                     material.points.push(x);
+//                     material.points.extend(i);
+//                     material.lines = vec![UVec2::new(
+//                         0,
+//                         material.points.len().saturating_sub(1) as u32,
+//                     )];
+//                 } else {
+//                     continue;
+//                 }
+//             }
+//         }
+//     }
 }
 
 /// `Mode::Timeseries`: plots all waves on amplitude over time axes.
@@ -102,31 +102,31 @@ pub fn render_xy_oscilloscope(
 ///           0      1      2      3      4      5      6    Time
 /// ```
 pub fn render_time_series_oscilloscope(
-    dsp_buffers: Query<&DspBuffer>,
-    mut materials: ResMut<Assets<OscilloscopeMaterial>>,
+    // dsp_buffers: Query<&DspBuffer>,
+    // mut materials: ResMut<Assets<OscilloscopeMaterial>>,
 ) {
-    for dsp_buffer in &dsp_buffers {
-        for (_id, material) in materials.iter_mut() {
-            let mut lock = dsp_buffer.0.try_lock();
-            if let Ok(ref mut mutex) = lock {
-                let l = mutex.len();
-                let dt = 2.0 / l as f32;
-                let mut i = mutex
-                    .iter()
-                    .enumerate()
-                    .map(|(n, x)| Vec2::new(-1. + n as f32 * dt, *x));
-                if let Some(x) = i.next() {
-                    material.points.clear();
-                    material.points.push(x);
-                    material.points.extend(i);
-                    material.lines = vec![UVec2::new(
-                        0,
-                        material.points.len().saturating_sub(1) as u32,
-                    )];
-                } else {
-                    continue;
-                }
-            }
-        }
-    }
+//     for dsp_buffer in &dsp_buffers {
+//         for (_id, material) in materials.iter_mut() {
+//             let mut lock = dsp_buffer.0.try_lock();
+//             if let Ok(ref mut mutex) = lock {
+//                 let l = mutex.len();
+//                 let dt = 2.0 / l as f32;
+//                 let mut i = mutex
+//                     .iter()
+//                     .enumerate()
+//                     .map(|(n, x)| Vec2::new(-1. + n as f32 * dt, *x));
+//                 if let Some(x) = i.next() {
+//                     material.points.clear();
+//                     material.points.push(x);
+//                     material.points.extend(i);
+//                     material.lines = vec![UVec2::new(
+//                         0,
+//                         material.points.len().saturating_sub(1) as u32,
+//                     )];
+//                 } else {
+//                     continue;
+//                 }
+//             }
+//         }
+//     }
 }

@@ -7,13 +7,11 @@ use bevy::prelude::*;
 use super::Screen;
 use crate::{
     assets::ImageAssets,
-    ui::{
-        oscilloscope::{
-            render::{DisplayMode, SetDisplayModeEvent},
-            OscilloscopeImage, SpawnOscilloscope,
-        },
-        prelude::*,
+    oscilloscope::{
+        render::{DisplayMode, SetDisplayModeEvent},
+        OscilloscopeImage, SpawnOscilloscope,
     },
+    ui::prelude::*,
 };
 
 pub(super) fn plugin(app: &mut App) {
