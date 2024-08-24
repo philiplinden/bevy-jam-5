@@ -13,6 +13,7 @@ pub(super) fn plugin(app: &mut App) {
     app.init_state::<Screen>();
     app.enable_state_scoped_entities::<Screen>();
     app.register_type::<InteractionPalette>();
+    app.add_systems(Startup, spawn_ui_camera);
     app.add_systems(Update, apply_interaction_palette);
     app.add_plugins((
         splash::plugin,
@@ -59,4 +60,26 @@ fn apply_interaction_palette(
         }
         .into();
     }
+}
+
+fn spawn_ui_camera(mut commands: Commands) {
+    commands.spawn((
+        Name::new("Camera"),
+        // Camera3dBundle{
+        //     projection: Projection::Orthographic(OrthographicProjection{
+        //         scale: 0.01,
+        //         ..default()
+        //     }),
+        //     ..default()
+        // }
+        Camera2dBundle::default(),
+        // Render all UI to this camera.
+        // Not strictly necessary since we only use one camera,
+        // but if we don't use this component, our UI will disappear as soon
+        // as we add another camera. This includes indirect ways of adding cameras like using
+        // [ui node outlines](https://bevyengine.org/news/bevy-0-14/#ui-node-outline-gizmos)
+        // for debugging. So it's good to have this here for future-proofing.
+        IsDefaultUiCamera,
+    ));
+    commands.insert_resource(UiScale(0.5));
 }

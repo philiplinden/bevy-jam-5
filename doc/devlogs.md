@@ -1,5 +1,23 @@
 # devlogs
 
+## 2024-08-03 - phil
+Here's a tutorial I found on how to draw images in an oscilloscope.
+[![IMAGE ALT TEXT](http://img.youtube.com/vi/344oEu9vo7w/0.jpg)](http://www.youtube.com/watch?v=344oEu9vo7w "#144: Use Arduino Uno to create spinning XY graphic on an Oscilloscope")
+
+I scoped out a mood board and controls in Figma.
+
+![ui ideas](assets/UI%20Ideas.png)
+
+![ui ideas](assets/UI%20Ideas%20(1).png)
+
+![ui ideas](assets/UI%20Ideas%20(2).png)
+
+![ui ideas](assets/UI%20Ideas%20(3).png)
+
+![ui ideas](assets/UI%20Ideas%20(4).png)
+
+![ui ideas](assets/UI%20Ideas%20(5).png)
+
 ## 2024-08-02 - phil
 I am having trouble getting the DSP wired up as a fully-adjustable waveform generator. Not sure what the problem is, and
 that's the problem. Luckily, Seth implemented the `piano` module that is a simple tone generator. The issue with the

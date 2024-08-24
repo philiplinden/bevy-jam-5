@@ -21,7 +21,6 @@ use bevy::winit::WinitWindows;
 use winit::window::Icon;
 
 pub(super) fn plugin(app: &mut App) {
-    app.insert_resource(ClearColor(palette::OSCILLOSCOPE_SCREEN_COLOR));
     app.add_plugins(menus::plugin);
 
     #[cfg(not(target_arch = "wasm32"))]

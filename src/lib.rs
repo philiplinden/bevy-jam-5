@@ -1,9 +1,9 @@
 #[cfg(feature = "dev")]
 mod assets;
 // mod audio;
-mod camera;
 mod controls;
 mod dev_tools;
+mod lighting;
 mod oscilloscope;
 mod ui;
 
@@ -64,8 +64,8 @@ impl Plugin for AppPlugin {
         app.add_plugins((
             assets::AssetLoaderPlugin,
             // audio::plugin,
-            camera::plugin,
             controls::plugin,
+            // lighting::plugin,
             oscilloscope::plugin,
             ui::plugin,
         ));

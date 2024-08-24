@@ -14,7 +14,7 @@ impl Plugin for DebugPlugin {
         app.add_systems(Update, (
             log_transitions::<crate::ui::menus::Screen>,
             log_transitions::<crate::ui::menus::loading::LoadingStatus>,
-            log_transitions::<crate::oscilloscope::render::DisplayMode>,
+            log_transitions::<crate::oscilloscope::crt::DisplayMode>,
         ));
         app.add_plugins((
             WorldInspectorPlugin::default(),

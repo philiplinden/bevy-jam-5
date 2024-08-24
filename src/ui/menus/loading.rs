@@ -22,6 +22,7 @@ const POST_LOADING_SCREEN: Screen = Screen::Playing;
 pub(super) fn plugin(app: &mut App) {
     app.init_state::<LoadingStatus>();
     app.init_resource::<LoadingStatus>();
+    app.insert_resource(ClearColor(crate::ui::palette::BEVY_GRAY));
     app.add_systems(OnEnter(Screen::Loading), spawn_loading_screen);
     app.add_systems(OnEnter(LoadingStatus::Done), goto_next_screen);
     app.add_plugins((

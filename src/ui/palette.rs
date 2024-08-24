@@ -1,8 +1,8 @@
-use bevy::color::{Color, palettes::tailwind::*};
+use bevy::color::{palettes::{basic::AQUA, tailwind::*}, Color};
 
 pub const BEVY_GRAY: Color = Color::srgb(0.157, 0.157, 0.157);
 pub const WAVEFORM_COLOR: Color = Color::hsl(118.882, 0.535, 0.109);
-pub const OSCILLOSCOPE_SCREEN_COLOR: Color = BEVY_GRAY;//Color::hsl(192.671, 0.800, 0.658);
+pub const OSCILLOSCOPE_SCREEN_COLOR: Color = Color::Srgba(AQUA);//Color::hsl(192.671, 0.800, 0.658);
 
 pub const NODE_BACKGROUND: Color = Color::Srgba(NEUTRAL_800);
 pub const BUTTON_HOVERED_BACKGROUND: Color = Color::Srgba(GREEN_700);
